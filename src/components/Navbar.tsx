@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React from 'react';
 
 const Navbar: React.FC = () => {
@@ -18,13 +19,18 @@ const Navbar: React.FC = () => {
                     <p className='self-start text-green-700 font-mono font-bold w-auto'></p>
                     <input className='bg-gray-900 text-green-700 font-mono font-bold p-2 pl-4 w-auto' type="text" placeholder="Type your command here" />
                 </div> */}
-                <div className="terminal-container  ">
+                <div className="terminal-container  flex">
                     <div className="terminal-prompt">
                         <span className="prompt-text">user@eacc.et-mikiyas:~$</span>
-                        <input
-                            className="terminal-input"
-                            type="text"
-                        />
+
+                    </div>
+                    <div className=' gap-3 flex'>
+                        <Link href='/'>
+                            <button className='hover:bg-green-700 hover:text-gray-50 hover:pl-1 pl-1 pr-1'>home</button>
+
+                        </Link>
+                        <button className='hover:bg-green-700 hover:text-gray-50 hover:pl-1 pr-1 pl-1'>about</button>
+                        <button className='hover:bg-green-700 hover:text-gray-50 hover:pl-1 pr-1 pl-1'>help</button>
                     </div>
                 </div>
             </div>

@@ -1,5 +1,6 @@
 import { supabase } from '@/libs/supabase';
 import { Zap } from 'lucide-react';
+import Link from 'next/link';
 import React, { useEffect } from 'react';
 
 const Post = ({ data, num }: any) => {
@@ -28,26 +29,33 @@ const Post = ({ data, num }: any) => {
     }
 
     return (
-        <div className='flex gap-3 mb-1'>
+
+        <div className='flex  mb-2'>
             <div className='flex'>
                 <p>{num + 1}.</p>
             </div>
-            <div className='font-sans -ml-1'>
-                <div className='flex gap-2'>
-                    <Zap className='hover:text-green-600  cursor-pointer mt-2 zapppp' size={12} />
+            <div className='font-sans '>
+                <div className='flex gap-1'>
+                    <div className='p-1'>
+                        <Zap className='hover:text-green-600  cursor-pointer zapppp' size={15} />
+                    </div>
                     <div>
-                        <h1 className='cursor-pointer flex'>{data.title}<p className='text-gray-300 text-xs self-center ml-1'> ({data.link})</p></h1>
-
-                        <div className='flex gap-2 text-xs text-gray-200'>
+                        <Link href={`/post/view?id=${data.id}`}>
+                            <div className="inline-flex items-baseline">
+                                <p className=" leading-5 mb-0 cursor-pointer">
+                                    {data.title}
+                                    <span className="text-gray-300 text-xs"> ({data.link})</span>
+                                </p>
+                            </div>
+                        </Link>
+                        <div className='flex gap-2 text-xs text-gray-200 mt-1'>
                             <p className='hover:underline cursor-pointer'>151 zaps</p>
                             <p className='hover:underline cursor-pointer'>by @{data.profiles.username}</p>
                             <p>{timeAgo(data.created_at)}</p>
                             <p className='hover:underline cursor-pointer'>93 comments</p>
                         </div>
                     </div>
-
                 </div>
-
             </div>
         </div>
     );

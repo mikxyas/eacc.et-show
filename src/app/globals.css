@@ -81,8 +81,8 @@ body {
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: #1e1e1e;
-  /* background: #300A24; */
+  /* background: #1e1e1e; */
+  background: #300A24;
 }
 
 a {
