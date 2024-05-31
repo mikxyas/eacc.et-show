@@ -2,6 +2,7 @@
 "use client"
 
 import Post from "@/components/Post";
+import { usePostsContext } from "@/context/posts";
 import { supabase } from "@/libs/supabase";
 import { Key } from "lucide-react";
 import Link from "next/link";
@@ -9,37 +10,39 @@ import React, { useEffect } from "react";
 
 export default function Home() {
   const [user, setUser] = React.useState({} as any);
-  const [posts, setPosts] = React.useState([] as any);
+  // const [posts, setPosts] = React.useState([] as any);
   const [loading, setLoading] = React.useState(true);
+  const { posts, setViewedPost } = usePostsContext();
 
-
-  async function getPosts() {
-
-    const res = await fetch('/api/post/get')
-    const data = await res.json()
-    setPosts(data)
-    setLoading(false)
-  }
-
-  async function getSesh() {
-    const res = await supabase.auth.getSession();
-    if (res) {
-      setUser(res.data.session?.user)
-    }
-  }
   useEffect(() => {
-    getSesh();
-    if (posts.length === 0 && loading === true) {
-      getPosts();
-    }
-  }, [loading, posts])
-  if (loading) {
-    return (
-      <div className='ml-10 sm:ml-0 font-mono'>
-        Loading...
-      </div>
-    )
-  }
+    setViewedPost(null)
+  }, [setViewedPost])
+
+  // async function getPosts() {
+
+  //   const res = await fetch('/api/post/get')
+  //   const data = await res.json()
+  //   setPosts(data)
+  //   setLoading(false)
+  // }
+
+  // async function getSesh() {
+  //   const res = await supabase.auth.getSession();
+  //   if (res) {
+  //     setUser(res.data.session?.user)
+  //   }
+  // }
+
+  // if (loading) {
+  //   return (
+  //     <div className="flex flex-col items-center justify-center">
+  //       <div className="bg-black md:w-2/3 h-46 p-3 font-mono">
+  //         Loading...
+  //       </div>
+
+  //     </div>
+  //   )
+  // }
   return (
     <div className=' md:ml-10 ml-2 font-mono flex flex-col'>
       {/* <div>{user?.email}</div> */}

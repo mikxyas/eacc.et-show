@@ -136,9 +136,28 @@ a {
   width: fit-content;
   margin-top: -12px;
   margin-bottom: 15px;
+  justify-content: center;
   color: #4e9a06;
   /* Ubuntu terminal text color */
   font-family: 'Ubuntu Mono', monospace;
+}
+
+textarea::-webkit-scrollbar {
+  width: 12px;
+}
+
+textarea::-webkit-scrollbar-track {
+  background: #444444;
+}
+
+textarea::-webkit-scrollbar-thumb {
+  background: black;
+  border-radius: 0px;
+  border: none;
+}
+
+textarea::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 .terminal-prompt {

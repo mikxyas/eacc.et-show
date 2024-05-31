@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
         console.log(response.data)
     }
     // send the user the new post
-    return NextResponse.json(response.data, {
+    return NextResponse.json(response, {
         status: 201,
     });
     // return NextResponse.redirect(url.origin, {
