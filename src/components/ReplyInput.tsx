@@ -1,6 +1,6 @@
 import { usePostsContext } from '@/context/posts'
 import { Zap } from 'lucide-react'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 export default function ReplyInput({ post_id, parent_id }) {
     const [showReply, setShowReply] = React.useState(false)
@@ -22,20 +22,28 @@ export default function ReplyInput({ post_id, parent_id }) {
         // })
     }
 
+    useEffect(() => {
+        parent_id === null && setShowReply(true)
+    }, [])
+
     return (
-        <div style={{ fontSize: '9pt' }}>
-            <button className='underline' onClick={() => setShowReply(!showReply)}>
-                {showReply
-                    ? 'hide'
-                    : 'reply'
-                }
-            </button>
-            {showReply
-                && <div style={{ width: '90%' }} className='mt-1 flex flex-col'>
+        <div className=' w-full' style={{ fontSize: '9pt' }}>
+            {parent_id != null &&
+                <button className='underline ' onClick={() => setShowReply(!showReply)}>
+                    {showReply
+                        ? 'hide'
+                        : 'reply'
+                    }
+                </button>
+            }
+
+            {
+                showReply == true
+                && <div style={{ width: '90%' }} className='mt-2 flex flex-col '>
                     <textarea value={reply} onChange={(e) => setReply(e.target.value)} className=' h-20   p-2 outline-none caret-green-500 ' placeholder='write your reply'></textarea>
-                    <button disabled={reply.length == 0} onClick={Send_Reply} className=' bg-green-800 self-end mt-1 text-white px-2 py-1  rounded-none '>reply</button>
+                    <button disabled={reply.length == 0} onClick={Send_Reply} className=' bg-green-700 self-start  text-white px-2 py-1  mb-3  rounded-none '>send</button>
                 </div>
             }
-        </div>
+        </div >
     )
 }

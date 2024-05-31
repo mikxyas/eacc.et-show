@@ -1,9 +1,10 @@
 "use client"
-import { createContext, useContext, useState } from 'react';
+import { supabase } from '@/libs/supabase';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 // Define the shape of your user context
 interface UserContextType {
-    user: string;
+    user: any;
     setUser: (user: string) => void;
 }
 
@@ -26,6 +27,15 @@ export const UserProvider = ({ children }:
     }>
 ) => {
     const [user, setUser] = useState<string>('');
+    async function init() {
+        const session = await supabase.auth.getSession()
+        if (session.data) {
+            setUser(session.data.session?.user)
+        }
+    }
+    useEffect(() => {
+        init()
+    }, [])
 
     return (
         <UserContext.Provider value={{ user, setUser }}>

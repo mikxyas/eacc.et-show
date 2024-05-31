@@ -17,7 +17,7 @@ const PostPage = (context) => {
 
     if (!viewedPost) {
         return <div className="flex flex-col items-center justify-center">
-            <div className="bg-black md:w-2/3 text-green-600 h-46 p-3 font-mono">
+            <div style={{ background: '#1e1e1e', alignSelf: 'center' }} className=" px-6 py-2 border-black border-4 md:w-2/3">
                 Loading...
             </div>
 
@@ -25,8 +25,8 @@ const PostPage = (context) => {
     }
 
     return (
-        <div className="items-center justify-center flex flex-col">
-            <div className="bg-black w-2/3 pt-4">
+        <div className="items-center justify-center flex flex-col mb-20">
+            <div style={{ background: '#1e1e1e', alignSelf: 'center' }} className="pt-4 px-6 py-2 border-black border-4 md:w-2/3">
                 <Post data={viewedPost} num={null} />
                 <div className="ml-10 -mt-1 mb-2">
                     <ReplyInput post_id={viewedPost.id} parent_id={null} />

@@ -1,12 +1,15 @@
 import { usePostsContext } from '@/context/posts';
+import { useUserContext } from '@/context/user';
 import { supabase } from '@/libs/supabase';
+import { UUID } from 'crypto';
 import { Zap } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 
 const Post = ({ data, num }: any) => {
-    const { openPost } = usePostsContext();
+    const { zap_post, zappedPosts, unZapPost } = usePostsContext();
+    const { user } = useUserContext()
     const router = useRouter()
     const postClicked = () => {
         // openPost(data.id);
@@ -40,6 +43,19 @@ const Post = ({ data, num }: any) => {
 
 
 
+    async function zapPost(post_id: number, zapped: UUID) {
+
+        const zappp = {
+            post_zapped: post_id,
+            zapper: user.id,
+            zapped: zapped,
+        }
+
+        await zap_post(zappp)
+        console.log(zappp)
+
+    }
+
     return (
 
         <div className='flex  mb-2'>
@@ -51,9 +67,17 @@ const Post = ({ data, num }: any) => {
             </div>
             <div className='font-sans '>
                 <div className='flex gap-1'>
-                    <div className='p-1'>
-                        <Zap className='hover:text-green-600  cursor-pointer zapppp' size={15} />
-                    </div>
+                    {zappedPosts.includes(data.id)
+                        ? <div onClick={() => unZapPost(data.id)} className='p-1'>
+                            <Zap className='text-green-600 hover:text-green-600 cursor-pointer zapppp' size={15} />
+                        </div>
+                        :
+                        <div onClick={() => zapPost(data.id, data.creator)} className='p-1'>
+                            <Zap className='hover:text-green-600 cursor-pointer zapppp' size={15} />
+                        </div>
+
+                    }
+
                     <div onClick={num != null ? postClicked : () => { }}>
                         {/* <Link href={`/post/${data.id}`}> */}
                         <div className="inline-flex items-baseline">
@@ -64,8 +88,8 @@ const Post = ({ data, num }: any) => {
                         </div>
                         {/* </Link> */}
                         <div className='flex gap-2 text-xs text-gray-200 mt-1'>
-                            <p className='hover:underline cursor-pointer'>151 zaps</p>
-                            <p className='hover:underline cursor-pointer'>by @{data.profiles.username}</p>
+                            <p className='hover:underline cursor-pointer'>{data.zap_count} zaps</p>
+                            <p className='hover:underline cursor-pointer'>by @{data.profile.username}</p>
                             <p>{timeAgo(data.created_at)}</p>
                             <p className='hover:underline cursor-pointer'>93 comments</p>
                         </div>

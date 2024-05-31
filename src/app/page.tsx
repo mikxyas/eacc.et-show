@@ -47,7 +47,7 @@ export default function Home() {
     <div className=' md:ml-10 ml-2 font-mono flex flex-col'>
       {/* <div>{user?.email}</div> */}
 
-      <div style={{ background: 'black', alignSelf: 'center' }} className=" md:w-2/3">
+      <div style={{ background: '#1e1e1e', alignSelf: 'center' }} className=" px-6 py-2 border-black border-4 md:w-2/3">
         <nav style={{ alignSelf: 'center' }} className=' font-mono mb-1'>
           <div className=' p-1  flex gap-2 justify-between'>
             <div className='flex gap-5 '>
