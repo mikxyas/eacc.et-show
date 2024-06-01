@@ -8,8 +8,8 @@ export default function Comment({ post_id, comment }: any) {
     const { zapComment, zappedComments, unZapComment } = usePostsContext()
 
     function timeAgo(createdAt: Date) {
-        const now = new Date();
-        const created = new Date(createdAt);
+        const now: any = new Date();
+        const created: any = new Date(createdAt);
         const diffInSeconds = Math.floor((now - created) / 1000);
 
         const intervals = [

@@ -18,8 +18,8 @@ const Post = ({ data, num }: any) => {
     }
 
     function timeAgo(createdAt: Date) {
-        const now = new Date();
-        const created = new Date(createdAt);
+        const now: any = new Date();
+        const created: any = new Date(createdAt);
         const diffInSeconds = Math.floor((now - created) / 1000);
 
         const intervals = [
