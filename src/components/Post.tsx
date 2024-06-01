@@ -75,7 +75,6 @@ const Post = ({ data, num }: any) => {
                         <div onClick={() => zapPost(data.id, data.creator)} className='p-1'>
                             <Zap className='hover:text-green-600 cursor-pointer zapppp' size={15} />
                         </div>
-
                     }
 
                     <div onClick={num != null ? postClicked : () => { }}>
@@ -89,7 +88,7 @@ const Post = ({ data, num }: any) => {
                         {/* </Link> */}
                         <div className='flex gap-2 text-xs text-gray-200 mt-1'>
                             <p className='hover:underline cursor-pointer'>{data.zap_count} zaps</p>
-                            <p className='hover:underline cursor-pointer'>by @{data.profile.username}</p>
+                            <p className='hover:underline cursor-pointer'>by @{data.profiles.username}</p>
                             <p>{timeAgo(data.created_at)}</p>
                             <p className='hover:underline cursor-pointer'>93 comments</p>
                         </div>

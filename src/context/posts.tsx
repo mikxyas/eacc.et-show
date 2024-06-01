@@ -17,6 +17,9 @@ interface UserContextType {
     zap_post: (zappp: object) => void;
     zappedPosts: [];
     unZapPost: (post_id: UUID) => void;
+    zapComment: (comment_id: UUID, replier: UUID) => void;
+    zappedComments: [];
+    unZapComment: (comment_id: UUID) => void;
 }
 
 // Create the user context
@@ -40,16 +43,44 @@ export const PostsProvider = ({ children }
     const [posts, setPosts] = useState<[]>([]);
     const [viewedPost, setViewedPost] = useState<any>(null)
     const [zappedPosts, setZappedPosts] = useState<any>([])
+    const [zappedComments, setZappedComments] = useState<any>([])
     const { user } = useUserContext()
     async function openPost(id: number) {
         // fetch with the comments nested
 
         fetch('/api/post/' + id, { method: 'GET' }).then(res => res.json()).then(data => {
-            setViewedPost(data);
+            if (data.data) {
+                setZappedComments(data.ids)
+                console.log(data)
+                setViewedPost(data.data);
+            } else {
+                console.log(data.error)
+            }
             console.log(data)
         })
-
     };
+
+    async function unZapComment(comment_id: UUID) {
+
+        const { error } = await supabase
+            .from('zaps')
+            .delete()
+            .eq('comment_zapped', comment_id)
+            .eq('zapper', user.id)
+        if (error) {
+            console.log(error)
+        } else {
+            const s = zappedComments.filter((id: UUID) => id != comment_id)
+            setZappedComments(s)
+            const newComments = viewedPost.comments.map((comment: any) => {
+                if (comment.id === comment_id) {
+                    comment.zap_count -= 1
+                }
+                return comment
+            })
+            setViewedPost({ ...viewedPost, comments: newComments })
+        }
+    }
 
     async function unZapPost(post_id: UUID) {
         const { error } = await supabase
@@ -61,6 +92,13 @@ export const PostsProvider = ({ children }
             console.log(error)
         } else {
             // remove post_id from zappedPosts
+            if (viewedPost.id === post_id) {
+                const updatedPost = {
+                    ...viewedPost,
+                    zap_count: viewedPost.zap_count - 1
+                }
+                setViewedPost(updatedPost)
+            }
             const s = zappedPosts.filter((id: UUID) => id != post_id)
             // update posts list 
             const newPostList = posts.map(post => {
@@ -81,6 +119,13 @@ export const PostsProvider = ({ children }
         if (error) {
             console.log(error)
         } else {
+            if (viewedPost.id === data[0].post_zapped) {
+                const updatedPost = {
+                    ...viewedPost,
+                    zap_count: viewedPost.zap_count + 1
+                }
+                setViewedPost(updatedPost)
+            }
             console.log(data)
             // updated zapped post's zap_count
             const s = [
@@ -98,7 +143,36 @@ export const PostsProvider = ({ children }
         }
     }
 
+    async function zapComment(comment_id: UUID, replier: UUID) {
+        const { data, error } = await supabase
+            .from('zaps')
+            .insert({
+                comment_zapped: comment_id,
+                zapper: user.id,
+                zapped: replier
+            })
+            .select()
+        if (error) {
+            console.log(error)
+        } else {
+            console.log(data)
+            // updated zapped post's zap_count
+            const s = [
+                ...zappedComments,
+                data[0].comment_zapped
+            ]
+            setZappedComments(s)
 
+            // update viewedposts.comments find the comment and increment the zap_count
+            const newComments = viewedPost.comments.map((comment: any) => {
+                if (comment.id === data[0].comment_zapped) {
+                    comment.zap_count += 1
+                }
+                return comment
+            })
+            setViewedPost({ ...viewedPost, comments: newComments })
+        }
+    }
     async function sendReply(formData: FormData) {
         const res = await fetch('/api/comment/new', {
             method: 'POST',
@@ -148,7 +222,7 @@ export const PostsProvider = ({ children }
     }, [])
 
     return (
-        <PostsContext.Provider value={{ unZapPost, zappedPosts, zap_post, setViewedPost, viewedPost, openPost, posts, setPosts, sendReply }}>
+        <PostsContext.Provider value={{ unZapComment, zappedComments, zapComment, unZapPost, zappedPosts, zap_post, setViewedPost, viewedPost, openPost, posts, setPosts, sendReply }}>
             {children}
         </PostsContext.Provider>
     );
