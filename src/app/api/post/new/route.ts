@@ -14,13 +14,14 @@ export async function POST(req: NextRequest) {
 
     const formData = await req.formData()
     const title = String(formData.get('title'))
-    const type = String(formData.get('type'))
+    // const type = String(formData.get('type'))
     const link = String(formData.get('link'))
+    const text = String(formData.get('text'))
     console.log(formData)
 
     const response = await supabase
         .from('posts')
-        .insert({ title: title, type: type, link: link, creator: session?.user.id })
+        .insert({ title: title, text: text, link: link, creator: session?.user.id })
         .select('*, profiles(*)')
     if (response.error) {
         console.log(response.error)

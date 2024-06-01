@@ -58,7 +58,7 @@ const Post = ({ data, num }: any) => {
 
     return (
 
-        <div className='flex  mb-2'>
+        <div className={num === null ? 'flex  mb-6 ' : 'flex  mb-2'}>
             <div className='flex'>
                 {num != null
                     && <p>{num + 1}.</p>
@@ -82,7 +82,9 @@ const Post = ({ data, num }: any) => {
                         <div className="inline-flex items-baseline">
                             <p className=" leading-5 mb-0 cursor-pointer">
                                 {data.title}
-                                <span className="text-gray-300 text-xs"> ({data.link})</span>
+                                {data.link != 'null' &&
+                                    <span className="text-gray-300 text-xs"> ({data.link})</span>
+                                }
                             </p>
                         </div>
                         {/* </Link> */}
@@ -90,8 +92,14 @@ const Post = ({ data, num }: any) => {
                             <p className='hover:underline cursor-pointer'>{data.zap_count} zaps</p>
                             <p className='hover:underline cursor-pointer'>by @{data.profiles.username}</p>
                             <p>{timeAgo(data.created_at)}</p>
-                            <p className='hover:underline cursor-pointer'>93 comments</p>
+                            <p className='hover:underline cursor-pointer'>{data.comment_count} comment{data.comment_count != 1 && 's'}</p>
                         </div>
+                        {data.text != null &&
+                            <div className='mt-2'>
+                                <p>{data.text}</p>
+                            </div>
+                        }
+
                     </div>
                 </div>
             </div>

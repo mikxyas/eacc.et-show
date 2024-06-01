@@ -40,8 +40,8 @@ export default function ReplyInput({ post_id, parent_id }) {
             {
                 showReply == true
                 && <div style={{ width: '90%' }} className='mt-2 flex flex-col '>
-                    <textarea value={reply} onChange={(e) => setReply(e.target.value)} className=' h-20   p-2 outline-none caret-green-500 ' placeholder='write your reply'></textarea>
-                    <button disabled={reply.length == 0} onClick={Send_Reply} className=' bg-green-700 self-start  text-white px-2 py-1  mb-3  rounded-none '>send</button>
+                    <textarea value={reply} onChange={(e) => setReply(e.target.value)} className=' h-20  p-2 outline-none caret-green-500 ' placeholder='write your reply'></textarea>
+                    <button disabled={reply.length == 0} onClick={Send_Reply} className=' bg-green-700 md:self-start self-end  text-white px-2 py-1  mb-3  rounded-none '>send</button>
                 </div>
             }
         </div >

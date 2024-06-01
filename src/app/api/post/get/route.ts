@@ -32,6 +32,7 @@ export async function GET(req: NextRequest) {
         .from('zaps')
         .select('post_zapped')
         .eq('zapper', session?.user.id)
+        .not('post_zapped', 'is', null) // Ensure the value is not null
     if (zappedPosts.error) {
         console.log(zappedPosts.error)
     } else {

@@ -1,4 +1,3 @@
-
 "use client"
 
 import { supabase } from '@/libs/supabase';
@@ -20,6 +19,8 @@ interface UserContextType {
     zapComment: (comment_id: UUID, replier: UUID) => void;
     zappedComments: [];
     unZapComment: (comment_id: UUID) => void;
+    postSortDate: string;
+    setPostSortDate: (date: string) => void;
 }
 
 // Create the user context
@@ -45,14 +46,26 @@ export const PostsProvider = ({ children }
     const [zappedPosts, setZappedPosts] = useState<any>([])
     const [zappedComments, setZappedComments] = useState<any>([])
     const { user } = useUserContext()
+    const [postSortDate, setPostSortDate] = useState<string>('day')
     async function openPost(id: number) {
         // fetch with the comments nested
 
         fetch('/api/post/' + id, { method: 'GET' }).then(res => res.json()).then(data => {
             if (data.data) {
-                setZappedComments(data.ids)
+                if (data.ids != null) {
+                    setZappedComments(data.ids)
+                }
                 console.log(data)
-                setViewedPost(data.data);
+                if (data.data.comments[0] == null) {
+                    const post = {
+                        ...data.data,
+                        comments: []
+                    }
+                    setViewedPost(post);
+                } else {
+                    setViewedPost(data.data);
+                }
+                // setViewedPost(data.data);
             } else {
                 console.log(data.error)
             }
@@ -92,14 +105,16 @@ export const PostsProvider = ({ children }
             console.log(error)
         } else {
             // remove post_id from zappedPosts
-            if (viewedPost.id === post_id) {
+            if (viewedPost?.id === post_id) {
                 const updatedPost = {
                     ...viewedPost,
                     zap_count: viewedPost.zap_count - 1
                 }
                 setViewedPost(updatedPost)
             }
+            // delete post_id from zappedPosts
             const s = zappedPosts.filter((id: UUID) => id != post_id)
+            console.log(s)
             // update posts list 
             const newPostList = posts.map(post => {
                 if (post.id === post_id) {
@@ -119,7 +134,7 @@ export const PostsProvider = ({ children }
         if (error) {
             console.log(error)
         } else {
-            if (viewedPost.id === data[0].post_zapped) {
+            if (viewedPost?.id === data[0].post_zapped) {
                 const updatedPost = {
                     ...viewedPost,
                     zap_count: viewedPost.zap_count + 1
@@ -157,12 +172,16 @@ export const PostsProvider = ({ children }
         } else {
             console.log(data)
             // updated zapped post's zap_count
-            const s = [
-                ...zappedComments,
-                data[0].comment_zapped
-            ]
-            setZappedComments(s)
-
+            console.log(zappedComments)
+            if (zappedComments != null) {
+                const s = [
+                    ...zappedComments,
+                    data[0].comment_zapped
+                ]
+                setZappedComments(s)
+            } else {
+                setZappedComments([data[0].comment_zapped])
+            }
             // update viewedposts.comments find the comment and increment the zap_count
             const newComments = viewedPost.comments.map((comment: any) => {
                 if (comment.id === data[0].comment_zapped) {
@@ -222,7 +241,7 @@ export const PostsProvider = ({ children }
     }, [])
 
     return (
-        <PostsContext.Provider value={{ unZapComment, zappedComments, zapComment, unZapPost, zappedPosts, zap_post, setViewedPost, viewedPost, openPost, posts, setPosts, sendReply }}>
+        <PostsContext.Provider value={{ postSortDate, setPostSortDate, unZapComment, zappedComments, zapComment, unZapPost, zappedPosts, zap_post, setViewedPost, viewedPost, openPost, posts, setPosts, sendReply }}>
             {children}
         </PostsContext.Provider>
     );

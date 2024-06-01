@@ -26,7 +26,7 @@ const PostPage = (context) => {
 
     return (
         <div className="items-center justify-center flex flex-col mb-20">
-            <div style={{ background: '#1e1e1e', alignSelf: 'center' }} className="pt-4 px-6 py-2 border-black border-4 md:w-2/3">
+            <div style={{ background: '#1e1e1e', alignSelf: 'center' }} className="pt-4 w-full md:px-1 md:py-1  md:w-2/3">
                 <Post data={viewedPost} num={null} />
                 <div className="ml-10 -mt-1 mb-2">
                     <ReplyInput post_id={viewedPost.id} parent_id={null} />

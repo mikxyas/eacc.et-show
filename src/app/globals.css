@@ -82,7 +82,8 @@ body {
 body {
   color: rgb(var(--foreground-rgb));
   /* background: #1e1e1e; */
-  background: #300A24;
+  /* background: #300A24; */
+  background: #101010;
 }
 
 a {
@@ -131,11 +132,12 @@ a {
 .terminal-container {
   /* background-color: #2e3436; */
   /* Ubuntu terminal background color */
-  padding: 20px;
+  padding: 10px;
+  margin-top: 1px;
   border-radius: 5px;
   width: fit-content;
-  margin-top: -12px;
-  margin-bottom: 15px;
+
+  margin-bottom: 3px;
   justify-content: center;
   color: #4e9a06;
   /* Ubuntu terminal text color */
