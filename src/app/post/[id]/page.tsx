@@ -6,7 +6,7 @@ import ReplyInput from "@/components/ReplyInput";
 import { usePostsContext } from "@/context/posts";
 import { useEffect, useState } from "react";
 
-const PostPage = (context) => {
+const PostPage = (context: any) => {
     const id = context.params.id
     const { viewedPost, openPost } = usePostsContext();
 
@@ -32,7 +32,7 @@ const PostPage = (context) => {
                     <ReplyInput post_id={viewedPost.id} parent_id={null} />
                 </div>
                 <div className="ml-4">
-                    {viewedPost.comments.length != 0 && viewedPost.comments.map((comment, index) => (
+                    {viewedPost.comments.length != 0 && viewedPost.comments.map((comment: object, index: number) => (
                         <Comment key={index} comment={comment} post_id={viewedPost.id} />
                     ))}
                 </div>

@@ -2,7 +2,7 @@ import { usePostsContext } from '@/context/posts'
 import { Zap } from 'lucide-react'
 import React, { useEffect } from 'react'
 
-export default function ReplyInput({ post_id, parent_id }) {
+export default function ReplyInput({ post_id, parent_id }: any) {
     const [showReply, setShowReply] = React.useState(false)
     const [reply, setReply] = React.useState('')
     const { sendReply } = usePostsContext()

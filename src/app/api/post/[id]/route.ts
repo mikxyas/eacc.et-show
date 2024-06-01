@@ -2,7 +2,7 @@ import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest, context) {
+export async function GET(req: NextRequest, context: any) {
     const id = context.params.id
     console.log(context)
     console.log('this is the id')
@@ -41,7 +41,7 @@ export async function GET(req: NextRequest, context) {
         } else {
             console.log(zappedComments.data)
 
-            const ids = []
+            const ids: any = []
             if (zappedComments.data.length === 0) {
                 newResp = {
                     ...response,

@@ -40,7 +40,7 @@ export async function GET(req: NextRequest) {
         console.log('-----------')
         console.log(zappedPosts.data)
         console.log('---------------')
-        const ids = []
+        const ids: any = []
         const listOfIds = zappedPosts.data.map((id) => {
             ids.push(id.post_zapped)
         })

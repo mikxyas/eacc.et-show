@@ -14,10 +14,10 @@ interface UserContextType {
     sendReply: (formData: FormData) => void;
     setViewedPost: (post: any) => void;
     zap_post: (zappp: object) => void;
-    zappedPosts: [];
+    zappedPosts: any;
     unZapPost: (post_id: UUID) => void;
     zapComment: (comment_id: UUID, replier: UUID) => void;
-    zappedComments: [];
+    zappedComments: any;
     unZapComment: (comment_id: UUID) => void;
     postSortDate: string;
     setPostSortDate: (date: string) => void;
@@ -116,7 +116,7 @@ export const PostsProvider = ({ children }
             const s = zappedPosts.filter((id: UUID) => id != post_id)
             console.log(s)
             // update posts list 
-            const newPostList = posts.map(post => {
+            const newPostList: any = posts.map((post: any) => {
                 if (post.id === post_id) {
                     post.zap_count -= 1
                 }

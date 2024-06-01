@@ -3,7 +3,7 @@ import React from 'react'
 import ReplyInput from './ReplyInput'
 import { usePostsContext } from '@/context/posts';
 
-export default function Comment({ post_id, comment }) {
+export default function Comment({ post_id, comment }: any) {
 
     const { zapComment, zappedComments, unZapComment } = usePostsContext()
 
