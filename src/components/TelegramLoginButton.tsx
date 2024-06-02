@@ -1,19 +1,24 @@
-// components/TelegramLoginButton.js
-import { useEffect } from 'react';
+import React from 'react';
+import useTelegramLogin from '../hooks/useTelegramLogin';
 
-const TelegramLoginButton = () => {
-    useEffect(() => {
-        // const script = document.createElement('script');
-        // script.src = "https://telegram.org/js/telegram-widget.js?22";
-        // script.async = true;
-        // script.setAttribute('data-telegram-login', 'e_accbot');
-        // script.setAttribute('data-size', 'large');
-        // // script.setAttribute('data-auth-url', `${window.location.origin}/auth/telegram/callback`);
-        // script.setAttribute('data-request-access', 'write');
-        // document.getElementById('telegram-login-button').appendChild(script);
-    }, []);
+interface TelegramLoginButtonProps {
+    botId: string;
+    onAuth: (user: any) => void;
+    options?: {
+        lang?: string;
+        corner_radius?: number;
+        request_access?: string;
+    };
+}
 
-    return <div id="telegram-login-button"></div>;
+const TelegramLoginButton: React.FC<TelegramLoginButtonProps> = ({ botId, onAuth, options }) => {
+    const { openTelegramLogin } = useTelegramLogin({ bot_id: botId, onAuth, ...options });
+
+    return (
+        <button onClick={openTelegramLogin}>
+            Login with Telegram
+        </button>
+    );
 };
 
 export default TelegramLoginButton;
