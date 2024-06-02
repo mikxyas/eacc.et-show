@@ -36,6 +36,7 @@ const useTelegramLogin = (options: UseTelegramLoginOptions) => {
         script.src = "https://telegram.org/js/telegram-widget.js?2";
         script.async = true;
         script.onload = () => {
+            // @ts-ignore
             window.Telegram.Login.init({
                 bot_id,
                 ...widgetOptions,
@@ -50,7 +51,11 @@ const useTelegramLogin = (options: UseTelegramLoginOptions) => {
     }, [bot_id, onAuth, widgetOptions]);
 
     const openTelegramLogin = () => {
+        // @ts-ignore
+
         if (window.Telegram && window.Telegram.Login) {
+            // @ts-ignore
+
             window.Telegram.Login.open();
         }
     };
