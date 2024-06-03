@@ -4,17 +4,17 @@ import React, { useState } from 'react';
 import ReplyInput from './ReplyInput';
 import { usePostsContext } from '@/context/posts';
 
-export default function Comment({ post_id, comment }) {
+export default function Comment({ post_id, comment }: any) {
     const { zapComment, zappedComments, unZapComment } = usePostsContext();
-    const [showReply, setShowReply] = useState({});
+    const [showReply, setShowReply] = useState<any>({});
 
-    const toggleReply = (commentId) => {
-        setShowReply(prev => ({ ...prev, [commentId]: !prev[commentId] }));
+    const toggleReply = (commentId: any) => {
+        setShowReply((prev: any) => ({ ...prev, [commentId]: !prev[commentId] }));
     };
 
-    const timeAgo = (createdAt) => {
-        const now = new Date();
-        const created = new Date(createdAt);
+    const timeAgo = (createdAt: any) => {
+        const now: any = new Date();
+        const created: any = new Date(createdAt);
         const diffInSeconds = Math.floor((now - created) / 1000);
 
         const intervals = [
@@ -35,7 +35,7 @@ export default function Comment({ post_id, comment }) {
         return 'just now';
     };
 
-    const renderComment = (comment) => {
+    const renderComment = (comment: any) => {
         const isReplyVisible = showReply[comment.id];
 
         return (
@@ -68,7 +68,7 @@ export default function Comment({ post_id, comment }) {
                 </div>
                 {comment.children && comment.children.length > 0 && (
                     <div className='ml-4'>
-                        {comment.children.map((child) => renderComment(child))}
+                        {comment.children.map((child: any) => renderComment(child))}
                     </div>
                 )}
             </div>
