@@ -40,10 +40,10 @@ const Navbar: React.FC = () => {
                             <button className='hover:bg-green-700 hover:text-gray-50 hover:pl-1 pl-1 pr-1'>home</button>
                         </Link>
                         {user != null
-                            ? <Link href='post/new'>
+                            ? <Link href='/post/new'>
                                 <button className='hover:bg-green-700 hover:text-gray-50 hover:pl-1 pr-1 pl-1'>submit</button>
                             </Link>
-                            : <Link href='login'>
+                            : <Link href='/login'>
                                 <button className='hover:bg-green-700 hover:text-gray-50 hover:pl-1 pr-1 pl-1'>submit</button>
                             </Link>
 

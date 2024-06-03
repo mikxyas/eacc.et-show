@@ -47,7 +47,7 @@ export default function Comment({ post_id, comment }: any) {
                             {comment.zap_count > 0 && <p className='hover:underline cursor-pointer'>{comment.zap_count}</p>}
                         </div>
                     ) : (
-                        <div onClick={() => zapComment(comment.id, comment.replier)} className='p-0 flex flex-col gap-1'>
+                        <div onClick={() => zapComment(comment.id, comment.replier)} className='p-0 flex flex-col items-center justify-center gap-1'>
                             <Zap className='hover:text-green-600 cursor-pointer zapppp' size={15} />
                             {comment.zap_count > 0 && <p className='hover:underline cursor-pointer'>{comment.zap_count}</p>}
                         </div>
@@ -55,12 +55,14 @@ export default function Comment({ post_id, comment }: any) {
                     <p className='hover:underline cursor-pointer'>@{comment.profiles.username}</p>
                     <p>{timeAgo(comment.created_at)}</p>
                 </div>
-                <div>
-                    <div style={{ fontSize: '9pt' }} className={comment.zap_count > 0 ? ' -mt-5 ml-5 md:w-2/3 flex items-center gap-1' : 'ml-5  md:w-2/3 flex items-center gap-1'}>
-                        <p className='h-fit'>{comment.content}</p>
-
-                        <MessageCircle onClick={() => toggleReply(comment.id)} className='text-gray-400 cursor-pointer hover:text-green-600' size={13} />
-
+                <div className={comment.zap_count > 0 ? ' -mt-5 ' : ''} style={{ fontSize: '9pt' }} >
+                    <div className='ml-5 md:w-2/3 inline-flex items-baseline  pr-1 md:pr-0'>
+                        <p className='h-fit '>
+                            {comment.content}
+                            <span className='ml-1'>
+                                <MessageCircle style={{ display: 'inherit' }} onClick={() => toggleReply(comment.id)} className='text-gray-400 cursor-pointer hover:text-green-600' size={13} />
+                            </span>
+                        </p>
                     </div>
                     <div className='ml-6'>
                         <ReplyInput showReply={isReplyVisible} toggleReply={() => toggleReply(comment.id)} parent_id={comment.id} post_id={post_id} />
