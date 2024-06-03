@@ -4,8 +4,11 @@ import { createContext, useContext, useEffect, useState } from 'react';
 
 // Define the shape of your user context
 interface UserContextType {
-    user: any;
-    setUser: (user: string) => void;
+    user: any | null;
+    setUser: (user: any) => void;
+    profile: any | null;
+    setProfile: (profile: any) => void;
+    logout: () => void;
 }
 
 // Create the user context
@@ -26,21 +29,34 @@ export const UserProvider = ({ children }:
         children: React.ReactNode;
     }>
 ) => {
-    const [user, setUser] = useState<string>('');
-    const [session, setSession] = useState<any>(null);
+    const [user, setUser] = useState<any | null>(null);
+    const [profile, setProfile] = useState<any | null>(null);
     async function init() {
         const session: any = await supabase.auth.getSession()
-        if (session.data) {
-            setSession(session)
+        if (session.data.session) {
             setUser(session.data.session?.user)
+            const { data, error } = await supabase.from('profiles').select().eq('user_id', session.data.session?.user.id).single()
+            if (data) {
+                console.log(data)
+                setProfile(data)
+            } else {
+                setProfile(null)
+            }
         }
     }
+
+    const logout = async () => {
+        await supabase.auth.signOut()
+        setUser(null)
+        setProfile(null)
+    }
+
     useEffect(() => {
         init()
     }, [])
 
     return (
-        <UserContext.Provider value={{ user, setUser }}>
+        <UserContext.Provider value={{ logout, profile, setProfile, user, setUser }}>
             {children}
         </UserContext.Provider>
     );

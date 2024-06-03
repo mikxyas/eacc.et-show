@@ -8,9 +8,17 @@ export async function middleware(req: NextRequest) {
     // update user's auth session
 
     const res = NextResponse.next()
-    // const supabase = createMiddlewareClient({ req, res })
+    const supabase = createMiddlewareClient({ req, res })
     // return await updateSession(request)
-    // const { data: { session } } = await supabase.auth.getSession()
+    const { data: { session } } = await supabase.auth.getSession()
+    // if session not exist and is path is in submit rewrite it with /login page
+    if (!session && req.url.includes('/submit')) {
+        return NextResponse.rewrite(new URL('/login', req.url))
+    }
+    if (session && req.url.includes('/login')) {
+        // redirect to base url then home
+        return NextResponse.redirect(new URL('/', req.url))
+    }
     // console.log(session)
     // if (!session) {
     //     // redirect the user to the login page

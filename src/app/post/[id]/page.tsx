@@ -48,7 +48,6 @@ const PostPage = (context: any) => {
             <div style={{ background: 'transparent', alignSelf: 'center' }} className=" px-6 py-2 border-gray-500 border-dashed border-4 md:w-2/3">
                 Loading...
             </div>
-
         </div>;
     }
 
@@ -56,7 +55,7 @@ const PostPage = (context: any) => {
         <div className="items-center justify-center flex flex-col ">
             <div style={{ background: 'transparent', alignSelf: 'center' }} className="pt-1 w-full md:px-1 pb-3 border-2 border-dashed  border-gray-500  md:w-2/3">
                 <Post data={viewedPost} num={null} />
-                <div className="ml-10 -mt-1 mb-2">
+                <div className="ml-7  mb-0">
                     <ReplyInput showReply={true} post_id={viewedPost.id} parent_id={null} />
                 </div>
                 <div className="ml-4">
@@ -64,7 +63,7 @@ const PostPage = (context: any) => {
                         <Comment key={index} comment={comment} post_id={viewedPost.id} />
                     ))}
                 </div>
-                {/* <Comment post_id={post.id} /> */}
+
             </div>
         </div>
 

@@ -3,21 +3,28 @@
 import { useUserContext } from '@/context/user';
 import useTelegramLogin from '@/hooks/useTelegramLogin';
 import { supabase } from '@/libs/supabase';
+import { Bell, Reply } from 'lucide-react';
 import Link from 'next/link';
+
 import React, { useEffect, useLayoutEffect } from 'react';
 
 const Navbar: React.FC = () => {
 
-    const { user } = useUserContext()
-    const signInWithGithub = async () => {
-        const { data, error } = await supabase.auth.signInWithOAuth({ provider: 'github' })
-        console.log(data, error)
+    const { user, profile, logout } = useUserContext()
+
+
+    const logoutUser = async () => {
+        // const { error } = await supabase.auth.signOut();
+        // if (error) console.log('Error logging out:', error.message)
+        logout()
+        window.location.reload()
+        // refresh the page
     }
 
     return (
         <div className=' '>
             <div className='flex flex-col justify-center items-center mt-5'>
-                <pre className=' text-4xs md:text-3xs' style={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace', lineHeight: '1.2', color: 'green' }}>
+                <pre className=' text-4xs md:text-3xs' style={{ whiteSpace: 'pre', fontFamily: 'monospace', lineHeight: '1.2', color: 'green', letterSpacing: 'normal', wordSpacing: 'normal' }}>
                     {`
 ███████╗██╗  ██╗ ██████╗ ██╗    ██╗   ███████╗    ██╗ █████╗  ██████╗ ██████╗   ███████╗████████╗
 ██╔════╝██║  ██║██╔═══██╗██║    ██║   ██╔════╝   ██╔╝██╔══██╗██╔════╝██╔════╝   ██╔════╝╚══██╔══╝
@@ -46,15 +53,26 @@ const Navbar: React.FC = () => {
                             : <Link href='/login'>
                                 <button className='hover:bg-green-700 hover:text-gray-50 hover:pl-1 pr-1 pl-1'>submit</button>
                             </Link>
-
                         }
 
                         {user != null
-                            ? <Link href='auth/logout'>
-                                <button className='hover:bg-green-700 hover:text-gray-50 hover:pl-1 pr-1 pl-1'>logout</button>
-                            </Link>
+                            ?
+                            <div className='flex items-center'>
+                                <div className='flex items-center self-end'>
+                                    <Link href='/user/profile'>
+                                        <button className='hover:bg-green-700 hover:text-gray-50 hover:pl-1 pr-1 pl-1'>{profile?.username}</button>
+                                    </Link>
+                                    |
+                                </div>
+
+                                <button onClick={logoutUser} className='hover:underline hover:text-gray-50 hover:pl-1 pr-1 pl-1'>logout</button>
+
+
+                            </div>
                             :
-                            <button onClick={signInWithGithub} className='hover:bg-green-700 hover:text-gray-50 hover:pl-1 pr-1 pl-1'>login(github)</button>
+                            <Link href='/login'>
+                                <button className='hover:bg-green-700 hover:text-gray-50 hover:pl-1 pr-1 pl-1'>login</button>
+                            </Link>
 
                         }
 

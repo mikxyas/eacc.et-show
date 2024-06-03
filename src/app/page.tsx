@@ -10,11 +10,11 @@ import Link from "next/link";
 import React, { useEffect } from "react";
 
 export default function Home() {
-  const [user, setUser] = React.useState({} as any);
+
   // const [posts, setPosts] = React.useState([] as any);
-  const [loading, setLoading] = React.useState(true);
+
   const { posts, setViewedPost } = usePostsContext();
-  const { postSortDate, setPostSortDate } = usePostsContext()
+
   useEffect(() => {
     setViewedPost(null)
   }, [setViewedPost])

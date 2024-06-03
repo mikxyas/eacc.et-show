@@ -55,7 +55,7 @@ export default function Comment({ post_id, comment }: any) {
                     <p className='hover:underline cursor-pointer'>@{comment.profiles.username}</p>
                     <p>{timeAgo(comment.created_at)}</p>
                 </div>
-                <div className={comment.zap_count > 0 ? ' -mt-5 ' : ''} style={{ fontSize: '9pt' }} >
+                <div className={comment.zap_count > 0 ? ' -mt-5 ' : ''} style={{ fontSize: '10pt' }} >
                     <div className='ml-5 md:w-2/3 inline-flex items-baseline  pr-1 md:pr-0'>
                         <p className='h-fit '>
                             {comment.content}

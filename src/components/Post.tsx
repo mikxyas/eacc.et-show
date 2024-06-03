@@ -47,7 +47,7 @@ const Post = ({ data, num }: any) => {
 
         const zappp = {
             post_zapped: post_id,
-            zapper: user.id,
+            zapper: user?.id,
             zapped: zapped,
         }
 
@@ -59,14 +59,9 @@ const Post = ({ data, num }: any) => {
     return (
 
         <div className={num === null ? 'flex  mb-6 ' : 'flex  mb-2'}>
-            <div className='flex'>
-                {num != null
-                    && <p>{num + 1}.</p>
-                }
 
-            </div>
-            <div className='font-sans '>
-                <div className='flex gap-1'>
+            <div className='font-sans w-full'>
+                <div className='flex gap-1 w-full'>
                     {user != null
                         ? <>
                             {zappedPosts.includes(data.id)
@@ -88,9 +83,9 @@ const Post = ({ data, num }: any) => {
                     }
 
 
-                    <div onClick={num != null ? postClicked : () => { }}>
+                    <div className='w-full'>
                         {/* <Link href={`/post/${data.id}`}> */}
-                        <div className="inline-flex items-baseline mb-1">
+                        <div onClick={num != null ? postClicked : () => { }} className="inline-flex  w-full items-baseline mb-1">
                             <p className=" leading-5 mb-0 cursor-pointer">
                                 {data.title}
                                 {data.link != 'null' &&
@@ -101,16 +96,21 @@ const Post = ({ data, num }: any) => {
                         {/* </Link> */}
                         <div style={{ color: "#828282" }} className='flex gap-2 text-xs   '>
                             <p className='hover:underline cursor-pointer'>{data.zap_count} zaps</p>
-                            <p className='hover:underline cursor-pointer'>by @{data.profiles.username}</p>
+                            <Link href={'/user/' + data.profiles.username} >
+                                <p className='hover:underline cursor-pointer'>by @{data.profiles.username}</p>
+
+                            </Link>
                             <p>{timeAgo(data.created_at)}</p>
-                            <p className='hover:underline cursor-pointer'>{data.comment_count} comment{data.comment_count != 1 && 's'}</p>
+                            <Link href={'/post/' + data.id}>
+                                <p className='hover:underline cursor-pointer'>{data.comment_count} comment{data.comment_count != 1 && 's'}</p>
+
+                            </Link>
                         </div>
                         {data.text != null &&
                             <div className='mt-2'>
-                                <p>{data.text}</p>
+                                <p style={{ fontSize: '10pt' }} >{data.text}</p>
                             </div>
                         }
-
                     </div>
                 </div>
             </div>
