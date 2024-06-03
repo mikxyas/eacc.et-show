@@ -27,9 +27,11 @@ export const UserProvider = ({ children }:
     }>
 ) => {
     const [user, setUser] = useState<string>('');
+    const [session, setSession] = useState<any>(null);
     async function init() {
         const session: any = await supabase.auth.getSession()
         if (session.data) {
+            setSession(session)
             setUser(session.data.session?.user)
         }
     }

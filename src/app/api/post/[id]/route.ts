@@ -28,39 +28,46 @@ export async function GET(req: NextRequest, context: any) {
             status: 500,
         });
     } else {
-        const zappedComments = await supabase
-            .from('comments')
-            .select('zaps!inner(comment_zapped)')
-            .eq('replier', session?.user.id)
-            .eq('post', id)
-            .not('zaps.comment_zapped', 'is', null) // Ensure the value is not null
+        if (session) {
+            const zappedComments = await supabase
+                .from('comments')
+                .select('zaps!inner(comment_zapped)')
+                .eq('replier', session?.user.id)
+                .eq('post', id)
+                .not('zaps.comment_zapped', 'is', null) // Ensure the value is not null
 
 
-        if (zappedComments.error) {
-            console.log(zappedComments.error)
-        } else {
-            console.log(zappedComments.data)
-
-            const ids: any = []
-            if (zappedComments.data.length === 0) {
-                newResp = {
-                    ...response,
-                    ids: null
-                }
+            if (zappedComments.error) {
+                console.log(zappedComments.error)
             } else {
-                const listOfIds = zappedComments.data.map((zap) => {
-                    console.log(zap.zaps[0].comment_zapped)
-                    ids.push(zap.zaps[0].comment_zapped)
-                })
-                newResp = {
-                    ...response,
-                    ids: ids
+                console.log(zappedComments.data)
+
+                const ids: any = []
+                if (zappedComments.data.length === 0) {
+                    newResp = {
+                        ...response,
+                        ids: null
+                    }
+                } else {
+                    const listOfIds = zappedComments.data.map((zap) => {
+                        console.log(zap.zaps[0].comment_zapped)
+                        ids.push(zap.zaps[0].comment_zapped)
+                    })
+                    newResp = {
+                        ...response,
+                        ids: ids
+                    }
                 }
             }
+            return NextResponse.json(newResp, {
+                status: 201,
+            });
+        } else {
+            return NextResponse.json(response, {
+                status: 201,
+            });
         }
-        return NextResponse.json(newResp, {
-            status: 201,
-        });
+
     }
     // send the user the new post
 

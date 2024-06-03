@@ -67,19 +67,30 @@ const Post = ({ data, num }: any) => {
             </div>
             <div className='font-sans '>
                 <div className='flex gap-1'>
-                    {zappedPosts.includes(data.id)
-                        ? <div onClick={() => unZapPost(data.id)} className='p-1'>
-                            <Zap className='text-green-600 hover:text-green-600 cursor-pointer zapppp' size={15} />
-                        </div>
+                    {user != null
+                        ? <>
+                            {zappedPosts.includes(data.id)
+                                ? <div onClick={() => unZapPost(data.id)} className='p-1'>
+                                    <Zap className='text-green-600 hover:text-green-600 cursor-pointer zapppp' size={15} />
+                                </div>
+                                :
+                                <div onClick={() => zapPost(data.id, data.creator)} className='p-1'>
+                                    <Zap className='hover:text-green-600 cursor-pointer zapppp' size={15} />
+                                </div>
+                            }
+                        </>
                         :
-                        <div onClick={() => zapPost(data.id, data.creator)} className='p-1'>
-                            <Zap className='hover:text-green-600 cursor-pointer zapppp' size={15} />
-                        </div>
+                        <Link href='/login'>
+                            <div className='p-1'>
+                                <Zap className='  cursor-pointer ' size={15} />
+                            </div>
+                        </Link>
                     }
+
 
                     <div onClick={num != null ? postClicked : () => { }}>
                         {/* <Link href={`/post/${data.id}`}> */}
-                        <div className="inline-flex items-baseline">
+                        <div className="inline-flex items-baseline mb-1">
                             <p className=" leading-5 mb-0 cursor-pointer">
                                 {data.title}
                                 {data.link != 'null' &&
@@ -88,7 +99,7 @@ const Post = ({ data, num }: any) => {
                             </p>
                         </div>
                         {/* </Link> */}
-                        <div className='flex gap-2 text-xs text-gray-200 mt-1'>
+                        <div style={{ color: "#828282" }} className='flex gap-2 text-xs   '>
                             <p className='hover:underline cursor-pointer'>{data.zap_count} zaps</p>
                             <p className='hover:underline cursor-pointer'>by @{data.profiles.username}</p>
                             <p>{timeAgo(data.created_at)}</p>

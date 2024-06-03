@@ -1,17 +1,23 @@
 "use client"
 
 import { useUserContext } from '@/context/user';
+import useTelegramLogin from '@/hooks/useTelegramLogin';
+import { supabase } from '@/libs/supabase';
 import Link from 'next/link';
 import React, { useEffect, useLayoutEffect } from 'react';
 
 const Navbar: React.FC = () => {
 
     const { user } = useUserContext()
+    const signInWithGithub = async () => {
+        const { data, error } = await supabase.auth.signInWithOAuth({ provider: 'github' })
+        console.log(data, error)
+    }
 
     return (
         <div className=' '>
             <div className='flex flex-col justify-center items-center mt-5'>
-                <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace', lineHeight: '1.2', color: 'green', fontSize: '6.5px' }}>
+                <pre className=' text-4xs md:text-3xs' style={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace', lineHeight: '1.2', color: 'green' }}>
                     {`
 ███████╗██╗  ██╗ ██████╗ ██╗    ██╗   ███████╗    ██╗ █████╗  ██████╗ ██████╗   ███████╗████████╗
 ██╔════╝██║  ██║██╔═══██╗██║    ██║   ██╔════╝   ██╔╝██╔══██╗██╔════╝██╔════╝   ██╔════╝╚══██╔══╝
@@ -33,13 +39,25 @@ const Navbar: React.FC = () => {
                         <Link href='/'>
                             <button className='hover:bg-green-700 hover:text-gray-50 hover:pl-1 pl-1 pr-1'>home</button>
                         </Link>
-                        <Link href='post/new'>
-                            <button className='hover:bg-green-700 hover:text-gray-50 hover:pl-1 pr-1 pl-1'>submit</button>
-                        </Link>
-                        <Link href='auth/logout'>
-                            <button className='hover:bg-green-700 hover:text-gray-50 hover:pl-1 pr-1 pl-1'>logout</button>
+                        {user != null
+                            ? <Link href='post/new'>
+                                <button className='hover:bg-green-700 hover:text-gray-50 hover:pl-1 pr-1 pl-1'>submit</button>
+                            </Link>
+                            : <Link href='login'>
+                                <button className='hover:bg-green-700 hover:text-gray-50 hover:pl-1 pr-1 pl-1'>submit</button>
+                            </Link>
 
-                        </Link>
+                        }
+
+                        {user != null
+                            ? <Link href='auth/logout'>
+                                <button className='hover:bg-green-700 hover:text-gray-50 hover:pl-1 pr-1 pl-1'>logout</button>
+                            </Link>
+                            :
+                            <button onClick={signInWithGithub} className='hover:bg-green-700 hover:text-gray-50 hover:pl-1 pr-1 pl-1'>login(github)</button>
+
+                        }
+
                     </div>
                 </div>
             </div>

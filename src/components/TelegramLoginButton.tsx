@@ -1,3 +1,4 @@
+"use client"
 import React from 'react';
 import useTelegramLogin from '../hooks/useTelegramLogin';
 
@@ -11,13 +12,16 @@ interface TelegramLoginButtonProps {
     };
 }
 
-const TelegramLoginButton: React.FC<TelegramLoginButtonProps> = ({ botId, onAuth, options }) => {
-    const { openTelegramLogin } = useTelegramLogin({ bot_id: botId, onAuth, ...options });
+const TelegramLoginButton: React.FC<TelegramLoginButtonProps> = () => {
+    const handleAuth = (user: any) => {
+        console.log(user)
+    }
+    const { openTelegramLogin } = useTelegramLogin({ bot_id: "7499969599:AAEg3y0kbuQW9y0tpGFMj09c6rL442aTWbY", onAuth: handleAuth });
 
     return (
-        <button onClick={openTelegramLogin}>
-            Login with Telegram
-        </button>
+        <div className="font-mono underline self-center">
+            <button onClick={openTelegramLogin} className="px-2 py-1 bg-green-700 border-dashed border-gray-700 border">Login with telegram</button>
+        </div>
     );
 };
 

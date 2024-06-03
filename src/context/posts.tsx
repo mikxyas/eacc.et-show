@@ -49,7 +49,6 @@ export const PostsProvider = ({ children }
     const [postSortDate, setPostSortDate] = useState<string>('day')
     async function openPost(id: number) {
         // fetch with the comments nested
-
         fetch('/api/post/' + id, { method: 'GET' }).then(res => res.json()).then(data => {
             if (data.data) {
                 if (data.ids != null) {
@@ -74,7 +73,6 @@ export const PostsProvider = ({ children }
     };
 
     async function unZapComment(comment_id: UUID) {
-
         const { error } = await supabase
             .from('zaps')
             .delete()
@@ -206,6 +204,8 @@ export const PostsProvider = ({ children }
             console.log(data.data[0])
             const newPosts: any = posts.map((post: any) => {
                 if (post.id === data.data[0].post) {
+                    // update the comment_count of the post
+                    post.comment_count += 1
                     viewedPost.comments.push(data.data[0])
                 }
                 return post
@@ -219,21 +219,21 @@ export const PostsProvider = ({ children }
 
     async function getPosts() {
         const sesh = await supabase.auth.getSession();
-        if (sesh.data.session) {
 
-            const res = await fetch('/api/post/get')
-            const data = await res.json()
-            if (data.ids) {
-                setZappedPosts(data.ids)
-            }
-            if (data.data) {
-                console.log(data)
-                setPosts(data.data)
-            } else {
-                console.log(data.error)
-            }
 
+        const res = await fetch('/api/post/get')
+        const data = await res.json()
+        if (data.ids) {
+            setZappedPosts(data.ids)
         }
+        if (data.data) {
+            console.log(data)
+            setPosts(data.data)
+        } else {
+            console.log(data.error)
+        }
+
+
     }
 
     useEffect(() => {

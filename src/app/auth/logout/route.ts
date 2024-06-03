@@ -18,6 +18,8 @@ export async function GET(req: NextRequest) {
     if (response.error) {
         console.log(response.error)
     }
+    // refresh the page
+
     return NextResponse.redirect(url.origin, {
         status: 301,
     });

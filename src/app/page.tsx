@@ -50,7 +50,7 @@ export default function Home() {
   return (
     <div className=' md:ml-10  font-mono flex flex-col'>
       {/* <div>{user?.email}</div> */}
-      <TelegramLoginButton botId="7499969599:AAEg3y0kbuQW9y0tpGFMj09c6rL442aTWbY" onAuth={handleAuth} />
+      {/* <TelegramLoginButton botId="7499969599:AAEg3y0kbuQW9y0tpGFMj09c6rL442aTWbY" onAuth={handleAuth} /> */}
 
       <div style={{ background: '#1e1e1e', alignSelf: 'center' }} className=" px-3 py-1 w-full  md:w-2/3 ">
         {/* <nav style={{ alignSelf: 'center' }} className=' font-mono mb-1'> */}
