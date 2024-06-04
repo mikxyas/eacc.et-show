@@ -13,15 +13,15 @@ export default function Home() {
 
   // const [posts, setPosts] = React.useState([] as any);
 
-  const { posts, setViewedPost } = usePostsContext();
+  const { posts, setViewedPost, page, setPage, setPosts, loading } = usePostsContext();
+
+  // 
 
   useEffect(() => {
     setViewedPost(null)
   }, [setViewedPost])
 
-  const handleAuth = (user: any) => {
-    console.log(user)
-  }
+
   // async function getPosts() {
 
   //   const res = await fetch('/api/post/get')
@@ -36,6 +36,59 @@ export default function Home() {
   //     setUser(res.data.session?.user)
   //   }
   // }
+
+  const incrementPage = async () => {
+    console.log(page)
+    if (page > 0) {
+      await setPage(page + 1)
+      setPosts(null)
+    } else {
+      setPage(1)
+    }
+
+  }
+
+  const decrementPage = async () => {
+    console.log(page)
+    if (page > 1) {
+      await setPage(page - 1)
+      setPosts(null)
+    } else {
+      setPage(1)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center">
+        <div style={{ background: 'transparent', alignSelf: 'center' }} className=" px-6 py-2 border-gray-500 border-dashed border-4 md:w-2/3">
+          Loading...
+        </div>
+      </div>
+    )
+  }
+
+  if (posts == null) {
+    return (
+      <div>
+        <div className="flex flex-col items-center justify-center">
+          <div style={{ background: 'transparent', alignSelf: 'center' }} className=" px-6 py-2 border-gray-500 border-dashed border-4 md:w-2/3">
+            No posts found
+          </div>
+        </div>
+        <div className='flex justify-center items-center gap-2 mt-2'>
+          <Link href={`/?p=${page > 1 ? page - 1 : 1}`}>
+            <button disabled={page == 1} onClick={() => decrementPage()} className={page === 1 ? ` p-1 text-gray-50 bg-gray-600` : ' p-1 text-gray-50 bg-green-700'}>prev</button>
+          </Link>
+          <Link href={`/?p=${page > 0 ? page + 1 : 1}`}>
+            <button onClick={() => incrementPage()} className='bg-green-700 p-1 text-gray-50'>next</button>
+          </Link>
+        </div>
+      </div>
+
+
+    )
+  }
 
   // if (loading) {
   //   return (
@@ -89,6 +142,15 @@ export default function Home() {
         <Post />
         <Post /> */}
 
+      </div>
+      {/* create buttons to show pagination using the page state */}
+      <div className='flex justify-center items-center gap-2 mt-2'>
+        <Link href={`/?p=${page > 1 ? page - 1 : 1}`}>
+          <button disabled={page == 1} onClick={() => decrementPage()} className={page === 1 ? ` p-1 text-gray-50 bg-gray-600` : ' p-1 text-gray-50 bg-green-700'}>prev</button>
+        </Link>
+        <Link href={`/?p=${page > 0 ? page + 1 : 1}`}>
+          <button onClick={() => incrementPage()} className='bg-green-700 p-1 text-gray-50'>next</button>
+        </Link>
       </div>
     </div>
   );

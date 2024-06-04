@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 
 const Post = ({ data, num }: any) => {
-    const { zap_post, zappedPosts, unZapPost } = usePostsContext();
+    const { zap_post, zappedPosts, unZapPost, page } = usePostsContext();
     const { user } = useUserContext()
     const router = useRouter()
     const postClicked = () => {
@@ -87,7 +87,7 @@ const Post = ({ data, num }: any) => {
                         {/* <Link href={`/post/${data.id}`}> */}
                         <div onClick={num != null ? postClicked : () => { }} className="inline-flex  w-full items-baseline mb-1">
                             <p className=" leading-5 mb-0 cursor-pointer">
-                                {data.title}
+                                <span className=' text-2xs'>{(num + 1) + ((page - 1) * 10)}.</span> {data.title}
                                 {data.link != 'null' &&
                                     <span className="text-gray-300 text-xs"> ({data.link})</span>
                                 }
@@ -98,12 +98,10 @@ const Post = ({ data, num }: any) => {
                             <p className='hover:underline cursor-pointer'>{data.zap_count} zaps</p>
                             <Link href={'/user/' + data.profiles.username} >
                                 <p className='hover:underline cursor-pointer'>by @{data.profiles.username}</p>
-
                             </Link>
                             <p>{timeAgo(data.created_at)}</p>
                             <Link href={'/post/' + data.id}>
                                 <p className='hover:underline cursor-pointer'>{data.comment_count} comment{data.comment_count != 1 && 's'}</p>
-
                             </Link>
                         </div>
                         {data.text != null &&

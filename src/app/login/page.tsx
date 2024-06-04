@@ -5,7 +5,9 @@ import { Github } from "lucide-react"
 // import { login, signup } from './actions'
 const LoginPage = () => {
     const signInWithGithub = async () => {
-        const { data, error } = await supabase.auth.signInWithOAuth({ provider: 'github' })
+        const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: 'github'
+        })
         console.log(data, error)
     }
     return (

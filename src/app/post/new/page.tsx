@@ -1,27 +1,26 @@
 "use client"
 
 import TelegramLoginButton from '@/components/TelegramLoginButton'
+import { usePostsContext } from '@/context/posts'
+import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 
 export default function NewPost() {
     const [formData, setFormData] = useState({} as any)
+    const { create_post } = usePostsContext()
     const handleChange = (e: any) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
+    const router = useRouter()
 
     const Post = async () => {
         const formDataToSend = new FormData();
         for (const key in formData) {
             formDataToSend.append(key, formData[key]);
         }
-        console.log(formData)
-        fetch('/api/post/new', {
-            method: 'POST',
-            body: formDataToSend
-        }).then(res => res.json())
-            .then(data => console.log(data))
+        const id = await create_post(formDataToSend)
+        router.push('/post/' + id)
     }
-
 
     return (
         <div className='flex flex-col ' >

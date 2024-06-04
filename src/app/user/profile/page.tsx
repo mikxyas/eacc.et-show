@@ -1,6 +1,7 @@
 "use client"
 import { useUserContext } from '@/context/user'
 import { supabase } from '@/libs/supabase'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
@@ -54,7 +55,12 @@ export default function UserProfile() {
                         <div className='w-full md:w-1/2'>
                             <textarea style={{ background: '#1e1e1e' }} value={formData.about} placeholder='bio' onChange={(e) => handleChange(e)} className='w-full h-20 outline-none p-2' name="about" />
                         </div>
-                        <button onClick={updateProfile} className='py-2 px-2 bg-green-700 border border-dashed border-gray-700 ' >Update Profile</button>
+                        <div className='flex'>
+                            <button onClick={updateProfile} className='py-2 px-2 bg-green-700 border border-dashed border-gray-700 ' >Update Profile</button>
+                            <Link href={'/user/' + profile.username}>
+                                <button className='py-2 px-2 bg-gray-700 border border-dashed border-gray-700 ' >View Profile</button>
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>

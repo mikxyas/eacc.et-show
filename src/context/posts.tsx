@@ -7,10 +7,10 @@ import { UUID } from 'crypto';
 
 // Define the shape of your user context
 interface UserContextType {
-    posts: [];
+    posts: any;
     viewedPost: any;
     openPost: (id: number) => void;
-    setPosts: (posts: []) => void;
+    setPosts: (posts: any) => void;
     sendReply: (formData: FormData) => void;
     setViewedPost: (post: any) => void;
     zap_post: (zappp: object) => void;
@@ -21,6 +21,11 @@ interface UserContextType {
     unZapComment: (comment_id: UUID) => void;
     postSortDate: string;
     setPostSortDate: (date: string) => void;
+    create_post: (formDataToSend: any) => any;
+    page: number;
+    setPage: (page: number) => void;
+    loading: boolean
+    setLoading: (loading: boolean) => void
 }
 
 // Create the user context
@@ -47,6 +52,9 @@ export const PostsProvider = ({ children }
     const [zappedComments, setZappedComments] = useState<any>([])
     const { user } = useUserContext()
     const [postSortDate, setPostSortDate] = useState<string>('day')
+    const [page, setPage] = useState<number>(1)
+    const [loading, setLoading] = useState<boolean>(true)
+
     async function openPost(id: number) {
         // fetch with the comments nested
         fetch('/api/post/' + id, { method: 'GET' }).then(res => res.json()).then(data => {
@@ -156,6 +164,24 @@ export const PostsProvider = ({ children }
         }
     }
 
+    async function create_post(formDataToSend: FormData) {
+        let id
+        await fetch('/api/post/new', {
+            method: 'POST',
+            body: formDataToSend
+        }).then(res => res.json())
+            .then(data => {
+                console.log(data[0])
+                // how will content get featured in the feed
+
+                id = data[0].id
+            })
+        getPosts()
+        return id
+    }
+
+
+
     async function zapComment(comment_id: UUID, replier: UUID) {
         const { data, error } = await supabase
             .from('zaps')
@@ -218,10 +244,22 @@ export const PostsProvider = ({ children }
     }
 
     async function getPosts() {
-        const sesh = await supabase.auth.getSession();
-
-
-        const res = await fetch('/api/post/get')
+        setLoading(true)
+        // const url = new URL(window.location.href);
+        // const params = new URLSearchParams(url.search);
+        // let urlP
+        // const p = params.get('p')
+        // if (p && parseInt(p) != 0) {
+        //     setPage(parseInt(p))
+        //     urlP = parseInt(p)
+        //     console.log('page set to ' + p)
+        // }
+        // let res
+        // if (p) {
+        const res = await fetch('/api/post/get?p=' + page)
+        // } else {
+        //     res = await fetch('/api/post/get?p=1')
+        // }
         const data = await res.json()
         if (data.ids) {
             setZappedPosts(data.ids)
@@ -232,16 +270,14 @@ export const PostsProvider = ({ children }
         } else {
             console.log(data.error)
         }
-
-
+        setLoading(false)
     }
-
     useEffect(() => {
         getPosts();
-    }, [])
+    }, [page])
 
     return (
-        <PostsContext.Provider value={{ postSortDate, setPostSortDate, unZapComment, zappedComments, zapComment, unZapPost, zappedPosts, zap_post, setViewedPost, viewedPost, openPost, posts, setPosts, sendReply }}>
+        <PostsContext.Provider value={{ loading, setLoading, page, setPage, create_post, postSortDate, setPostSortDate, unZapComment, zappedComments, zapComment, unZapPost, zappedPosts, zap_post, setViewedPost, viewedPost, openPost, posts, setPosts, sendReply }}>
             {children}
         </PostsContext.Provider>
     );
