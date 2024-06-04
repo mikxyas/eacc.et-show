@@ -7,8 +7,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 
-const Post = ({ data, num }: any) => {
-    const { zap_post, zappedPosts, unZapPost, page } = usePostsContext();
+const Post = ({ data, num, page }: any) => {
+    const { zap_post, zappedPosts, unZapPost } = usePostsContext();
     const { user } = useUserContext()
     const router = useRouter()
     const postClicked = () => {

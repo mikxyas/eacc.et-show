@@ -27,17 +27,19 @@ export default function User(context: any) {
 
     return (
         <div className='font-mono gap-4 px-3 mt-10 flex-col items-center flex w-full justify-center'>
+            <p>{profile.name}</p>
             @{profile.username}
+
             <div style={{ background: '#1e1e1e' }} className='px-2 py-1 '>
                 {profile.about}
             </div>
             <div className='flex'>
-                <Link href='/posts/user/id'>
-                    <button className='py-1 px-4  border border-dashed border-gray-700'>Posts</button>
+                <Link href={'/post/user/' + profile.user_id}>
+                    <button className='py-1 px-4  border border-dashed border-gray-700'>sumbissions</button>
                 </Link>
-                <Link href='/comments/user/id'>
+                {/* <Link href={'/comments/user/' + profile.user_id}>
                     <button className='py-1 px-4  border border-dashed border-gray-700'>Comments</button>
-                </Link>
+                </Link> */}
             </div>
         </div>
     )
