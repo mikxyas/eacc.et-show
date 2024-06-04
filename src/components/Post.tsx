@@ -104,7 +104,7 @@ const Post = ({ data, num }: any) => {
                                 <p className='hover:underline cursor-pointer'>{data.comment_count} comment{data.comment_count != 1 && 's'}</p>
                             </Link>
                         </div>
-                        {data.text != null &&
+                        {data.text != null && data.text != 'null' &&
                             <div className='mt-2'>
                                 <p style={{ fontSize: '10pt' }} >{data.text}</p>
                             </div>

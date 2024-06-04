@@ -16,7 +16,7 @@ const Navbar: React.FC = () => {
     const logoutUser = async () => {
         // const { error } = await supabase.auth.signOut();
         // if (error) console.log('Error logging out:', error.message)
-        logout()
+        await logout()
         window.location.reload()
         // refresh the page
     }
@@ -60,7 +60,7 @@ const Navbar: React.FC = () => {
                             <div className='flex items-center'>
                                 <div className='flex items-center self-end'>
                                     <Link href='/user/profile'>
-                                        <button className='hover:bg-green-700 hover:text-gray-50 hover:pl-1 pr-1 pl-1'>{profile?.username}</button>
+                                        <button className='hover:bg-green-700 hover:text-gray-50 hover:pl-1 pr-1 pl-1'>{profile?.username.length == 0 ? 'profile' : profile?.username}</button>
                                     </Link>
                                     |
                                 </div>

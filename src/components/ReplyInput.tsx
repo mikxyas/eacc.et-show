@@ -37,12 +37,12 @@ export default function ReplyInput({ post_id, parent_id, showReply, toggleReply 
             {
                 showReply == true
                 && <div style={{ width: '90%' }} className='mt-2 w-full flex  flex-col '>
-                    <textarea style={{ background: '#1e1e1e' }} value={reply} onChange={(e) => setReply(e.target.value)} className=' h-20  p-2 outline-none caret-green-500 ' placeholder='write your reply'></textarea>
-                    <div className='gap-1 self-end'>
+                    <textarea style={{ background: '#1e1e1e' }} value={reply} onChange={(e) => setReply(e.target.value)} className=' h-20  p-2 outline-none border-gray-500 border caret-green-500 ' placeholder='write your reply'></textarea>
+                    <div className='gap-1 mt-2 self-end'>
                         {parent_id !== null &&
-                            <button onClick={toggleReply} className=' bg-gray-700 md:self-start self-end  text-white px-2 py-1  mb-3  rounded-none cursor-pointer'>cancel</button>
+                            <button onClick={toggleReply} className=' bg-gray-800 md:self-start self-end  text-white px-2 py-1  mb-3  rounded-none cursor-pointer'>cancel</button>
                         }
-                        <button disabled={reply.length == 0} onClick={Send_Reply} className=' bg-green-700 md:self-start self-end  text-white px-2 py-1  mb-3  rounded-none cursor-pointer '>send</button>
+                        <button disabled={reply.length == 0} onClick={Send_Reply} className=' bg-gray-700  md:self-start self-end  text-white px-2 py-1  mb-3  rounded-none cursor-pointer '>send</button>
 
 
                     </div>

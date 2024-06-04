@@ -76,12 +76,12 @@ export default function Home() {
             No posts found
           </div>
         </div>
-        <div className='flex justify-center items-center gap-2 mt-2'>
+        <div className='flex justify-center items-center gap-1 mt-2'>
           <Link href={`/?p=${page > 1 ? page - 1 : 1}`}>
-            <button disabled={page == 1} onClick={() => decrementPage()} className={page === 1 ? ` p-1 text-gray-50 bg-gray-600` : ' p-1 text-gray-50 bg-green-700'}>prev</button>
+            <button disabled={page == 1} onClick={() => decrementPage()} className={page === 1 ? ` p-1 text-gray-50 bg-gray-600` : ' p-1 text-gray-50 bg-green-900'}>prev</button>
           </Link>
           <Link href={`/?p=${page > 0 ? page + 1 : 1}`}>
-            <button onClick={() => incrementPage()} className='bg-green-700 p-1 text-gray-50'>next</button>
+            <button onClick={() => incrementPage()} className='bg-green-900 p-1 text-gray-50'>next</button>
           </Link>
         </div>
       </div>
@@ -144,12 +144,12 @@ export default function Home() {
 
       </div>
       {/* create buttons to show pagination using the page state */}
-      <div className='flex justify-center items-center gap-2 mt-2'>
+      <div className='flex justify-center items-center gap-1 mt-2 pb-5'>
         <Link href={`/?p=${page > 1 ? page - 1 : 1}`}>
-          <button disabled={page == 1} onClick={() => decrementPage()} className={page === 1 ? ` p-1 text-gray-50 bg-gray-600` : ' p-1 text-gray-50 bg-green-700'}>prev</button>
+          <button disabled={page == 1} onClick={() => decrementPage()} className={page === 1 ? ` p-1 text-gray-50 bg-gray-600` : ' p-1 text-gray-50 bg-green-900'}>prev</button>
         </Link>
         <Link href={`/?p=${page > 0 ? page + 1 : 1}`}>
-          <button onClick={() => incrementPage()} className='bg-green-700 p-1 text-gray-50'>next</button>
+          <button onClick={() => incrementPage()} className='bg-green-900 p-1 text-gray-50'>next</button>
         </Link>
       </div>
     </div>

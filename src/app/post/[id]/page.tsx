@@ -53,8 +53,11 @@ const PostPage = (context: any) => {
 
     return (
         <div className="items-center justify-center flex flex-col ">
-            <div style={{ background: 'transparent', alignSelf: 'center' }} className="pt-1 w-full md:px-1 pb-3 border-2 border-dashed  border-gray-500  md:w-2/3">
-                <Post data={viewedPost} num={null} />
+            <div style={{ background: '#1e1e1e', alignSelf: 'center' }} className="pt-3 w-full md:px-1 pb-3   md:w-2/3">
+                <div className="pl-2">
+                    <Post data={viewedPost} num={null} />
+
+                </div>
                 <div className="ml-7  mb-0">
                     <ReplyInput showReply={true} post_id={viewedPost.id} parent_id={null} />
                 </div>
