@@ -47,6 +47,10 @@ export default function Home() {
 
   }
 
+  async function updateSort() {
+    await setSortByNew(!sortByNew)
+  }
+
   const decrementPage = async () => {
     console.log(page)
     if (page > 1) {
@@ -95,25 +99,14 @@ export default function Home() {
       {/* <TelegramLoginButton botId="7499969599:AAEg3y0kbuQW9y0tpGFMj09c6rL442aTWbY" onAuth={handleAuth} /> */}
       <div style={{ background: '#1e1e1e', alignSelf: 'center' }} className=" px-3 py-1 w-full  md:w-2/3 ">
         <span>sort by </span>
-        <button onClick={() => setSortByNew(!sortByNew)} className="self-start underline">
-          {sortByNew ? ' new' : ' top'}
+        <button onClick={() => updateSort()} className="self-start underline">
+          {!sortByNew ? ' new' : ' top'}
         </button>
-
-        {posts?.map((post: any, index: number) => (
-          <Post key={post.id} data={post} num={index} page={page} />
-        ))
-
-
+        {
+          posts?.map((post: any, index: number) => (
+            <Post key={post.id} data={post} num={index} page={page} />
+          ))
         }
-        {/* <Post />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-        <Post /> */}
-
       </div>
       {/* create buttons to show pagination using the page state */}
       <div className='flex justify-center items-center gap-1 mt-2 pb-5'>

@@ -19,13 +19,14 @@ export async function GET(req: NextRequest) {
 
     const page: any = params.get('p')
     const sortbynew = params.get('new')
-    console.log(sortbynew)
+
     const p_limit: any = 10 * parseInt(page)
     const p_offset = p_limit == 10 ? 0 : 10 * (parseInt(page) - 1)
     let response
-    if (Boolean(sortbynew)) {
+    if (sortbynew == 'true') {
         response = await supabase.rpc('get_newest_posts', { p_limit: p_limit, p_offset: p_offset })
     } else {
+        console.log('getting top posts')
         response = await supabase.rpc('get_posts_with_zap_counts', { p_limit: p_limit, p_offset: p_offset })
     }
     if (response.error) {
