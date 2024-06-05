@@ -26,7 +26,7 @@ export async function GET(req: NextRequest, context: any) {
         p_limit = 10
         p_offset = 0
     }
-    const { data, error } = await supabase.rpc('get_users_posts_with_zap_counts', { user_id: id, p_limit: p_limit, p_offset: p_offset })
+    const { data, error } = await supabase.rpc('get_users_posts_with_zap_counts', { requested_users_id: id, p_limit: p_limit, p_offset: p_offset })
 
     if (error) {
         return NextResponse.json(error, {

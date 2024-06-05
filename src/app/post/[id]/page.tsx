@@ -55,7 +55,7 @@ const PostPage = (context: any) => {
         <div className="items-center justify-center flex flex-col ">
             <div style={{ background: '#1e1e1e', alignSelf: 'center' }} className="pt-3 w-full md:px-1 pb-3   md:w-2/3">
                 <div className="pl-2">
-                    <Post data={viewedPost} num={null} />
+                    <Post data={viewedPost} num={null} page={null} />
 
                 </div>
                 <div className="ml-7  mb-0">

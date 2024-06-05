@@ -12,8 +12,7 @@ import React, { useEffect } from "react";
 export default function Home() {
 
   // const [posts, setPosts] = React.useState([] as any);
-
-  const { posts, setViewedPost, page, setPage, setPosts, loading } = usePostsContext();
+  const { posts, setViewedPost, page, setPage, setPosts, loading, sortByNew, setSortByNew } = usePostsContext();
 
   // 
 
@@ -90,22 +89,15 @@ export default function Home() {
     )
   }
 
-  // if (loading) {
-  //   return (
-  //     <div className="flex flex-col items-center justify-center">
-  //       <div className="bg-black md:w-2/3 h-46 p-3 font-mono">
-  //         Loading...
-  //       </div>
-
-  //     </div>
-  //   )
-  // }
   return (
     <div className=' md:ml-10  font-mono flex flex-col'>
       {/* <div>{user?.email}</div> */}
       {/* <TelegramLoginButton botId="7499969599:AAEg3y0kbuQW9y0tpGFMj09c6rL442aTWbY" onAuth={handleAuth} /> */}
-
       <div style={{ background: '#1e1e1e', alignSelf: 'center' }} className=" px-3 py-1 w-full  md:w-2/3 ">
+        <span>sort by </span>
+        <button onClick={() => setSortByNew(!sortByNew)} className="self-start underline">
+          {sortByNew ? ' new' : ' top'}
+        </button>
 
         {posts?.map((post: any, index: number) => (
           <Post key={post.id} data={post} num={index} page={page} />

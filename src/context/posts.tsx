@@ -26,6 +26,8 @@ interface UserContextType {
     setPage: (page: number) => void;
     loading: boolean
     setLoading: (loading: boolean) => void
+    sortByNew: boolean
+    setSortByNew: (sortByNew: boolean) => void;
 }
 
 // Create the user context
@@ -54,6 +56,7 @@ export const PostsProvider = ({ children }
     const [postSortDate, setPostSortDate] = useState<string>('day')
     const [page, setPage] = useState<number>(1)
     const [loading, setLoading] = useState<boolean>(true)
+    const [sortByNew, setSortByNew] = useState(false);
 
     async function openPost(id: number) {
         // fetch with the comments nested
@@ -245,21 +248,8 @@ export const PostsProvider = ({ children }
 
     async function getPosts() {
         setLoading(true)
-        // const url = new URL(window.location.href);
-        // const params = new URLSearchParams(url.search);
-        // let urlP
-        // const p = params.get('p')
-        // if (p && parseInt(p) != 0) {
-        //     setPage(parseInt(p))
-        //     urlP = parseInt(p)
-        //     console.log('page set to ' + p)
-        // }
-        // let res
-        // if (p) {
-        const res = await fetch('/api/post/get?p=' + page)
-        // } else {
-        //     res = await fetch('/api/post/get?p=1')
-        // }
+
+        const res = await fetch('/api/post/get?p=' + page + '&new=' + sortByNew)
         const data = await res.json()
         if (data.ids) {
             setZappedPosts(data.ids)
@@ -274,10 +264,10 @@ export const PostsProvider = ({ children }
     }
     useEffect(() => {
         getPosts();
-    }, [page])
+    }, [page, sortByNew])
 
     return (
-        <PostsContext.Provider value={{ loading, setLoading, page, setPage, create_post, postSortDate, setPostSortDate, unZapComment, zappedComments, zapComment, unZapPost, zappedPosts, zap_post, setViewedPost, viewedPost, openPost, posts, setPosts, sendReply }}>
+        <PostsContext.Provider value={{ sortByNew, setSortByNew, loading, setLoading, page, setPage, create_post, postSortDate, setPostSortDate, unZapComment, zappedComments, zapComment, unZapPost, zappedPosts, zap_post, setViewedPost, viewedPost, openPost, posts, setPosts, sendReply }}>
             {children}
         </PostsContext.Provider>
     );

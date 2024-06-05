@@ -20,7 +20,7 @@ export default function UserProfile() {
         } else {
             console.log(data)
             setProfile(data[0])
-            router.push('/')
+            router.push('/user/' + data[0].username)
         }
 
     }

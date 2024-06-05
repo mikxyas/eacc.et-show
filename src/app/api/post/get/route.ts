@@ -6,6 +6,7 @@ export async function GET(req: NextRequest) {
     const url = new URL(req.url);
     const params = new URLSearchParams(url.search);
     console.log(params.get('p'))
+    console.log(params)
     const cookieStore = cookies();
 
     const supabase = await createRouteHandlerClient({
@@ -15,13 +16,18 @@ export async function GET(req: NextRequest) {
     const { data: { session } } = await supabase.auth.getSession()
     // console.log(params)
     let newResp
+
     const page: any = params.get('p')
+    const sortbynew = params.get('new')
+    console.log(sortbynew)
     const p_limit: any = 10 * parseInt(page)
     const p_offset = p_limit == 10 ? 0 : 10 * (parseInt(page) - 1)
-    const response = await supabase
-        .rpc('get_posts_with_zap_counts', { p_limit: p_limit, p_offset: p_offset })
-    // .from('posts')
-    // .select("*, profiles(name, username), zaps('*', { count: 'exact' })")
+    let response
+    if (Boolean(sortbynew)) {
+        response = await supabase.rpc('get_newest_posts', { p_limit: p_limit, p_offset: p_offset })
+    } else {
+        response = await supabase.rpc('get_posts_with_zap_counts', { p_limit: p_limit, p_offset: p_offset })
+    }
     if (response.error) {
         console.log(response.error)
     } else {

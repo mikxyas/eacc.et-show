@@ -87,7 +87,12 @@ const Post = ({ data, num, page }: any) => {
                         {/* <Link href={`/post/${data.id}`}> */}
                         <div onClick={num != null ? postClicked : () => { }} className="inline-flex  w-full items-baseline mb-1">
                             <p className=" leading-5 mb-0 cursor-pointer">
-                                <span className=' text-2xs'>{(num + 1) + ((page - 1) * 10)}.</span> {data.title}
+                                {page != null &&
+                                    <span className=' text-2xs mr-1'>{(num + 1) + ((page - 1) * 10)}.</span>
+
+                                }
+
+                                {data.title}
                                 {data.link != 'null' &&
                                     <span className="text-gray-300 text-xs"> ({data.link})</span>
                                 }
