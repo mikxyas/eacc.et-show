@@ -231,11 +231,11 @@ export const PostsProvider = ({ children }
             console.log(data.error)
         } else {
             console.log(data.data[0])
+            viewedPost.comments.push(data.data[0])
             const newPosts: any = posts.map((post: any) => {
                 if (post.id === data.data[0].post) {
                     // update the comment_count of the post
                     post.comment_count += 1
-                    viewedPost.comments.push(data.data[0])
                 }
                 return post
             })

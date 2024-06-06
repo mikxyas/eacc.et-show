@@ -50,7 +50,7 @@ const PostPage = (context: any) => {
             </div>
         </div>;
     }
-
+    console.log(viewedPost)
     return (
         <div className="items-center justify-center flex flex-col ">
             <div style={{ background: '#1e1e1e', alignSelf: 'center' }} className="pt-3 w-full md:px-1 pb-3   md:w-2/3">

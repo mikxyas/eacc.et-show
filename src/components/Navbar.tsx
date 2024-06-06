@@ -24,7 +24,7 @@ const Navbar: React.FC = () => {
     return (
         <div className=' '>
             <div className='flex flex-col justify-center items-center mt-5'>
-                <pre className=' text-4xs md:text-3xs' style={{ whiteSpace: 'pre', fontFamily: 'monospace', lineHeight: '1.2', color: 'green', letterSpacing: 'normal', wordSpacing: 'normal' }}>
+                <pre className=' text-4xs md:text-3xs whitespace-pre' style={{ fontFamily: 'monospace', lineHeight: '1.2', color: 'green', wordSpacing: 'normal' }}>
                     {`
 ███████╗██╗  ██╗ ██████╗ ██╗    ██╗   ███████╗    ██╗ █████╗  ██████╗ ██████╗   ███████╗████████╗
 ██╔════╝██║  ██║██╔═══██╗██║    ██║   ██╔════╝   ██╔╝██╔══██╗██╔════╝██╔════╝   ██╔════╝╚══██╔══╝
