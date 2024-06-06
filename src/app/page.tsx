@@ -21,21 +21,6 @@ export default function Home() {
   }, [setViewedPost])
 
 
-  // async function getPosts() {
-
-  //   const res = await fetch('/api/post/get')
-  //   const data = await res.json()
-  //   setPosts(data)
-  //   setLoading(false)
-  // }
-
-  // async function getSesh() {
-  //   const res = await supabase.auth.getSession();
-  //   if (res) {
-  //     setUser(res.data.session?.user)
-  //   }
-  // }
-
   const incrementPage = async () => {
     console.log(page)
     if (page > 0) {
@@ -48,7 +33,12 @@ export default function Home() {
   }
 
   async function updateSort() {
-    await setSortByNew(!sortByNew)
+    setSortByNew(!sortByNew)
+    setPage(1)
+    const url = new URL(window.location.href)
+    const search_params = url.searchParams
+    search_params.set('p', '1')
+    window.history.pushState({}, '', url.toString())
   }
 
   const decrementPage = async () => {
@@ -81,10 +71,7 @@ export default function Home() {
         </div>
         <div className='flex justify-center items-center gap-1 mt-2'>
           <Link href={`/?p=${page > 1 ? page - 1 : 1}`}>
-            <button disabled={page == 1} onClick={() => decrementPage()} className={page === 1 ? ` p-1 text-gray-50 bg-gray-600` : ' p-1 text-gray-50 bg-green-900'}>prev</button>
-          </Link>
-          <Link href={`/?p=${page > 0 ? page + 1 : 1}`}>
-            <button onClick={() => incrementPage()} className='bg-green-900 p-1 text-gray-50'>next</button>
+            <button disabled={page == 1} onClick={() => decrementPage()} className={page === 1 ? ` p-1 text-gray-50 bg-gray-600` : ' p-1 text-gray-50 bg-green-900'}>go back</button>
           </Link>
         </div>
       </div>
@@ -96,11 +83,22 @@ export default function Home() {
   return (
     <div className=' md:ml-10  font-mono flex flex-col'>
       <div style={{ background: '#1e1e1e', alignSelf: 'center' }} className=" px-3 py-1 w-full  md:w-2/3 ">
-        <div className="text-gray-400">
-          <span>sort by </span>
-          <button onClick={() => updateSort()} className="self-start underline">
-            {!sortByNew ? ' new' : ' top'}
-          </button>
+        <div className="text-gray-400 flex justify-between">
+          <div>
+            <span>sort by </span>
+            <button onClick={() => updateSort()} className="self-start underline">
+              {!sortByNew ? ' new' : ' top'}
+            </button>
+          </div>
+          <div className=" space-x-2">
+            <Link href={`/?p=${page > 1 ? page - 1 : 1}`}>
+              <button disabled={page == 1} onClick={() => decrementPage()} className={page === 1 ? `  text-gray-50 ` : ' p-1 text-gray-50 '}>prev</button>
+            </Link>
+            <Link href={`/?p=${page > 0 ? page + 1 : 1}`}>
+              <button onClick={() => incrementPage()} className='  text-gray-50'>next</button>
+            </Link>
+          </div>
+
         </div>
         {
           posts?.map((post: any, index: number) => (
@@ -108,14 +106,9 @@ export default function Home() {
           ))
         }
       </div>
-      <div className='flex justify-center items-center gap-1 mt-2 pb-5'>
-        <Link href={`/?p=${page > 1 ? page - 1 : 1}`}>
-          <button disabled={page == 1} onClick={() => decrementPage()} className={page === 1 ? ` p-1 text-gray-50 bg-gray-600` : ' p-1 text-gray-50 bg-green-900'}>prev</button>
-        </Link>
-        <Link href={`/?p=${page > 0 ? page + 1 : 1}`}>
-          <button onClick={() => incrementPage()} className='bg-green-900 p-1 text-gray-50'>next</button>
-        </Link>
-      </div>
+
+
+
     </div>
   );
 }

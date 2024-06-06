@@ -50,7 +50,7 @@ export const PostsProvider = ({ children }
         children: React.ReactNode;
     }>
 ) => {
-    const [posts, setPosts] = useState<[]>([]);
+    const [posts, setPosts] = useState<any>([]);
     const [viewedPost, setViewedPost] = useState<any>(null)
     const [zappedPosts, setZappedPosts] = useState<any>([])
     const [zappedComments, setZappedComments] = useState<any>([])
@@ -86,86 +86,126 @@ export const PostsProvider = ({ children }
     };
 
     async function unZapComment(comment_id: UUID) {
+        const s = zappedComments.filter((id: UUID) => id != comment_id)
+        setZappedComments(s)
+        const newComments = viewedPost.comments.map((comment: any) => {
+            if (comment.id === comment_id) {
+                comment.zap_count -= 1
+            }
+            return comment
+        })
+        setViewedPost({ ...viewedPost, comments: newComments })
+
         const { error } = await supabase
             .from('zaps')
             .delete()
             .eq('comment_zapped', comment_id)
             .eq('zapper', user.id)
         if (error) {
-            console.log(error)
-        } else {
-            const s = zappedComments.filter((id: UUID) => id != comment_id)
+            // undo the unzapping
+            const s = [
+                ...zappedComments,
+                comment_id
+            ]
             setZappedComments(s)
             const newComments = viewedPost.comments.map((comment: any) => {
                 if (comment.id === comment_id) {
-                    comment.zap_count -= 1
+                    comment.zap_count += 1
                 }
                 return comment
             })
             setViewedPost({ ...viewedPost, comments: newComments })
+            console.log(error)
+        } else {
+            console.log('deleted')
         }
     }
 
     async function unZapPost(post_id: UUID) {
+        if (viewedPost?.id === post_id) {
+            const updatedPost = {
+                ...viewedPost,
+                zap_count: viewedPost.zap_count - 1
+            }
+            setViewedPost(updatedPost)
+        }
+        // delete post_id from zappedPosts
+        const s = zappedPosts.filter((id: UUID) => id != post_id)
+        console.log(s)
+        // update posts list 
+        const newPostList: any = posts.map((post: any) => {
+            if (post.id === post_id) {
+                post.zap_count -= 1
+            }
+            return post
+        })
+        setPosts(newPostList)
+        setZappedPosts(s)
         const { error } = await supabase
             .from('zaps')
             .delete()
             .eq('post_zapped', post_id)
             .eq('zapper', user.id)
         if (error) {
-            console.log(error)
-        } else {
-            // remove post_id from zappedPosts
-            if (viewedPost?.id === post_id) {
-                const updatedPost = {
-                    ...viewedPost,
-                    zap_count: viewedPost.zap_count - 1
-                }
-                setViewedPost(updatedPost)
-            }
-            // delete post_id from zappedPosts
-            const s = zappedPosts.filter((id: UUID) => id != post_id)
-            console.log(s)
-            // update posts list 
-            const newPostList: any = posts.map((post: any) => {
-                if (post.id === post_id) {
-                    post.zap_count -= 1
-                }
-                return post
-            })
-            setPosts(newPostList)
-            setZappedPosts(s)
-        }
-    }
-    async function zap_post(zappp: object) {
-        const { data, error } = await supabase
-            .from('zaps')
-            .insert(zappp)
-            .select()
-        if (error) {
-            console.log(error)
-        } else {
-            if (viewedPost?.id === data[0].post_zapped) {
-                const updatedPost = {
-                    ...viewedPost,
-                    zap_count: viewedPost.zap_count + 1
-                }
-                setViewedPost(updatedPost)
-            }
-            console.log(data)
-            // updated zapped post's zap_count
+            // undo the unzapping
             const s = [
                 ...zappedPosts,
-                data[0].post_zapped
+                post_id
             ]
             setZappedPosts(s)
             const newPosts: any = posts.map((post: any) => {
-                if (post.id === data[0].post_zapped) {
+                if (post.id === post_id) {
                     post.zap_count += 1
                 }
                 return post
             })
             setPosts(newPosts)
+            console.log(error)
+        } else {
+            // remove post_id from zappedPosts
+            console.log('deleted')
+        }
+    }
+    async function zap_post(zappp: any) {
+        if (viewedPost?.id === zappp.post_zapped) {
+            const updatedPost = {
+                ...viewedPost,
+                zap_count: viewedPost.zap_count + 1
+            }
+            setViewedPost(updatedPost)
+        }
+        // updated zapped post's zap_count
+        const s = [
+            ...zappedPosts,
+            zappp.post_zapped
+        ]
+        setZappedPosts(s)
+        const newPosts: any = posts.map((post: any) => {
+            if (post.id === zappp.post_zapped) {
+                post.zap_count += 1
+            }
+            return post
+        })
+        setPosts(newPosts)
+
+        const { data, error } = await supabase
+            .from('zaps')
+            .insert(zappp)
+            .select()
+        if (error) {
+            // undo the zapping
+            const s = zappedPosts.filter((id: UUID) => id != zappp.post_zapped)
+            setZappedPosts(s)
+            const newPosts: any = posts.map((post: any) => {
+                if (post.id === zappp.post_zapped) {
+                    post.zap_count -= 1
+                }
+                return post
+            })
+            setPosts(newPosts)
+            console.log(error)
+        } else {
+            console.log(data)
         }
     }
 
@@ -188,6 +228,25 @@ export const PostsProvider = ({ children }
 
 
     async function zapComment(comment_id: UUID, replier: UUID) {
+        // add the comment to zapped
+        if (zappedComments != null) {
+            const s = [
+                ...zappedComments,
+                comment_id
+            ]
+            setZappedComments(s)
+        } else {
+            setZappedComments([comment_id])
+        }
+        // update viewedposts.comments find the comment and increment the zap_count
+        const newComments = viewedPost.comments.map((comment: any) => {
+            if (comment.id === comment_id) {
+                comment.zap_count += 1
+            }
+            return comment
+        })
+        setViewedPost({ ...viewedPost, comments: newComments })
+
         const { data, error } = await supabase
             .from('zaps')
             .insert({
@@ -197,28 +256,38 @@ export const PostsProvider = ({ children }
             })
             .select()
         if (error) {
+            // if an error occurs undo the zapping 
+            const s = zappedComments.filter((id: UUID) => id != comment_id)
+            setZappedComments(s)
+            const newComments = viewedPost.comments.map((comment: any) => {
+                if (comment.id === comment_id) {
+                    comment.zap_count -= 1
+                }
+                return comment
+            })
+            setViewedPost({ ...viewedPost, comments: newComments })
             console.log(error)
         } else {
             console.log(data)
             // updated zapped post's zap_count
             console.log(zappedComments)
-            if (zappedComments != null) {
-                const s = [
-                    ...zappedComments,
-                    data[0].comment_zapped
-                ]
-                setZappedComments(s)
-            } else {
-                setZappedComments([data[0].comment_zapped])
-            }
-            // update viewedposts.comments find the comment and increment the zap_count
-            const newComments = viewedPost.comments.map((comment: any) => {
-                if (comment.id === data[0].comment_zapped) {
-                    comment.zap_count += 1
-                }
-                return comment
-            })
-            setViewedPost({ ...viewedPost, comments: newComments })
+            // if (zappedComments != null) {
+            //     const s = [
+            //         ...zappedComments,
+            //         data[0].comment_zapped
+            //     ]
+            //     setZappedComments(s)
+            // } else {
+            //     setZappedComments([data[0].comment_zapped])
+            // }
+            // // update viewedposts.comments find the comment and increment the zap_count
+            // const newComments = viewedPost.comments.map((comment: any) => {
+            //     if (comment.id === data[0].comment_zapped) {
+            //         comment.zap_count += 1
+            //     }
+            //     return comment
+            // })
+            // setViewedPost({ ...viewedPost, comments: newComments })
         }
     }
     async function sendReply(formData: FormData) {
@@ -291,7 +360,6 @@ export const PostsProvider = ({ children }
 
     async function getPosts() {
         setLoading(true)
-
         const res = await fetch('/api/post/get?p=' + page + '&new=' + sortByNew)
         const data = await res.json()
         if (data.ids) {
@@ -305,8 +373,26 @@ export const PostsProvider = ({ children }
         }
         setLoading(false)
     }
+
+    async function extractPageFromUrl() {
+        const url = new URL(window.location.href)
+        const p = url.searchParams.get('p')
+        if (p) {
+            await setPage(parseInt(p))
+        }
+
+    }
+
+
+
     useEffect(() => {
+        // extract p from url
+        if (page === 1 && posts.length === 0) {
+            console.log('extracting url')
+            extractPageFromUrl()
+        }
         getPosts();
+        console.log('just run')
     }, [page, sortByNew])
 
     return (
