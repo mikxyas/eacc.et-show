@@ -28,6 +28,8 @@ interface UserContextType {
     setLoading: (loading: boolean) => void
     sortByNew: boolean
     setSortByNew: (sortByNew: boolean) => void;
+    deletePost: (post_id: UUID) => void;
+    deleteComment: (comment_id: UUID) => void;
 }
 
 // Create the user context
@@ -246,6 +248,47 @@ export const PostsProvider = ({ children }
         // console.log(data)
     }
 
+    async function deleteComment(comment_id: UUID) {
+        const { error } = await supabase
+            .from('comments')
+            .delete()
+            .eq('id', comment_id)
+            .eq('replier', user.id)
+        if (error) {
+            console.log(error)
+        } else {
+            // remove comment_id from zappedComments
+            const s = zappedComments.filter((id: UUID) => id != comment_id)
+            setZappedComments(s)
+            // update viewedPost.comments
+            const newComments = viewedPost.comments.filter((comment: any) => comment.id != comment_id)
+            setViewedPost({ ...viewedPost, comments: newComments })
+        }
+    }
+
+    async function deletePost(post_id: UUID) {
+        const { error } = await supabase
+            .from('posts')
+            .delete()
+            .eq('id', post_id)
+            .eq('creator', user.id)
+        if (error) {
+            console.log(error)
+        } else {
+            // remove post_id from zappedPosts
+
+            // delete post_id from zappedPosts  
+            const s = zappedPosts.filter((id: UUID) => id != post_id)
+            setZappedPosts(s)
+            // update posts list
+            const newPostList: any = posts.filter((post: any) => post.id != post_id)
+            setPosts(newPostList)
+            if (viewedPost != null) {
+                window.location.href = '/'
+            }
+        }
+    }
+
     async function getPosts() {
         setLoading(true)
 
@@ -267,7 +310,7 @@ export const PostsProvider = ({ children }
     }, [page, sortByNew])
 
     return (
-        <PostsContext.Provider value={{ sortByNew, setSortByNew, loading, setLoading, page, setPage, create_post, postSortDate, setPostSortDate, unZapComment, zappedComments, zapComment, unZapPost, zappedPosts, zap_post, setViewedPost, viewedPost, openPost, posts, setPosts, sendReply }}>
+        <PostsContext.Provider value={{ deleteComment, deletePost, sortByNew, setSortByNew, loading, setLoading, page, setPage, create_post, postSortDate, setPostSortDate, unZapComment, zappedComments, zapComment, unZapPost, zappedPosts, zap_post, setViewedPost, viewedPost, openPost, posts, setPosts, sendReply }}>
             {children}
         </PostsContext.Provider>
     );

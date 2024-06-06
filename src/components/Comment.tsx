@@ -3,14 +3,21 @@ import { MessageCircle, Spline, X, Zap } from 'lucide-react';
 import React, { useState } from 'react';
 import ReplyInput from './ReplyInput';
 import { usePostsContext } from '@/context/posts';
+import { useUserContext } from '@/context/user';
 
 export default function Comment({ post_id, comment }: any) {
-    const { zapComment, zappedComments, unZapComment } = usePostsContext();
+    const { zapComment, zappedComments, unZapComment, deleteComment } = usePostsContext();
     const [showReply, setShowReply] = useState<any>({});
+    const [showDelete, setShowDelete] = useState<any>({})
+    const { user } = useUserContext()
 
     const toggleReply = (commentId: any) => {
         setShowReply((prev: any) => ({ ...prev, [commentId]: !prev[commentId] }));
     };
+
+    const toggleDelete = (commentId: any) => {
+        setShowDelete((prev: any) => ({ ...prev, [commentId]: !prev[commentId] }));
+    }
 
     const timeAgo = (createdAt: any) => {
         const now: any = new Date();
@@ -54,6 +61,14 @@ export default function Comment({ post_id, comment }: any) {
                     )}
                     <p className='hover:underline cursor-pointer'>@{comment.profiles.username}</p>
                     <p>{timeAgo(comment.created_at)}</p>
+                    {comment.replier == user?.id &&
+                        <p
+                            className='hover:underline cursor-pointer '
+                            onClick={() => toggleDelete(comment.id)}
+                        >delete</p>
+
+                    }
+                    {/* <p>delete</p> */}
                 </div>
                 <div className={comment.zap_count > 0 ? ' -mt-5 ' : ''} style={{ fontSize: '10pt' }} >
                     <div className='ml-5 md:w-2/3 inline-flex items-baseline  pr-1 md:pr-0'>
@@ -64,6 +79,17 @@ export default function Comment({ post_id, comment }: any) {
                             </span>
                         </p>
                     </div>
+                    {showDelete[comment.id] &&
+                        <div className='ml-5 mt-1  '>
+                            <p className='text-gray-200'>Are you sure you want to delete this comment?</p>
+                            <div className='mt-1'>
+                                <button onClick={() => deleteComment(comment.id)} className=' bg-gray-800 px-2 text-sm'>Yes</button>
+                                <button onClick={() => setShowDelete((prev: any) => ({ ...prev, [comment.id]: !prev[comment.id] }))} className=' bg-gray-700 px-2 text-sm'>No</button>
+                            </div>
+                        </div>
+
+                    }
+
                     <div className='ml-6'>
                         <ReplyInput showReply={isReplyVisible} toggleReply={() => toggleReply(comment.id)} parent_id={comment.id} post_id={post_id} />
                     </div>

@@ -75,7 +75,7 @@ export default function NewPost() {
     return (
         <div className='flex flex-col' >
             <div className='flex self-center flex-col items-center justify-center  w-full md:w-2/3 mt-40 md:mt-2' >
-                <p className='px-4 font-mono w-full md:w-1/2'>submit high quality content that inspires insightful discussion and learning</p>
+                {/* <p className='px-4 font-mono w-full md:w-1/2'>submit high quality content that inspires insightful discussion and learning</p> */}
                 <div className='mx-4 my-2 w-full items-center px-4 md:px-1 justify-center flex flex-col gap-2'>
                     {emptyInput &&
                         <p className='text-sm'>Title Cannot be empty</p>

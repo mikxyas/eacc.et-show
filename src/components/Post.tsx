@@ -1,3 +1,4 @@
+
 import { usePostsContext } from '@/context/posts';
 import { useUserContext } from '@/context/user';
 import { supabase } from '@/libs/supabase';
@@ -5,10 +6,11 @@ import { UUID } from 'crypto';
 import { Zap } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const Post = ({ data, num, page }: any) => {
-    const { zap_post, zappedPosts, unZapPost } = usePostsContext();
+    const { zap_post, zappedPosts, unZapPost, deletePost } = usePostsContext();
+    const [showDelete, setShowDelete] = useState(false)
     const { user } = useUserContext()
     const router = useRouter()
     const postClicked = () => {
@@ -40,8 +42,6 @@ const Post = ({ data, num, page }: any) => {
 
         return 'just now';
     }
-
-
 
     async function zapPost(post_id: number, zapped: UUID) {
 
@@ -110,6 +110,9 @@ const Post = ({ data, num, page }: any) => {
                             <Link href={'/post/' + data.id}>
                                 <p className='hover:underline cursor-pointer'>{data.comment_count} comment{data.comment_count != 1 && 's'}</p>
                             </Link>
+                            {data.creator == user?.id &&
+                                <p onClick={() => setShowDelete(true)} className='cursor-pointer hover:underline'>delete post</p>
+                            }
                         </div>
                         {data.text != null && data.text != 'null' &&
                             <div className='mt-2'>
@@ -117,7 +120,18 @@ const Post = ({ data, num, page }: any) => {
                             </div>
                         }
                     </div>
+
                 </div>
+                {showDelete &&
+                    <div className='ml-5 mt-1  '>
+                        <p className='text-gray-200'>Are you sure you want to delete this post</p>
+                        <div className='mt-1'>
+                            <button onClick={() => deletePost(data.id)} className=' bg-gray-800 px-2 text-sm'>Yes</button>
+                            <button onClick={() => setShowDelete(false)} className=' bg-gray-700 px-2 text-sm'>No</button>
+                        </div>
+                    </div>
+                }
+
             </div>
         </div>
     );
