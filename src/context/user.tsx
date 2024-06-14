@@ -11,6 +11,7 @@ interface UserContextType {
     setProfile: (profile: any) => void;
     logout: () => void;
     createUser: (username: string, password: string) => any;
+    createNewProfile: (name: string, username: string, email: string, userId: UUID) => any;
 }
 
 // Create the user context
@@ -49,16 +50,29 @@ export const UserProvider = ({ children }:
         if (session.data.session) {
             setUser(session.data.session?.user)
             console.log(session.data.session?.user)
-            const { data, error } = await supabase.from('profiles').select().eq('user_id', session.data.session?.user.id).select()
+            const { data, error } = await supabase.from('profiles').select().eq('user_id', session.data.session?.user.id).select('*')
             if (error) {
+                console.log(error)
                 setProfile(null)
             } else {
                 if (data) {
                     console.log(data)
+                    const random = Math.floor(Math.random() * 1000)
+
+                    if (data.length == 0) {
+                        createNewProfile(session.data.session?.user.user_metadata.full_name, session.data.session?.user.user_metadata.user_name + random, session.data.session?.user.email, session.data.session?.user.id)
+                    }
                     setProfile(data[0])
                 } else {
                     // console.log('creating new profile ')
-                    createNewProfile(session.data.session?.user.name, session.data.session?.user.username, session.data.session?.user.email, session.data.session?.user.id)
+                    // if metadata exists create using it 
+                    if (session.data.session?.user.user_metadata) {
+                        createNewProfile(session.data.session?.user.user_metadata.full_name, session.data.session?.user.user_metadata.user_name + random, session.data.session?.user.email, session.data.session?.user.id)
+                    }
+                    // else{
+                    //     // make the name the email before the @
+                    //     createNewProfile(session.data.session?.user.email.split('@')[0], session.data.session?.user.username, session.data.session?.user.email, session.data.session?.user.id)
+                    // }
                 }
             }
         }
@@ -132,7 +146,7 @@ export const UserProvider = ({ children }:
     }, [])
 
     return (
-        <UserContext.Provider value={{ createUser, logout, profile, setProfile, user, setUser }}>
+        <UserContext.Provider value={{ createNewProfile, createUser, logout, profile, setProfile, user, setUser }}>
             {children}
         </UserContext.Provider>
     );

@@ -383,15 +383,14 @@ export const PostsProvider = ({ children }
 
     }
 
-
-
     useEffect(() => {
         // extract p from url
-        if (page === 1 && posts.length === 0) {
+        if (page === 1 && posts === null) {
             console.log('extracting url')
             extractPageFromUrl()
         }
         getPosts();
+
         console.log('just run')
     }, [page, sortByNew])
 

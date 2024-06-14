@@ -12,14 +12,17 @@ const LoginPage = () => {
     const [usernameTaken, setUsernameTaken] = useState(false)
     const [errorMsg, setErorMsg] = useState('')
     const [error, setError] = useState(false)
-    const { createUser } = useUserContext()
+    const { createUser, createNewProfile } = useUserContext()
     const router = useRouter()
 
     const signInWithGithub = async () => {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'github'
         })
+
         console.log(data, error)
+
+        alert(data)
     }
 
     // create a function that validates the username doesn't contain any symbols other than _ and is a valid username that also doesnt' start with a number also make sure the password is validated with the standards 
@@ -63,6 +66,7 @@ const LoginPage = () => {
             setErorMsg('invalid username or password')
             console.log(login.error)
         } else {
+
             window.location.reload()
             console.log(login.data)
         }
@@ -76,6 +80,7 @@ const LoginPage = () => {
                 setUsernameTaken(true)
             }
             if (resp === "sign up success") {
+                // create a profile for the user
                 window.location.reload()
             }
         })

@@ -21,7 +21,7 @@ export default function NewPost() {
     const router = useRouter()
 
     // create a function that validates the link and checks if its a real link or not
-    function isValidUrl(string: string) {
+    function isValidUrl(string) {
         const pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
             '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|' + // domain name
             '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
@@ -29,9 +29,11 @@ export default function NewPost() {
             '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
             '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
         const domainPattern = new RegExp('\\.[a-z]{2,}$', 'i'); // check for valid domain extension
-        setUrlValid(pattern.test(string) && domainPattern.test(string))
-        return pattern.test(string) && domainPattern.test(string);
+        const isValid = pattern.test(string) && domainPattern.test(string.split('/')[2]);
+        setUrlValid(isValid);
+        return isValid;
     }
+
 
     const Post = async () => {
         setLoading(true)

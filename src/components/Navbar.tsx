@@ -26,12 +26,12 @@ const Navbar: React.FC = () => {
             <div className='flex flex-col justify-center items-center mt-5'>
                 <pre className=' text-4xs hidden md:flex md:text-3xs whitespace-pre' style={{ fontFamily: 'monospace', lineHeight: '1.2', color: 'green', wordSpacing: 'normal' }}>
                     {`
-███████╗██╗  ██╗ ██████╗ ██╗    ██╗   ███████╗    ██╗ █████╗  ██████╗ ██████╗   ███████╗████████╗
+███████╗██╗  ██╗ ██████╗ ██╗    ██╗   ███████╗    ██╗ █████╗  ██████╗ ██████╗   ███████╗████████╗ 
 ██╔════╝██║  ██║██╔═══██╗██║    ██║   ██╔════╝   ██╔╝██╔══██╗██╔════╝██╔════╝   ██╔════╝╚══██╔══╝
 ███████╗███████║██║   ██║██║ █╗ ██║   █████╗    ██╔╝ ███████║██║     ██║        █████╗     ██║    
 ╚════██║██╔══██║██║   ██║██║███╗██║   ██╔══╝   ██╔╝  ██╔══██║██║     ██║        ██╔══╝     ██║   
 ███████║██║  ██║╚██████╔╝╚███╔███╔╝██╗███████╗██╔╝   ██║  ██║╚██████╗╚██████╗██╗███████╗   ██║   
-╚══════╝╚═╝  ╚═╝ ╚═════╝  ╚══╝╚══╝ ╚═╝╚══════╝╚═╝    ╚═╝  ╚═╝ ╚═════╝ ╚═════╝╚═╝╚══════╝   ╚═╝
+╚══════╝╚═╝  ╚═╝ ╚═════╝  ╚══╝╚══╝ ╚═╝╚══════╝╚═╝    ╚═╝  ╚═╝ ╚═════╝ ╚═════╝╚═╝╚══════╝   ╚═╝ 
                     `}
                 </pre>
                 {/* <div className='flex w-full'>
@@ -60,7 +60,7 @@ const Navbar: React.FC = () => {
                             <div className='flex items-center'>
                                 <div className='flex items-center self-end'>
                                     <Link href='/user/profile'>
-                                        <button className='hover:bg-green-700 hover:text-gray-50 hover:pl-1 pr-1 pl-1'>{profile?.username.length == 0 ? 'profile' : profile?.username}</button>
+                                        <button className='hover:bg-green-700 hover:text-gray-50 hover:pl-1 pr-1 pl-1'>{!profile?.username ? 'profile' : profile?.username}</button>
                                     </Link>
                                     |
                                 </div>
