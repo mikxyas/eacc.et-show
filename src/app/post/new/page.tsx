@@ -21,7 +21,7 @@ export default function NewPost() {
     const router = useRouter()
 
     // create a function that validates the link and checks if its a real link or not
-    function isValidUrl(string) {
+    function isValidUrl(string: any) {
         const pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
             '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|' + // domain name
             '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
