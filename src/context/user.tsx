@@ -67,7 +67,6 @@ export const UserProvider = ({ children }:
                     // console.log('creating new profile ')
                     // if metadata exists create using it 
                     const random = Math.floor(Math.random() * 1000)
-
                     if (session.data.session?.user.user_metadata) {
                         createNewProfile(session.data.session?.user.user_metadata.full_name, session.data.session?.user.user_metadata.user_name + random, session.data.session?.user.email, session.data.session?.user.id)
                     }

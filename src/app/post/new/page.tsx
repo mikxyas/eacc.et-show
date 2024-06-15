@@ -98,7 +98,7 @@ export default function NewPost() {
                         <textarea style={{ background: '#1e1e1e' }} placeholder='text' onChange={(e) => handleChange(e)} className='w-full h-20 outline-none p-2' name="text" />
                     </div>
                     <p className='w-full md:w-1/2 text-xs text-center text-gray-300'>Leave url blank to submit a question for discussion. If there is a url, text is optional.</p>
-                    <button type="submit" className='py-2 px-2 bg-green-700 border border-dashed border-gray-700 ' onClick={Post}>Create Post</button>
+                    <button type="submit" className='py-2 px-2 bg-gray-200  bg-opacity-10 hover:bg-opacity-20 border-black border-2 border-opacity-40  ' onClick={Post}>create post</button>
                     {loading &&
                         <p>Loading...</p>
                     }

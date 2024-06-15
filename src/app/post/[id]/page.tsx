@@ -44,19 +44,18 @@ const PostPage = (context: any) => {
         console.log(nestComments(viewedPost?.comments))
     }
     if (!viewedPost) {
-        return <div className="flex flex-col items-center justify-center">
-            <div style={{ background: 'transparent', alignSelf: 'center' }} className=" px-6 py-2 border-gray-500 border-dashed border-4 md:w-2/3">
+        return <div className="flex flex-col  items-center md:mx-44 justify-center">
+            <div style={{ background: '#1e1e1e', alignSelf: 'center' }} className=" px-6 py-2  w-full ">
                 Loading...
             </div>
         </div>;
     }
     console.log(viewedPost)
     return (
-        <div className="items-center justify-center flex flex-col ">
-            <div style={{ background: '#1e1e1e', alignSelf: 'center' }} className="pt-3 w-full md:px-1 pb-3   md:w-2/3">
+        <div className="items-center justify-center flex flex-col  md:mx-44">
+            <div style={{ background: '#1e1e1e', alignSelf: 'center' }} className="pt-3 w-full md:px-1 pb-3  ">
                 <div className="pl-2">
                     <Post data={viewedPost} num={null} page={null} />
-
                 </div>
                 <div className="ml-7  mb-0">
                     <ReplyInput showReply={true} post_id={viewedPost.id} parent_id={null} />
@@ -66,7 +65,6 @@ const PostPage = (context: any) => {
                         <Comment key={index} comment={comment} post_id={viewedPost.id} />
                     ))}
                 </div>
-
             </div>
         </div>
 

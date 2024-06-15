@@ -20,8 +20,8 @@ export async function GET(req: NextRequest) {
     const page: any = params.get('p')
     const sortbynew = params.get('new')
 
-    const itemsPerPage = 10;
-    const currentPage = parseInt(page, 10);
+    const itemsPerPage = 30;
+    const currentPage = parseInt(page, itemsPerPage);
 
     // Calculate limit and offset for pagination
     const p_limit = itemsPerPage;

@@ -56,9 +56,9 @@ export default function UserProfile() {
                             <textarea style={{ background: '#1e1e1e' }} value={formData.about} placeholder='bio' onChange={(e) => handleChange(e)} className='w-full h-20 outline-none p-2' name="about" />
                         </div>
                         <div className='flex'>
-                            <button onClick={updateProfile} className='py-2 px-2 bg-green-700 border border-dashed border-gray-700 ' >Update Profile</button>
+                            <button onClick={updateProfile} className='py-2 px-2 bg-gray-200  bg-opacity-10 hover:bg-opacity-20 border-black border-2 border-opacity-40 ' >Update Profile</button>
                             <Link href={'/user/' + profile.username}>
-                                <button className='py-2 px-2 bg-gray-700 border border-dashed border-gray-700 ' >View Profile</button>
+                                <button className='py-2 px-2 bg-gray-200  bg-opacity-10 hover:bg-opacity-20 border-black border-2 border-opacity-40  ' >View Profile</button>
                             </Link>
                         </div>
                     </div>

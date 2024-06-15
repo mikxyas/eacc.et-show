@@ -62,47 +62,55 @@ const Post = ({ data, num, page }: any) => {
         <div className={num === null ? 'flex  mb-6 ' : 'flex  mb-2'}>
 
             <div className='font-sans w-full'>
-                <div className='flex gap-1 w-full'>
-                    {user != null
-                        ? <>
-                            {zappedPosts.includes(data.id)
-                                ? <div onClick={() => unZapPost(data.id)} className='p-1'>
-                                    <Zap className='text-green-600 hover:text-green-600 cursor-pointer zapppp' size={15} />
-                                </div>
-                                :
-                                <div onClick={() => zapPost(data.id, data.creator)} className='p-1'>
-                                    <Zap className='hover:text-green-600 cursor-pointer zapppp' size={15} />
-                                </div>
-                            }
-                        </>
-                        :
-                        <Link href='/login'>
-                            <div className='p-1'>
-                                <Zap className='  cursor-pointer ' size={15} />
-                            </div>
-                        </Link>
-                    }
+                <div className='flex gap-1 w-full '>
 
 
+                    <div className='flex items-center justify-center flex-col'>
+                        {page != null &&
+                            <p className=' text-2xs mr-1'>{(num + 1) + ((page - 1) * 30)}.</p>
+                        }
+                        {user != null
+                            ? <>
+                                {zappedPosts.includes(data.id)
+                                    ? <div onClick={() => unZapPost(data.id)} className='p-1 '>
+                                        <Zap className='text-green-600 hover:text-green-600 cursor-pointer zapppp' size={15} />
+                                    </div>
+                                    :
+                                    <div onClick={() => zapPost(data.id, data.creator)} className='p-1 '>
+                                        <Zap className='hover:text-green-600 cursor-pointer zapppp' size={15} />
+                                    </div>
+                                }
+                            </>
+                            :
+                            <Link href='/login'>
+                                <div className='p-1'>
+                                    <Zap className='cursor-pointer ' size={15} />
+                                </div>
+                            </Link>
+                        }
+
+                    </div>
                     <div className='w-full'>
                         {/* <Link href={`/post/${data.id}`}> */}
-                        <div className="inline-flex  w-full items-baseline mb-1">
-                            <p className=" leading-5 mb-0 cursor-pointer no-select">
-                                {page != null &&
-                                    <span className=' text-2xs mr-1'>{(num + 1) + ((page - 1) * 10)}.</span>
-                                }
-                                {data.link == null || data.link == "null"
-                                    ? <span onClick={num != null ? postClicked : () => { }}> {data.title}</span>
-                                    : <a href={data.link} target='_blank' className='hover:underline'>{data.title}</a>
-                                }
+                        <div className="inline-flex  w-full items-baseline ">
 
-                                {data.link != 'null' &&
-                                    <a href={data.link} target='_blank'> <span className="text-gray-300 text-xs">({data.link})</span></a>
-                                }
+                            <p className=" leading-5 mb-0 cursor-pointer flex  no-select">
+
+                                <div>
+                                    {data.link == null || data.link == "null"
+                                        ? <span onClick={num != null ? postClicked : () => { }}> {data.title}</span>
+                                        : <a href={data.link} target='_blank' className='hover:underline'>{data.title}</a>
+                                    }
+
+                                    {data.link != 'null' &&
+                                        <a href={data.link} target='_blank'> <span className="text-gray-300 text-xs">({data.link})</span></a>
+                                    }
+                                </div>
+
                             </p>
                         </div>
                         {/* </Link> */}
-                        <div style={{ color: "#828282" }} className='flex gap-2 text-xs   '>
+                        <div className='flex gap-2 text-white text-opacity-55 text-xs   pt-0.5'>
                             <p className='hover:underline cursor-pointer'>{data.zap_count} zaps</p>
                             <Link href={'/user/' + data.profiles.username} >
                                 <p className='hover:underline cursor-pointer'>by @{data.profiles.username}</p>

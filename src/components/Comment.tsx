@@ -47,7 +47,7 @@ export default function Comment({ post_id, comment }: any) {
 
         return (
             <div key={comment.id} className='mt-2'>
-                <div className='flex gap-1 items-start text-gray-300' style={{ fontSize: '8pt' }}>
+                <div className='flex gap-1 items-start text-white font-light text-opacity-70' style={{ fontSize: '8pt' }}>
                     {zappedComments?.includes(comment.id) ? (
                         <div onClick={() => unZapComment(comment.id)} className='p-0 flex flex-col items-center justify-center gap-1'>
                             <Zap className='text-green-600 hover:text-green-600 cursor-pointer zapppp' size={15} />
@@ -83,8 +83,8 @@ export default function Comment({ post_id, comment }: any) {
                         <div className='ml-5 mt-1  '>
                             <p className='text-gray-200'>Are you sure you want to delete this comment?</p>
                             <div className='mt-1'>
-                                <button onClick={() => deleteComment(comment.id)} className=' bg-gray-800 px-2 text-sm'>Yes</button>
-                                <button onClick={() => setShowDelete((prev: any) => ({ ...prev, [comment.id]: !prev[comment.id] }))} className=' bg-gray-700 px-2 text-sm'>No</button>
+                                <button onClick={() => deleteComment(comment.id)} className=' bg-gray-200  bg-opacity-10 hover:bg-opacity-20 border-black border-2 border-opacity-40  px-2 py-1 text-xs'>delete comment</button>
+                                <button onClick={() => setShowDelete((prev: any) => ({ ...prev, [comment.id]: !prev[comment.id] }))} className=' bg-gray-200  bg-opacity-10 hover:bg-opacity-20 border-black border-2 border-opacity-40 py-1 px-2 text-xs'>Cancel</button>
                             </div>
                         </div>
 
@@ -95,7 +95,7 @@ export default function Comment({ post_id, comment }: any) {
                     </div>
                 </div>
                 {comment.children && comment.children.length > 0 && (
-                    <div className='ml-4'>
+                    <div className='ml-5 mt-2'>
                         {comment.children.map((child: any) => renderComment(child))}
                     </div>
                 )}
