@@ -23,27 +23,29 @@ const LoginPage = () => {
         // (data, error)
     }
 
-    // create a function that validates the username doesn't contain any symbols other than _ and is a valid username that also doesnt' start with a number also make sure the password is validated with the standards 
-    // also return a message saying invalid username or invalid password 
-    const validateForm = () => {
-        const regex = /^[a-zA-Z0-9_]*$/
-        if (username.length < 3) {
-            return 'username must be at least 3 characters long'
-        }
-        if (password.length < 6) {
-            return 'password must be at least 6 characters long'
-        }
 
-        if (!regex.test(username)) {
-            return 'username must only contain letters, numbers and _'
-        }
-        if (username[0].match(/[0-9]/)) {
-            return 'username must start with a letter'
-        }
-
-        return 'valid'
-
+    function isValidUsername(username: string) {
+        const regex = /^[a-zA-Z0-9_]{4,20}$/;
+        return regex.test(username);
     }
+
+    function isValidPassword(password: string) {
+        const passwordRegex = /^[A-Za-z\d]{6,20}$/;
+        return passwordRegex.test(password);
+    }
+
+    // Example usage      
+    const validateForm = () => {
+        if (!isValidUsername(username)) {
+            return 'invalid username'
+        }
+        if (!isValidPassword(password)) {
+            return 'invalid password'
+        }
+        return 'valid'
+    }
+
+
 
     const handleLogin = async () => {
         const validation = validateForm()
@@ -65,14 +67,21 @@ const LoginPage = () => {
             setErorMsg('invalid username or password')
             // (login.error)
         } else {
-
             window.location.reload()
             // (login.data)
         }
-
     }
 
     const handleSignup = () => {
+        const validation = validateForm()
+        if (validation !== 'valid') {
+            setErorMsg(validation)
+            setError(true)
+            return
+        } else {
+            setError(false)
+            setErorMsg('')
+        }
         const resp = createUser(username, password).then((resp: any) => {
             // (resp)
             if (resp === "username taken") {
@@ -90,12 +99,10 @@ const LoginPage = () => {
         <div className="flex items-center justify-center flex-col mt-10" style={{ width: '100%' }}>
             <div className="flex items-center gap-1 mt-3 justify-center flex-col">
                 {/* make this input only accept lowercase */}
-
-                <input style={{ background: '#1e1e1e' }} type="text" className={usernameTaken ? 'border border-red-500 px-2 py-2 outline-none' : `px-2 py-2 outline-none`} onChange={(e) => setUsername(e.currentTarget.value.toLowerCase())} placeholder="username" />
+                <input style={{ background: '#1e1e1e' }} type="text" className={usernameTaken ? 'border border-red-500 px-2 py-2 outline-none' : `px-2 py-2 outline-none`} onChange={(e) => setUsername(e.currentTarget.value)} placeholder="username" />
                 {usernameTaken &&
                     <p className="text-sm text-gray-400">username already exists</p>
                 }
-
                 <input style={{ background: '#1e1e1e' }} type='password' className="px-2 py-2 outline-none" onChange={(e) => setPassword(e.currentTarget.value)} placeholder="password" />
                 <button onClick={() => handleSignup()} className="px-3 py-1 mt-1 flex gap-2 border border-dashed border-green-700">Signup</button>
             </div>
@@ -103,7 +110,7 @@ const LoginPage = () => {
                 {error &&
                     <p className="text-sm text-gray-400">{errorMsg}</p>
                 }
-                <input style={{ background: '#1e1e1e' }} type="text" className="px-2 py-2 outline-none" onChange={(e) => setUsername(e.currentTarget.value.toLowerCase())} placeholder="username" />
+                <input style={{ background: '#1e1e1e' }} type="text" className="px-2 py-2 outline-none" onChange={(e) => setUsername(e.currentTarget.value)} placeholder="username" />
                 <input style={{ background: '#1e1e1e' }} type='password' className="px-2 py-2 outline-none" onChange={(e) => setPassword(e.currentTarget.value)} placeholder="password" />
                 <button onClick={() => handleLogin()} className='px-3 py-1 mt-1 flex gap-2 border border-dashed border-green-700'>Login</button>
             </div>

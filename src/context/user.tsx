@@ -82,15 +82,16 @@ export const UserProvider = ({ children }:
         const { data, error } = await supabase
             .from('profiles')
             .select('username')
-            .eq('username', username)
+            .eq('username', username.toLowerCase())
             .select()
         if (error) {
+            console.log(error)
             // (error)
         } else {
             if (data[0]) {
                 return true
             } else {
-                false
+                return false
             }
         }
     }
@@ -126,7 +127,9 @@ export const UserProvider = ({ children }:
                 // (data)
                 return "sign up success"
             } else {
-                // (error)
+                console.log(error)
+
+                return ("username taken")
             }
 
             // create a function that when a user is created a profile is also created with the first @ found before the username
