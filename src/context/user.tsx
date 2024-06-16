@@ -1,7 +1,7 @@
 "use client"
 import { supabase } from '@/libs/supabase';
 import { UUID } from 'crypto';
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 // Define the shape of your user context
 interface UserContextType {
@@ -35,49 +35,48 @@ export const UserProvider = ({ children }:
     const [user, setUser] = useState<any | null>(null);
     const [profile, setProfile] = useState<any | null>(null);
 
-    async function createNewProfile(name: string, username: string, email: string, userId: UUID) {
-        const { data, error } = await supabase.from('profiles').insert({ name: name, username: username, email: email, user_id: userId }).select()
+    const hasProfileBeenCreated = useRef(false);
+
+    const createNewProfile = useCallback(async (name: string, username: string, email: string, userId: string) => {
+        console.log('req');
+        const { data, error } = await supabase
+            .from('profiles')
+            .insert({ name, username, email, user_id: userId })
+            .select();
         if (error) {
-            console.log(error)
+            console.log(error);
         } else {
-            console.log(data)
-            setProfile(data[0])
+            setProfile(data[0]);
         }
-    }
+    }, []);
 
-    async function init() {
-        const session: any = await supabase.auth.getSession()
+    const init = useCallback(async () => {
+        const session = await supabase.auth.getSession();
         if (session.data.session) {
-            setUser(session.data.session?.user)
-            console.log(session.data.session?.user)
-            const { data, error } = await supabase.from('profiles').select().eq('user_id', session.data.session?.user.id).select('*')
+            setUser(session.data.session?.user);
+            const { data, error } = await supabase
+                .from('profiles')
+                .select()
+                .eq('user_id', session.data.session?.user.id)
+                .select('*');
             if (error) {
-                console.log(error)
-                setProfile(null)
+                console.log(error);
             } else {
-                if (data) {
-                    console.log(data)
-                    const random = Math.floor(Math.random() * 1000)
-
-                    if (data.length == 0) {
-                        createNewProfile(session.data.session?.user.user_metadata.full_name, session.data.session?.user.user_metadata.user_name + random, session.data.session?.user.email, session.data.session?.user.id)
-                    }
-                    setProfile(data[0])
+                const random = Math.floor(Math.random() * 1000);
+                if (data.length === 0 && !hasProfileBeenCreated.current) {
+                    hasProfileBeenCreated.current = true;
+                    await createNewProfile(
+                        session.data.session?.user.user_metadata.full_name,
+                        session.data.session?.user.user_metadata.user_name + random,
+                        session.data.session?.user.email,
+                        session.data.session?.user.id
+                    );
                 } else {
-                    // console.log('creating new profile ')
-                    // if metadata exists create using it 
-                    const random = Math.floor(Math.random() * 1000)
-                    if (session.data.session?.user.user_metadata) {
-                        createNewProfile(session.data.session?.user.user_metadata.full_name, session.data.session?.user.user_metadata.user_name + random, session.data.session?.user.email, session.data.session?.user.id)
-                    }
-                    // else{
-                    //     // make the name the email before the @
-                    //     createNewProfile(session.data.session?.user.email.split('@')[0], session.data.session?.user.username, session.data.session?.user.email, session.data.session?.user.id)
-                    // }
+                    setProfile(data[0]);
                 }
             }
         }
-    }
+    }, [createNewProfile]);
 
     const IsUsernameTaken = async (username: string) => {
         const { data, error } = await supabase
@@ -86,7 +85,7 @@ export const UserProvider = ({ children }:
             .eq('username', username)
             .select()
         if (error) {
-            console.log(error)
+            // (error)
         } else {
             if (data[0]) {
                 return true
@@ -99,14 +98,14 @@ export const UserProvider = ({ children }:
 
     const createUser = async (username: string, password: string) => {
         // first check if username exists 
-        console.log(username)
-        console.log(password)
+        // (username)
+        // (password)
         const usernametaken = await IsUsernameTaken(username)
         if (usernametaken) {
             return "username taken"
         } else {
             const tempEmail = username + '@eacc.et'
-            console.log(tempEmail)
+            // (tempEmail)
             const { data, error } = await supabase.auth.signUp({
                 email: tempEmail,
                 password: password
@@ -114,20 +113,20 @@ export const UserProvider = ({ children }:
             if (data.session) {
                 const new_profile = await supabase.from('profiles').insert({ username: username, user_id: data.user?.id }).select()
                 if (new_profile.error) {
-                    console.log(error)
+                    // (error)
                 } else {
-                    console.log(new_profile.data[0])
+                    // (new_profile.data[0])
                     setProfile(new_profile.data[0])
                 }
                 const sesh = await supabase.auth.setSession({
                     access_token: data.session?.access_token,
                     refresh_token: data.session?.refresh_token
                 });
-                console.log(sesh)
-                console.log(data)
+                // (sesh)
+                // (data)
                 return "sign up success"
             } else {
-                console.log(error)
+                // (error)
             }
 
             // create a function that when a user is created a profile is also created with the first @ found before the username
@@ -137,7 +136,7 @@ export const UserProvider = ({ children }:
 
     const logout = async () => {
         const { error } = await supabase.auth.signOut()
-        console.log(error)
+        // (error)
         await setUser(null)
         await setProfile(null)
     }

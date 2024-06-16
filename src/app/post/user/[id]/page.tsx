@@ -14,7 +14,7 @@ export default function UserPosts(context: any) {
         setLoading(true)
         const res = await fetch('/api/post/user/' + id + '/?p=' + page)
         const data = await res.json()
-        console.log(data)
+        // (data)
 
 
         setPosts(data)
@@ -23,7 +23,7 @@ export default function UserPosts(context: any) {
     }
 
     const incrementPage = async () => {
-        console.log(page)
+        // (page)
         if (page > 0) {
             await setPage(page + 1)
             setPosts(null)
@@ -34,7 +34,7 @@ export default function UserPosts(context: any) {
     }
 
     const decrementPage = async () => {
-        console.log(page)
+        // (page)
         if (page > 1) {
             await setPage(page - 1)
             setPosts(null)

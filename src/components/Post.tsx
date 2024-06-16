@@ -4,9 +4,13 @@ import { useUserContext } from '@/context/user';
 import { supabase } from '@/libs/supabase';
 import { UUID } from 'crypto';
 import { Zap } from 'lucide-react';
+import { Inter, Roboto, Source_Code_Pro } from 'next/font/google';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+const inter = Source_Code_Pro({ subsets: ["latin"], weight: '300' });
+
+
 
 const Post = ({ data, num, page }: any) => {
     const { zap_post, zappedPosts, unZapPost, deletePost } = usePostsContext();
@@ -17,7 +21,6 @@ const Post = ({ data, num, page }: any) => {
         // openPost(data.id);
         // redirect to post page
         router.push(`/post/${data.id}`)
-
     }
 
     function timeAgo(createdAt: Date) {
@@ -53,19 +56,18 @@ const Post = ({ data, num, page }: any) => {
         }
 
         await zap_post(zappp)
-        console.log(zappp)
+        // (zappp)
 
     }
 
     return (
 
-        <div className={num === null ? 'flex  mb-6 ' : 'flex  mb-2'}>
-
-            <div className='font-sans w-full'>
+        <div className={num === null ? 'flex  mb-6 ' : 'flex  mb-1.5'}>
+            <div className='w-full'>
                 <div className='flex gap-1 w-full '>
 
 
-                    <div className='flex items-center justify-center flex-col'>
+                    <div className={`flex items-center self-start mt-1  flex-col ${page == null ? 'justify-start mt-1' : 'justify-center'}`}>
                         {page != null &&
                             <p className=' text-2xs mr-1'>{(num + 1) + ((page - 1) * 30)}.</p>
                         }
@@ -73,18 +75,18 @@ const Post = ({ data, num, page }: any) => {
                             ? <>
                                 {zappedPosts.includes(data.id)
                                     ? <div onClick={() => unZapPost(data.id)} className='p-1 '>
-                                        <Zap className='text-green-600 hover:text-green-600 cursor-pointer zapppp' size={15} />
+                                        <Zap className='text-green-600 hover:text-green-600 cursor-pointer zapppp' size={13} />
                                     </div>
                                     :
                                     <div onClick={() => zapPost(data.id, data.creator)} className='p-1 '>
-                                        <Zap className='hover:text-green-600 cursor-pointer zapppp' size={15} />
+                                        <Zap className='hover:text-green-600 cursor-pointer zapppp' size={13} />
                                     </div>
                                 }
                             </>
                             :
                             <Link href='/login'>
                                 <div className='p-1'>
-                                    <Zap className='cursor-pointer ' size={15} />
+                                    <Zap className='cursor-pointer ' size={13} />
                                 </div>
                             </Link>
                         }
@@ -94,7 +96,7 @@ const Post = ({ data, num, page }: any) => {
                         {/* <Link href={`/post/${data.id}`}> */}
                         <div className="inline-flex  w-full items-baseline ">
 
-                            <p className=" leading-5 mb-0 cursor-pointer flex  no-select">
+                            <div className=" leading-5 mb-0 cursor-pointer flex  no-select">
 
                                 <div>
                                     {data.link == null || data.link == "null"
@@ -107,13 +109,13 @@ const Post = ({ data, num, page }: any) => {
                                     }
                                 </div>
 
-                            </p>
+                            </div>
                         </div>
                         {/* </Link> */}
                         <div className='flex gap-2 text-white text-opacity-55 text-xs   pt-0.5'>
                             <p className='hover:underline cursor-pointer'>{data.zap_count} zaps</p>
                             <Link href={'/user/' + data.profiles.username} >
-                                <p className='hover:underline cursor-pointer'>by @{data.profiles.username}</p>
+                                <p className='hover:underline cursor-pointer'>by {data.profiles.username}</p>
                             </Link>
                             <p>{timeAgo(data.created_at)}</p>
                             <Link href={'/post/' + data.id}>
@@ -124,7 +126,7 @@ const Post = ({ data, num, page }: any) => {
                             }
                         </div>
                         {data.text != null && data.text != 'null' &&
-                            <div className='mt-2'>
+                            <div className='mt-2 md:w-8/12 w-full'>
                                 <p style={{ fontSize: '10pt' }} >{data.text}</p>
                             </div>
                         }

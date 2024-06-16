@@ -22,7 +22,7 @@ export default function Home() {
 
 
   const incrementPage = async () => {
-    console.log(page)
+    // (page)
     if (page > 0) {
       await setPage(page + 1)
       setPosts(null)
@@ -50,7 +50,7 @@ export default function Home() {
   }
 
   const decrementPage = async () => {
-    console.log(page)
+    // (page)
     if (page > 1) {
       await setPage(page - 1)
       setPosts(null)

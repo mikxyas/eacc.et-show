@@ -20,15 +20,15 @@ export async function POST(req: NextRequest) {
         parent = String(formData.get('parent'))
     }
     // const parent = formData.get('parent')
-    console.log(formData)
+    // (formData)
     const response = await supabase
         .from('comments')
         .insert({ content: content, post: post, parent: parent, replier: session?.user.id })
         .select('*, profiles(*)')
     if (response.error) {
-        console.log(response.error)
+        // (response.error)
     } else {
-        console.log(response.data)
+        // (response.data)
     }
     // send the user the new post
     return NextResponse.json(response, {

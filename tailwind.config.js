@@ -12,6 +12,17 @@ module.exports = {
   theme: {
 
     extend: {
+      margin: {
+        "comment": "-1.09rem",
+      },
+      width: {
+        "reply-pc": '30vw'
+      },
+      fontFamily: {
+        "roboto": ["Source Code"],
+        // "commit": ["Commit", "sans-serif"],
+      },
+
       fontSize: {
         "2xs": "10.3px",
         "3xs": "6px",

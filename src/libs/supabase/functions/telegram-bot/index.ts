@@ -5,7 +5,7 @@
 // @ts-ignore
 import { serve } from "https://deno.land/std@0.131.0/http/server.ts";
 
-console.log(`Function "telegram-bot" up and running!`);
+// (`Function "telegram-bot" up and running!`);
 //@ts-ignore
 import { Bot, webhookCallback } from "https://deno.land/x/grammy@v1.8.3/mod.ts";
 // @ts-ignore
@@ -29,7 +29,7 @@ bot.command("start", async (ctx: any) => {
         .select('*')
         .eq('telegram_id', userId)
     if (error) {
-        console.log(error)
+        // (error)
     } else {
         // ctx.reply("Welcome! Up and running.")
         if (data.length === 0) {

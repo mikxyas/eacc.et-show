@@ -41,7 +41,7 @@ const PostPage = (context: any) => {
         return nestedComments;
     };
     if (viewedPost?.comments) {
-        console.log(nestComments(viewedPost?.comments))
+        // (nestComments(viewedPost?.comments))
     }
     if (!viewedPost) {
         return <div className="flex flex-col  items-center md:mx-44 justify-center">
@@ -50,7 +50,7 @@ const PostPage = (context: any) => {
             </div>
         </div>;
     }
-    console.log(viewedPost)
+    // (viewedPost)
     return (
         <div className="items-center justify-center flex flex-col  md:mx-44">
             <div style={{ background: '#1e1e1e', alignSelf: 'center' }} className="pt-3 w-full md:px-1 pb-3  ">

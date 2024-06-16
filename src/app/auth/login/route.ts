@@ -9,12 +9,12 @@ export async function POST(req: NextRequest) {
     const supabase = await createRouteHandlerClient({
         cookies: () => cookieStore,
     })
-    console.log("trying to login")
+    // ("trying to login")
 
     const formData = await req.formData()
     const email = String(formData.get('email'))
     const password = String(formData.get('password'))
-    console.log(formData)
+    // (formData)
 
 
     const response = await supabase
@@ -23,9 +23,9 @@ export async function POST(req: NextRequest) {
             email, password,
         });
     if (response.error) {
-        console.log(response.error)
+        // (response.error)
     } else {
-        console.log(response.data)
+        // (response.data)
     }
 
     return NextResponse.redirect(url.origin, {

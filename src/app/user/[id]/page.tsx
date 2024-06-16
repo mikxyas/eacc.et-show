@@ -11,7 +11,7 @@ export default function User(context: any) {
         const res = await fetch('/api/user/' + id)
         const data = await res.json()
         setProfile(data)
-        console.log(data)
+        // (data)
     }
 
     useEffect(() => {

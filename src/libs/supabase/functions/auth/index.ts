@@ -5,7 +5,7 @@
 // @ts-ignore
 import { serve } from "https://deno.land/std@0.131.0/http/server.ts";
 
-console.log(`Function "telegram-bot" up and running!`);
+// (`Function "telegram-bot" up and running!`);
 // @ts-ignore
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.8.0";
 // @ts-ignore

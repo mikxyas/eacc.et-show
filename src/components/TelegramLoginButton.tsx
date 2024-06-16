@@ -14,7 +14,7 @@ interface TelegramLoginButtonProps {
 
 const TelegramLoginButton: React.FC<TelegramLoginButtonProps> = () => {
     const handleAuth = (user: any) => {
-        console.log(user)
+        // (user)
     }
     const { openTelegramLogin } = useTelegramLogin({ bot_id: "7499969599:AAEg3y0kbuQW9y0tpGFMj09c6rL442aTWbY", onAuth: handleAuth });
 

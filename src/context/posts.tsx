@@ -67,7 +67,7 @@ export const PostsProvider = ({ children }
                 if (data.ids != null) {
                     setZappedComments(data.ids)
                 }
-                console.log(data)
+                // (data)
                 if (data.data.comments[0] == null) {
                     const post = {
                         ...data.data,
@@ -79,9 +79,9 @@ export const PostsProvider = ({ children }
                 }
                 // setViewedPost(data.data);
             } else {
-                console.log(data.error)
+                // (data.error)
             }
-            console.log(data)
+            // (data)
         })
     };
 
@@ -115,9 +115,9 @@ export const PostsProvider = ({ children }
                 return comment
             })
             setViewedPost({ ...viewedPost, comments: newComments })
-            console.log(error)
+            // (error)
         } else {
-            console.log('deleted')
+            // ('deleted')
         }
     }
 
@@ -131,7 +131,7 @@ export const PostsProvider = ({ children }
         }
         // delete post_id from zappedPosts
         const s = zappedPosts.filter((id: UUID) => id != post_id)
-        console.log(s)
+        // (s)
         // update posts list 
         const newPostList: any = posts.map((post: any) => {
             if (post.id === post_id) {
@@ -160,10 +160,10 @@ export const PostsProvider = ({ children }
                 return post
             })
             setPosts(newPosts)
-            console.log(error)
+            // (error)
         } else {
             // remove post_id from zappedPosts
-            console.log('deleted')
+            // ('deleted')
         }
     }
     async function zap_post(zappp: any) {
@@ -203,9 +203,9 @@ export const PostsProvider = ({ children }
                 return post
             })
             setPosts(newPosts)
-            console.log(error)
+            // (error)
         } else {
-            console.log(data)
+            // (data)
         }
     }
 
@@ -216,7 +216,7 @@ export const PostsProvider = ({ children }
             body: formDataToSend
         }).then(res => res.json())
             .then(data => {
-                console.log(data[0])
+                // (data[0])
                 // how will content get featured in the feed
 
                 id = data[0].id
@@ -266,11 +266,11 @@ export const PostsProvider = ({ children }
                 return comment
             })
             setViewedPost({ ...viewedPost, comments: newComments })
-            console.log(error)
+            // (error)
         } else {
-            console.log(data)
+            // (data)
             // updated zapped post's zap_count
-            console.log(zappedComments)
+            // (zappedComments)
             // if (zappedComments != null) {
             //     const s = [
             //         ...zappedComments,
@@ -299,9 +299,9 @@ export const PostsProvider = ({ children }
 
         const data = await res.json();
         if (data.error) {
-            console.log(data.error)
+            // (data.error)
         } else {
-            console.log(data.data[0])
+            // (data.data[0])
             viewedPost.comments.push(data.data[0])
             const newPosts: any = posts.map((post: any) => {
                 if (post.id === data.data[0].post) {
@@ -314,7 +314,7 @@ export const PostsProvider = ({ children }
         }
         // add new reply to post
 
-        // console.log(data)
+        // // (data)
     }
 
     async function deleteComment(comment_id: UUID) {
@@ -324,7 +324,7 @@ export const PostsProvider = ({ children }
             .eq('id', comment_id)
             .eq('replier', user.id)
         if (error) {
-            console.log(error)
+            // (error)
         } else {
             // remove comment_id from zappedComments
             const s = zappedComments.filter((id: UUID) => id != comment_id)
@@ -332,6 +332,14 @@ export const PostsProvider = ({ children }
             // update viewedPost.comments
             const newComments = viewedPost.comments.filter((comment: any) => comment.id != comment_id)
             setViewedPost({ ...viewedPost, comments: newComments })
+            // update the post's comment_count
+            const newPosts: any = posts.map((post: any) => {
+                if (post.id === viewedPost.id) {
+                    post.comment_count -= 1
+                }
+                return post
+            })
+            setPosts(newPosts)
         }
     }
 
@@ -342,7 +350,7 @@ export const PostsProvider = ({ children }
             .eq('id', post_id)
             .eq('creator', user.id)
         if (error) {
-            console.log(error)
+            // (error)
         } else {
             // remove post_id from zappedPosts
 
@@ -366,10 +374,10 @@ export const PostsProvider = ({ children }
             setZappedPosts(data.ids)
         }
         if (data.data) {
-            console.log(data)
+            // (data)
             setPosts(data.data)
         } else {
-            console.log(data.error)
+            // (data.error)
         }
         setLoading(false)
     }
@@ -386,12 +394,12 @@ export const PostsProvider = ({ children }
     useEffect(() => {
         // extract p from url
         if (page === 1 && posts === null) {
-            console.log('extracting url')
+            // ('extracting url')
             extractPageFromUrl()
         }
         getPosts();
 
-        console.log('just run')
+        // ('just run')
     }, [page, sortByNew])
 
     return (

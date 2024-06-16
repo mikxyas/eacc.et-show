@@ -4,7 +4,6 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { UserProvider } from "@/context/user";
 import { PostsProvider } from "@/context/posts";
-
 const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "show -> e/acc -> et",

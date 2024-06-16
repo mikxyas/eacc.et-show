@@ -20,7 +20,7 @@ export async function middleware(req: NextRequest) {
         // redirect to base url then home
         return NextResponse.redirect(new URL('/', req.url))
     }
-    // console.log(session)
+    // // (session)
     // if (!session) {
     //     // redirect the user to the login page
     //     return NextResponse.rewrite(new URL('/login', req.url))

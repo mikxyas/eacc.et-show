@@ -4,8 +4,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest, context: any) {
     const id = context.params.id
-    console.log(context)
-    console.log('this is the id')
+    // (context)
+    // ('this is the id')
     const cookieStore = cookies();
 
     const supabase = await createRouteHandlerClient({
@@ -38,9 +38,9 @@ export async function GET(req: NextRequest, context: any) {
 
 
             if (zappedComments.error) {
-                console.log(zappedComments.error)
+                // (zappedComments.error)
             } else {
-                console.log(zappedComments.data)
+                // (zappedComments.data)
 
                 const ids: any = []
                 if (zappedComments.data.length === 0) {
@@ -50,7 +50,7 @@ export async function GET(req: NextRequest, context: any) {
                     }
                 } else {
                     const listOfIds = zappedComments.data.map((zap) => {
-                        console.log(zap.zaps[0].comment_zapped)
+                        // (zap.zaps[0].comment_zapped)
                         ids.push(zap.zaps[0].comment_zapped)
                     })
                     newResp = {

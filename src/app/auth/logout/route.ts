@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
         .auth
         .signOut();
     if (response.error) {
-        console.log(response.error)
+        // (response.error)
     }
     // refresh the page
 

@@ -8,18 +8,24 @@ import React, { useEffect, useState } from 'react'
 export default function UserProfile() {
     const [formData, setFormData] = useState({} as any)
     const { profile, setProfile } = useUserContext()
+    const [isDuplicate, setIsDuplicate] = useState(false)
     const router = useRouter()
     const handleChange = (e: any) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
 
     const updateProfile = async () => {
+
         const { data, error } = await supabase.from('profiles').update({ name: formData.name, username: formData.username, about: formData.about }).eq('user_id', profile.user_id).select()
-        if (error) {
+        if (error?.code == '23505') {
+            // (error)
+            setIsDuplicate(true)
             console.log(error)
         } else {
-            console.log(data)
+            // (data)
+            setIsDuplicate(false)
             setProfile(data[0])
+
             router.push('/user/' + data[0].username)
         }
 
@@ -33,8 +39,8 @@ export default function UserProfile() {
     }, [profile])
     if (profile == null) {
         return (
-            <div className="flex flex-col items-center justify-center">
-                <div style={{ background: 'transparent', alignSelf: 'center' }} className=" px-6 py-2 border-gray-500 border-dashed border-4 md:w-2/3">
+            <div className="flex flex-col items-center justify-center md:mx-44">
+                <div style={{ background: '#1e1e1e', alignSelf: 'center' }} className=" px-6 py-2  w-full">
                     Loading...
                 </div>
 
@@ -49,6 +55,7 @@ export default function UserProfile() {
                         <div className='w-full md:w-1/2 '>
                             <input style={{ background: '#1e1e1e' }} value={formData.name} placeholder='Name' onChange={(e) => handleChange(e)} className='outline-none p-2 w-full' type="text" name="name" />
                         </div>
+                        {isDuplicate && <p className='text-red-500'>Username already taken</p>}
                         <div className='w-full md:w-1/2'>
                             <input style={{ background: '#1e1e1e' }} value={formData.username} placeholder='Username' onChange={(e) => handleChange(e)} className=' outline-none p-2 w-full' width={200} type="text" name="username" />
                         </div>

@@ -20,9 +20,7 @@ const LoginPage = () => {
             provider: 'github'
         })
 
-        console.log(data, error)
-
-        alert(data)
+        // (data, error)
     }
 
     // create a function that validates the username doesn't contain any symbols other than _ and is a valid username that also doesnt' start with a number also make sure the password is validated with the standards 
@@ -64,18 +62,18 @@ const LoginPage = () => {
         if (login.error) {
             setError(true)
             setErorMsg('invalid username or password')
-            console.log(login.error)
+            // (login.error)
         } else {
 
             window.location.reload()
-            console.log(login.data)
+            // (login.data)
         }
 
     }
 
     const handleSignup = () => {
         const resp = createUser(username, password).then((resp: any) => {
-            console.log(resp)
+            // (resp)
             if (resp === "username taken") {
                 setUsernameTaken(true)
             }

@@ -17,16 +17,16 @@ export async function POST(req: NextRequest) {
     // const type = String(formData.get('type'))
     const link = String(formData.get('link'))
     const text = String(formData.get('text'))
-    console.log(formData)
+    // (formData)
 
     const response = await supabase
         .from('posts')
         .insert({ title: title, text: text, link: link, creator: session?.user.id })
         .select('*, profiles(*)')
     if (response.error) {
-        console.log(response.error)
+        // (response.error)
     } else {
-        console.log(response.data)
+        // (response.data)
     }
     // send the user the new post
     return NextResponse.json(response.data, {

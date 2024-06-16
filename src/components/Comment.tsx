@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import ReplyInput from './ReplyInput';
 import { usePostsContext } from '@/context/posts';
 import { useUserContext } from '@/context/user';
+import Link from 'next/link';
 
 export default function Comment({ post_id, comment }: any) {
     const { zapComment, zappedComments, unZapComment, deleteComment } = usePostsContext();
@@ -47,19 +48,32 @@ export default function Comment({ post_id, comment }: any) {
 
         return (
             <div key={comment.id} className='mt-2'>
-                <div className='flex gap-1 items-start text-white font-light text-opacity-70' style={{ fontSize: '8pt' }}>
-                    {zappedComments?.includes(comment.id) ? (
-                        <div onClick={() => unZapComment(comment.id)} className='p-0 flex flex-col items-center justify-center gap-1'>
-                            <Zap className='text-green-600 hover:text-green-600 cursor-pointer zapppp' size={15} />
-                            {comment.zap_count > 0 && <p className='hover:underline cursor-pointer'>{comment.zap_count}</p>}
+                <div className=' gap-1 flex items-start text-white  text-opacity-55 text-xs ' style={{ fontSize: '8pt', flexBasis: '' }}>
+
+                    {user == null
+                        ? <div className=''>
+                            <Link href='/login'>
+                                <div className=' p-0 flex flex-col items-center justify-center gap-1 '>
+                                    <Zap className='cursor-pointer ' size={13} />
+                                    {comment.zap_count > 0 && <p className='hover:underline cursor-pointer'>{comment.zap_count}</p>}
+                                </div>
+                            </Link>
                         </div>
-                    ) : (
-                        <div onClick={() => zapComment(comment.id, comment.replier)} className='p-0 flex flex-col items-center justify-center gap-1'>
-                            <Zap className='hover:text-green-600 cursor-pointer zapppp' size={15} />
-                            {comment.zap_count > 0 && <p className='hover:underline cursor-pointer'>{comment.zap_count}</p>}
-                        </div>
-                    )}
-                    <p className='hover:underline cursor-pointer'>@{comment.profiles.username}</p>
+                        : zappedComments?.includes(comment.id) ? (
+                            <div onClick={() => unZapComment(comment.id)} className='p-0 flex  flex-col items-center justify-center gap-1'>
+                                <Zap className='text-green-600 hover:text-green-600 cursor-pointer zapppp' size={13} />
+                                {comment.zap_count > 0 && <p className='hover:underline  cursor-pointer'>{comment.zap_count}</p>}
+                            </div>
+                        ) : (
+                            <div onClick={() => zapComment(comment.id, comment.replier)} className='p-0 flex  flex-col items-center justify-center gap-1'>
+                                <Zap className='hover:text-green-600 cursor-pointer zapppp' size={13} />
+                                {comment.zap_count > 0 && <p className='hover:underline  cursor-pointer'>{comment.zap_count}</p>}
+                            </div>
+                        )
+                    }
+                    <Link href={`/user/${comment.profiles.username}`}>
+                        <p className='hover:underline  cursor-pointer ' >{comment.profiles.username}</p>
+                    </Link>
                     <p>{timeAgo(comment.created_at)}</p>
                     {comment.replier == user?.id &&
                         <p
@@ -70,7 +84,7 @@ export default function Comment({ post_id, comment }: any) {
                     }
                     {/* <p>delete</p> */}
                 </div>
-                <div className={comment.zap_count > 0 ? ' -mt-5 ' : ''} style={{ fontSize: '10pt' }} >
+                <div className={comment.zap_count > 0 ? ' mt-comment ' : 'mt-0'} style={{ fontSize: '10pt' }} >
                     <div className='ml-5 md:w-2/3 inline-flex items-baseline  pr-1 md:pr-0'>
                         <p className='h-fit '>
                             {comment.content}
@@ -87,9 +101,7 @@ export default function Comment({ post_id, comment }: any) {
                                 <button onClick={() => setShowDelete((prev: any) => ({ ...prev, [comment.id]: !prev[comment.id] }))} className=' bg-gray-200  bg-opacity-10 hover:bg-opacity-20 border-black border-2 border-opacity-40 py-1 px-2 text-xs'>Cancel</button>
                             </div>
                         </div>
-
                     }
-
                     <div className='ml-6'>
                         <ReplyInput showReply={isReplyVisible} toggleReply={() => toggleReply(comment.id)} parent_id={comment.id} post_id={post_id} />
                     </div>

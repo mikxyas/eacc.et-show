@@ -5,8 +5,8 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
     const url = new URL(req.url);
     const params = new URLSearchParams(url.search);
-    console.log(params.get('p'))
-    console.log(params)
+    // (params.get('p'))
+    // (params)
     const cookieStore = cookies();
 
     const supabase = await createRouteHandlerClient({
@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
     })
     // inefficient af will set up hooks later
     const { data: { session } } = await supabase.auth.getSession()
-    // console.log(params)
+    // // (params)
     let newResp
 
     const page: any = params.get('p')
@@ -32,18 +32,18 @@ export async function GET(req: NextRequest) {
     if (sortbynew === 'true') {
         response = await supabase.rpc('get_newest_posts', { p_limit, p_offset });
     } else {
-        console.log('Getting top posts');
+        // ('Getting top posts');
         response = await supabase.rpc('get_posts_with_zap_counts', { p_limit, p_offset });
     }
 
     if (response.error) {
-        console.log(response.error)
+        // (response.error)
     } else {
         newResp = {
             ...response,
             ids: null
         }
-        // console.log(response.data)
+        // // (response.data)
     }
     if (session) {
         const zappedPosts = await supabase
@@ -52,12 +52,12 @@ export async function GET(req: NextRequest) {
             .eq('zapper', session?.user.id)
             .not('post_zapped', 'is', null) // Ensure the value is not null
         if (zappedPosts.error) {
-            console.log(zappedPosts.error)
+            // (zappedPosts.error)
         } else {
             // turn the ids into lists
-            console.log('-----------')
-            console.log(zappedPosts.data)
-            console.log('---------------')
+            // ('-----------')
+            // (zappedPosts.data)
+            // ('---------------')
             const ids: any = []
             const listOfIds = zappedPosts.data.map((id) => {
                 ids.push(id.post_zapped)
@@ -66,11 +66,11 @@ export async function GET(req: NextRequest) {
                 ...response,
                 ids: ids
             }
-            // console.log(zappedPosts.data)
+            // // (zappedPosts.data)
         }
     }
     // send the user the new post
-    // console.log(response)
+    // // (response)
     return NextResponse.json(newResp, {
         status: 201,
     });

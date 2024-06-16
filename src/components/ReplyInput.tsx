@@ -25,7 +25,7 @@ export default function ReplyInput({ post_id, parent_id, showReply, toggleReply 
         //     body: formdata
         // }
         // ).then(res => res.json()).then(data => {
-        //     console.log(data)
+        //     // (data)
         // })
     }
 
@@ -36,11 +36,11 @@ export default function ReplyInput({ post_id, parent_id, showReply, toggleReply 
     // }, [showReply])
 
     return (
-        <div className='' style={{ fontSize: '9pt' }}>
+        <div className='' style={{ fontSize: '10pt' }}>
             {
                 showReply == true
-                && <div style={{ width: '90%' }} className='mt-2 w-full flex  flex-col '>
-                    <textarea style={{ background: '#1e1e1e' }} value={reply} onChange={(e) => setReply(e.target.value)} className=' h-20  p-2 outline-none border-gray-500 border caret-green-500 ' placeholder='write your reply'></textarea>
+                && <div className='mt-2 w-full md:w-reply-pc flex pr-4 flex-col '>
+                    <textarea style={{ background: '#1e1e1e' }} value={reply} onChange={(e) => setReply(e.target.value)} className=' h-20  p-2 outline-none border-white border-opacity-10 border-2  ' placeholder='write your reply'></textarea>
                     <div className='flex  flex-row justify-between'>
                         <div className='gap-1 mt-2'>
                             {parent_id !== null &&

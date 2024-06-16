@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest, context: any) {
     const id = context.params.id
-    console.log(context)
+    // (context)
     const url = new URL(req.url);
     const params = new URLSearchParams(url.search);
     // const page = params.get('p')
@@ -35,20 +35,20 @@ export async function GET(req: NextRequest, context: any) {
     if (sortbynew === 'true') {
         response = await supabase.rpc('get_users_posts_with_zap_counts', { requested_users_id: id, p_limit: p_limit, p_offset: p_offset })
     } else {
-        console.log('Getting top posts');
+        // ('Getting top posts');
         response = await supabase.rpc('get_users_posts_with_zap_counts', { requested_users_id: id, p_limit: p_limit, p_offset: p_offset })
     }
 
     if (response.error) {
-        console.log(response.error)
+        // (response.error)
     } else {
         newResp = {
             ...response,
             ids: null
         }
-        // console.log(response.data)
+        // // (response.data)
     }
-    console.log(newResp)
+    // (newResp)
     return NextResponse.json(response.data, {
         status: 201,
     });

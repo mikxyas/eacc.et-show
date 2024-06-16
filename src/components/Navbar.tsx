@@ -15,7 +15,7 @@ const Navbar: React.FC = () => {
 
     const logoutUser = async () => {
         // const { error } = await supabase.auth.signOut();
-        // if (error) console.log('Error logging out:', error.message)
+        // if (error) // ('Error logging out:', error.message)
         await logout()
         window.location.reload()
         // refresh the page
