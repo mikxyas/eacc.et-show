@@ -4,11 +4,11 @@ import { useUserContext } from '@/context/user';
 import { supabase } from '@/libs/supabase';
 import { UUID } from 'crypto';
 import { Zap } from 'lucide-react';
-import { Inter, Roboto, Source_Code_Pro } from 'next/font/google';
+// import { Inter, Roboto, Source_Code_Pro } from 'next/font/google';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-const inter = Source_Code_Pro({ subsets: ["latin"], weight: '300' });
+// const inter = Source_Code_Pro({ subsets: ["latin"], weight: '300' });
 
 
 
