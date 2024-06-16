@@ -33,6 +33,7 @@ const LoginPage = () => {
         if (password.length < 6) {
             return 'password must be at least 6 characters long'
         }
+
         if (!regex.test(username)) {
             return 'username must only contain letters, numbers and _'
         }
@@ -88,7 +89,9 @@ const LoginPage = () => {
 
         <div className="flex items-center justify-center flex-col mt-10" style={{ width: '100%' }}>
             <div className="flex items-center gap-1 mt-3 justify-center flex-col">
-                <input style={{ background: '#1e1e1e' }} type="text" className={usernameTaken ? 'border border-red-500 px-2 py-2 outline-none' : `px-2 py-2 outline-none`} onChange={(e) => setUsername(e.currentTarget.value)} placeholder="username" />
+                {/* make this input only accept lowercase */}
+
+                <input style={{ background: '#1e1e1e' }} type="text" className={usernameTaken ? 'border border-red-500 px-2 py-2 outline-none' : `px-2 py-2 outline-none`} onChange={(e) => setUsername(e.currentTarget.value.toLowerCase())} placeholder="username" />
                 {usernameTaken &&
                     <p className="text-sm text-gray-400">username already exists</p>
                 }
@@ -100,7 +103,7 @@ const LoginPage = () => {
                 {error &&
                     <p className="text-sm text-gray-400">{errorMsg}</p>
                 }
-                <input style={{ background: '#1e1e1e' }} type="text" className="px-2 py-2 outline-none" onChange={(e) => setUsername(e.currentTarget.value)} placeholder="username" />
+                <input style={{ background: '#1e1e1e' }} type="text" className="px-2 py-2 outline-none" onChange={(e) => setUsername(e.currentTarget.value.toLowerCase())} placeholder="username" />
                 <input style={{ background: '#1e1e1e' }} type='password' className="px-2 py-2 outline-none" onChange={(e) => setPassword(e.currentTarget.value)} placeholder="password" />
                 <button onClick={() => handleLogin()} className='px-3 py-1 mt-1 flex gap-2 border border-dashed border-green-700'>Login</button>
             </div>

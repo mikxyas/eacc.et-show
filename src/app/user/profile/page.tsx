@@ -11,7 +11,7 @@ export default function UserProfile() {
     const [isDuplicate, setIsDuplicate] = useState(false)
     const router = useRouter()
     const handleChange = (e: any) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value })
+        setFormData({ ...formData, [e.target.name]: e.target.value.toLowerCase() })
     }
 
     const updateProfile = async () => {
