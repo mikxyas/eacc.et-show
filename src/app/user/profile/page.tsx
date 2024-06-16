@@ -11,7 +11,7 @@ export default function UserProfile() {
     const [isDuplicate, setIsDuplicate] = useState(false)
     const router = useRouter()
     const handleChange = (e: any) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value.toLowerCase() })
+        setFormData({ ...formData, [e.target.name]: e.target.value })
     }
 
     const updateProfile = async () => {
@@ -57,7 +57,7 @@ export default function UserProfile() {
                         </div>
                         {isDuplicate && <p className='text-red-500'>Username already taken</p>}
                         <div className='w-full md:w-1/2'>
-                            <input style={{ background: '#1e1e1e' }} value={formData.username} placeholder='Username' onChange={(e) => handleChange(e)} className=' outline-none p-2 w-full' width={200} type="text" name="username" />
+                            <input style={{ background: '#1e1e1e' }} value={formData.username && formData.username} placeholder='Username' onChange={(e) => handleChange(e)} className=' outline-none p-2 w-full' width={200} type="text" name="username" />
                         </div>
                         <div className='w-full md:w-1/2'>
                             <textarea style={{ background: '#1e1e1e' }} value={formData.about} placeholder='bio' onChange={(e) => handleChange(e)} className='w-full h-20 outline-none p-2' name="about" />
