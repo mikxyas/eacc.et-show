@@ -77,9 +77,9 @@ export default function Home() {
             No posts found
           </div>
         </div>
-        <div className='flex justify-center items-center gap-1 mt-2'>
+        <div style={{ height: '80vh' }} className='flex justify-center  md:items-center items-end gap-1 mt-2'>
           <Link href={`/?p=${page > 1 ? page - 1 : 1}`}>
-            <button disabled={page == 1} onClick={() => SendUserBack()} className={' px-2 py-1 text-gray-50 bg-gray-200 hover:bg-opacity-20 bg-opacity-10 mb-3  rounded-none cursor-pointer border-black border-2 border-opacity-40'}>go back</button>
+            <button disabled={page == 1} onClick={() => SendUserBack()} className={' px-2 py-1 text-gray-50 bg-gray-200 hover:bg-opacity-20 bg-opacity-10 mb-3  mt-auto rounded-none cursor-pointer border-black border-2 border-opacity-40'}>go back</button>
           </Link>
         </div>
       </div>
