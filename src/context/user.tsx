@@ -37,7 +37,7 @@ export const UserProvider = ({ children }:
 
     const hasProfileBeenCreated = useRef(false);
 
-    const createNewProfile = useCallback(async (name: string, username: string, email: string, userId: string) => {
+    const createNewProfile = useCallback(async (name: any, username: any, email: any, userId: any) => {
         console.log('req');
         const { data, error } = await supabase
             .from('profiles')
