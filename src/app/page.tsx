@@ -79,7 +79,7 @@ export default function Home() {
         </div>
         <div className='flex justify-center items-center gap-1 mt-2'>
           <Link href={`/?p=${page > 1 ? page - 1 : 1}`}>
-            <button disabled={page == 1} onClick={() => SendUserBack()} className={page === 1 ? ` p-1 text-gray-50 bg-gray-600` : ' p-1 text-gray-50 bg-green-900'}>go back</button>
+            <button disabled={page == 1} onClick={() => SendUserBack()} className={' px-2 py-1 text-gray-50 bg-gray-200 hover:bg-opacity-20 bg-opacity-10 mb-3  rounded-none cursor-pointer border-black border-2 border-opacity-40'}>go back</button>
           </Link>
         </div>
       </div>
