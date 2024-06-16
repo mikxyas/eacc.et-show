@@ -17,11 +17,11 @@ export default function UserProfile() {
     const updateProfile = async () => {
 
         const { data, error } = await supabase.from('profiles').update({ name: formData.name, username: formData.username, about: formData.about }).eq('user_id', profile.user_id).select()
-        if (error && error?.code == '23505') {
+        if (error?.code == '23505') {
             // (error)
             setIsDuplicate(true)
             console.log(error)
-        } else {
+        } if (data) {
             // (data)
             setIsDuplicate(false)
             setProfile(data[0])
