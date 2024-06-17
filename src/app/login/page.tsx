@@ -12,6 +12,7 @@ const LoginPage = () => {
     const [usernameTaken, setUsernameTaken] = useState(false)
     const [errorMsg, setErorMsg] = useState('')
     const [error, setError] = useState(false)
+    const [loading, setLoading] = useState(false)
     const { createUser, createNewProfile } = useUserContext()
     const router = useRouter()
 
@@ -48,12 +49,15 @@ const LoginPage = () => {
 
 
     const handleLogin = async () => {
+        setLoading(true)
         const validation = validateForm()
         if (validation !== 'valid') {
             setErorMsg(validation)
+            setLoading(false)
             setError(true)
             return
         } else {
+            setLoading(false)
             setError(false)
             setErorMsg('')
         }
@@ -63,31 +67,38 @@ const LoginPage = () => {
             email: tempMail
         })
         if (login.error) {
+            setLoading(false)
             setError(true)
             setErorMsg('invalid username or password')
             // (login.error)
         } else {
+            setLoading(false)
             window.location.reload()
             // (login.data)
         }
     }
 
     const handleSignup = () => {
+        setLoading(true)
         const validation = validateForm()
         if (validation !== 'valid') {
             setErorMsg(validation)
             setError(true)
+            setLoading(false)
             return
         } else {
             setError(false)
+            setLoading(false)
             setErorMsg('')
         }
         const resp = createUser(username, password).then((resp: any) => {
             // (resp)
             if (resp === "username taken") {
+                setLoading(false)
                 setUsernameTaken(true)
             }
             if (resp === "sign up success") {
+                setLoading(false)
                 // create a profile for the user
                 window.location.reload()
             }
@@ -106,7 +117,12 @@ const LoginPage = () => {
                 <input style={{ background: '#1e1e1e' }} type='password' className="px-2 py-2 outline-none" onChange={(e) => setPassword(e.currentTarget.value)} placeholder="password" />
                 <button onClick={() => handleSignup()} className="px-3 py-1 mt-1 flex gap-2 border border-dashed border-green-700">Signup</button>
             </div>
+
             <div className="flex  items-center gap-1 mt-3 justify-center flex-col">
+                {
+                    loading &&
+                    <p className="text-sm text-gray-400">loading...</p>
+                }
                 {error &&
                     <p className="text-sm text-gray-400">{errorMsg}</p>
                 }

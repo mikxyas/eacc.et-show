@@ -3,7 +3,7 @@ import { usePostsContext } from '@/context/posts';
 import { useUserContext } from '@/context/user';
 import { supabase } from '@/libs/supabase';
 import { UUID } from 'crypto';
-import { Zap } from 'lucide-react';
+import { Delete, Trash, Zap } from 'lucide-react';
 // import { Inter, Roboto, Source_Code_Pro } from 'next/font/google';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -112,17 +112,17 @@ const Post = ({ data, num, page }: any) => {
                             </div>
                         </div>
                         {/* </Link> */}
-                        <div className='flex gap-2 text-white text-opacity-55 text-xs   pt-0.5'>
+                        <div className='flex gap-x-1 text-white text-opacity-55 text-xs flex-wrap   pt-0.5'>
                             <p className='hover:underline cursor-pointer'>{data.zap_count} zaps</p>
                             <Link href={'/user/' + data.profiles.username} >
                                 <p className='hover:underline cursor-pointer'>by {data.profiles.username}</p>
                             </Link>
                             <p>{timeAgo(data.created_at)}</p>
                             <Link href={'/post/' + data.id}>
-                                <p className='hover:underline cursor-pointer'>{data.comment_count} comment{data.comment_count != 1 && 's'}</p>
+                                <p className='hover:underline cursor-pointer'>| {data.comment_count} comment{data.comment_count != 1 && 's'}</p>
                             </Link>
                             {data.creator == user?.id &&
-                                <p onClick={() => setShowDelete(true)} className='cursor-pointer hover:underline'>delete post</p>
+                                <p onClick={() => setShowDelete(true)} className='cursor-pointer  hover:underline'>| delete post</p>
                             }
                         </div>
                         {data.text != null && data.text != 'null' &&
@@ -135,7 +135,7 @@ const Post = ({ data, num, page }: any) => {
                 </div>
                 {showDelete &&
                     <div className='ml-5 mt-1  '>
-                        <p className='text-gray-200'>Are you sure you want to delete this post</p>
+                        <p className='text-gray-200'>Are you sure you want to delete post?</p>
                         <div className='mt-1'>
                             <button onClick={() => deletePost(data.id)} className=' bg-gray-800 px-2 text-sm'>Yes</button>
                             <button onClick={() => setShowDelete(false)} className=' bg-gray-700 px-2 text-sm'>No</button>
