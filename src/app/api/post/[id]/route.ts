@@ -36,7 +36,6 @@ export async function GET(req: NextRequest, context: any) {
                 .eq('post', id)
                 .not('zaps.comment_zapped', 'is', null) // Ensure the value is not null
 
-
             if (zappedComments.error) {
                 // (zappedComments.error)
             } else {

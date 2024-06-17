@@ -59,14 +59,11 @@ const Post = ({ data, num, page }: any) => {
         // (zappp)
 
     }
-
     return (
 
         <div className={num === null ? 'flex  mb-6 ' : 'flex  mb-1.5'}>
             <div className='w-full'>
                 <div className='flex gap-1 w-full '>
-
-
                     <div className={`flex items-center self-start mt-1  flex-col ${page == null ? 'justify-start mt-1' : 'justify-center'}`}>
                         {page != null &&
                             <p className=' text-2xs mr-1'>{(num + 1) + ((page - 1) * 30)}.</p>
@@ -95,9 +92,7 @@ const Post = ({ data, num, page }: any) => {
                     <div className='w-full'>
                         {/* <Link href={`/post/${data.id}`}> */}
                         <div className="inline-flex  w-full items-baseline ">
-
                             <div className=" leading-5 mb-0 cursor-pointer flex  no-select">
-
                                 <div>
                                     {data.link == null || data.link == "null"
                                         ? <span onClick={num != null ? postClicked : () => { }}> {data.title}</span>
@@ -108,21 +103,29 @@ const Post = ({ data, num, page }: any) => {
                                         <a href={data.link} target='_blank'> <span className="text-gray-300 text-xs">({data.link})</span></a>
                                     }
                                 </div>
-
                             </div>
                         </div>
                         {/* </Link> */}
                         <div className='flex gap-x-1 text-white text-opacity-55 text-xs flex-wrap   pt-0.5'>
                             <p className='hover:underline cursor-pointer'>{data.zap_count} zaps</p>
                             <Link href={'/user/' + data.profiles.username} >
-                                <p className='hover:underline cursor-pointer'>by {data.profiles.username}</p>
+                                <p className='hover:underline cursor-pointer'>by {data.profiles.username} |</p>
                             </Link>
                             <p>{timeAgo(data.created_at)}</p>
                             <Link href={'/post/' + data.id}>
                                 <p className='hover:underline cursor-pointer'>| {data.comment_count} comment{data.comment_count != 1 && 's'}</p>
                             </Link>
+                            {data.hackerlink &&
+                                <Link href={data.hackerlink} target='_blank'>
+                                    <p className='hover:underline cursor-pointer'>| hackerlink</p>
+                                </Link>
+                            }
+
                             {data.creator == user?.id &&
-                                <p onClick={() => setShowDelete(true)} className='cursor-pointer  hover:underline'>| delete post</p>
+                                <div className='flex gap-x-1'>
+                                    <p onClick={() => setShowDelete(true)} className='cursor-pointer  hover:underline'>| delete post</p>
+                                    <p onClick={() => router.push('/post/edit/' + data.id)} className='cursor-pointer  hover:underline'>| edit post</p>
+                                </div>
                             }
                         </div>
                         {data.text != null && data.text != 'null' &&

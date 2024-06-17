@@ -17,11 +17,12 @@ export async function POST(req: NextRequest) {
     // const type = String(formData.get('type'))
     const link = String(formData.get('link'))
     const text = String(formData.get('text'))
+    const hackerlink = String(formData.get('hackerlink'))
     // (formData)
 
     const response = await supabase
         .from('posts')
-        .insert({ title: title, text: text, link: link, creator: session?.user.id })
+        .insert({ title: title, text: text, link: link, creator: session?.user.id, hackerlink: hackerlink })
         .select('*, profiles(*)')
     if (response.error) {
         // (response.error)
