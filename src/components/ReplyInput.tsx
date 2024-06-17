@@ -1,39 +1,80 @@
-import { usePostsContext } from '@/context/posts'
 import { MessageCircle, MessageCircleDashed, MessageCircleOff, MessageCircleX, X, Zap } from 'lucide-react'
 import React, { useEffect } from 'react'
+import { useQueryClient, useQuery, useMutation } from '@tanstack/react-query'
+import { create_comment } from '@/functions/comments'
+import { supabase } from '@/libs/supabase'
 
 export default function ReplyInput({ post_id, parent_id, showReply, toggleReply }: any) {
     // const [showReply, setShowReply] = React.useState(false)
     const [reply, setReply] = React.useState('')
-    const { sendReply } = usePostsContext()
     const [replying, setReplying] = React.useState(false)
+    const client = useQueryClient()
+
+    const createComment = useMutation({
+        mutationFn: (comment: object) => {
+            return create_comment(comment)
+        },
+        // onMutate: async (comment: object) => {
+        //     const prevState: any = client.getQueryData(['post', { id: post_id }])
+        //     console.log(prevState)
+        //     const newComment = {
+        //         ...comment,
+        //         temp: true,
+        //         children: [],
+        //         profiles: {
+        //             username: '...sending',
+        //             id: 0,
+        //         }
+        //     }
+        //     const updatedComments = [...prevState.comments, newComment]
+        //     client.setQueryData(['post', { id: post_id }], { ...prevState, comments: updatedComments })
+        //     return prevState
+        // },
+        onSuccess: (data) => {
+            try {
+                // check if comments[0] = null  
+                console.log(data)
+                const prevState: any = client.getQueryData(['post', { id: post_id }])
+                let updatedComments = []
+                if (prevState.comments == null) {
+                    client.invalidateQueries({ queryKey: ['post', { id: post_id }] })
+                    setReply('')
+                    setReplying(false)
+                    return
+                } else {
+                    updatedComments = [...prevState.comments, data]
+                    console.log(updatedComments)
+                }
+                client.setQueryData(['post', { id: post_id }], { ...prevState, comments: updatedComments })
+                if (parent_id != null) {
+                    toggleReply()
+                }
+                setReply('')
+                setReplying(false)
+            } catch (e) {
+                console.log(e)
+            }
+
+        }
+    })
 
     const Send_Reply = async () => {
         setReplying(true)
         const formdata = new FormData()
-        formdata.append('content', reply)
-        formdata.append('post', post_id)
-        formdata.append('parent', parent_id)
-        await sendReply(formdata)
-        if (parent_id != null) {
-            toggleReply()
+        const session = await supabase.auth.getSession()
+        const obj = {
+            content: reply,
+            post: post_id,
+            parent: parent_id,
+            replier: session.data.session?.user.id
         }
-        setReply('')
-        setReplying(false)
-        // fetch('/api/comment/new', {
-        //     method: 'POST',
-        //     body: formdata
-        // }
-        // ).then(res => res.json()).then(data => {
-        //     // (data)
-        // })
+
+        await createComment.mutate(obj)
+
+
     }
 
-    // useEffect(() => {
-    //     if (parent_id === null && showReply === false) {
-    //         setShowReply(true)
-    //     }
-    // }, [showReply])
+
 
     return (
         <div className='' style={{ fontSize: '10pt' }}>
@@ -48,7 +89,7 @@ export default function ReplyInput({ post_id, parent_id, showReply, toggleReply 
                             }
                             <button disabled={reply.length == 0} onClick={Send_Reply} className=' bg-gray-200  bg-opacity-10 hover:bg-opacity-20 border-black border-2 border-opacity-40   text-white px-2 py-1  mb-3  rounded-none cursor-pointer '>add comment</button>
                         </div>
-                        {replying
+                        {createComment.isPending
                             ? <p className='mt-1'>...sending</p>
                             : <p></p>
                         }

@@ -1,19 +1,108 @@
 
-import { usePostsContext } from '@/context/posts';
 import { useUserContext } from '@/context/user';
-import { supabase } from '@/libs/supabase';
 import { UUID } from 'crypto';
-import { Delete, Trash, Zap } from 'lucide-react';
+import { Zap } from 'lucide-react';
 // import { Inter, Roboto, Source_Code_Pro } from 'next/font/google';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 // const inter = Source_Code_Pro({ subsets: ["latin"], weight: '300' });
-
-
-
+import { useQueryClient, useMutation } from '@tanstack/react-query';
+import { zapPost as zap_the_post, unzapPost as unzappPost } from '@/functions/posts';
+import { delete_post } from '@/functions/posts';
 const Post = ({ data, num, page }: any) => {
-    const { zap_post, zappedPosts, unZapPost, deletePost } = usePostsContext();
+    // const { deletePost } = usePostsContext();
+    const deletePost = useMutation({
+        mutationFn: (post_id) => {
+            return delete_post(post_id)
+        },
+        onSuccess: (post_id) => {
+            try {
+                if (page != null) {
+                    const posts: any = client.getQueryData(['posts', { sortByNew: false, page: page }])
+                    client.setQueryData(['posts', { sortByNew: false, page: page }], posts.data.filter((p: any) => p.id != post_id))
+                } else {
+                    client.setQueryData(['post', { id: post_id }], null)
+                    router.push('/')
+                }
+            }
+            catch (e) {
+                console.log(e)
+            }
+        }
+    })
+
+    const zapp_post = useMutation({
+        mutationFn: (zap) => {
+            return zap_the_post(zap)
+        },
+
+        onMutate: async (zap: any) => {
+            try {
+                if (page != null) {
+                    const posts: any = client.getQueryData(['posts', { sortByNew: false, page: page }])
+                    const zaps: any = client.getQueryData(['posts_zapped'])
+                    const new_posts_zap_count = posts.data.map((post: any) => {
+                        if (post.id == zap.post_zapped) {
+                            post.zap_count += 1
+                        }
+                        return post
+                    })
+
+                    client.setQueryData(['posts_zapped'], [...zaps, zap.post_zapped])
+                    client.setQueryData(['posts'], new_posts_zap_count)
+                } else {
+                    const post: any = client.getQueryData(['post', { id: zap.post_zapped }])
+                    post.zap_count += 1
+                    client.setQueryData(['post', { id: zap.post_zapped }], post)
+                    const zaps: any = client.getQueryData(['posts_zapped'])
+                    client.setQueryData(['posts_zapped'], [...zaps, zap.post_zapped])
+                }
+            }
+            catch (e) {
+                console.log(e)
+            }
+        }
+
+    })
+
+    const unzapp_post = useMutation({
+        mutationFn: (post_id) => {
+            return unzappPost(post_id)
+        },
+        onMutate: async (post_id) => {
+            try {
+                // if page null user is in post page so we dont need to update the posts query we update the post query
+                if (page != null) {
+                    const posts: any = client.getQueryData(['posts', { sortByNew: false, page: page }])
+
+                    const zaps: any = client.getQueryData(['posts_zapped'])
+                    const new_posts_zap_count = posts.data.map((post: any) => {
+                        if (post.id == post_id) {
+                            post.zap_count -= 1
+                        }
+                        return post
+                    })
+                    client.setQueryData(['posts_zapped'], zaps.filter((z: any) => z != post_id))
+                    client.setQueryData(['posts'], new_posts_zap_count)
+                } else {
+                    const post: any = client.getQueryData(['post', { id: post_id }])
+                    const zaps: any = client.getQueryData(['posts_zapped'])
+                    client.setQueryData(['posts_zapped'], zaps.filter((z: any) => z != post_id))
+                    post.zap_count -= 1
+                    client.setQueryData(['post', { id: post_id }], post)
+                }
+            }
+            catch (e) {
+                console.log(e)
+            }
+        },
+
+
+    })
+
+    const client = useQueryClient()
+    const zappedPosts: any = client.getQueryData(['posts_zapped'])
     const [showDelete, setShowDelete] = useState(false)
     const { user } = useUserContext()
     const router = useRouter()
@@ -43,19 +132,18 @@ const Post = ({ data, num, page }: any) => {
                 return `${count} ${interval.label}${count > 1 ? 's' : ''} ago`;
             }
         }
-
         return 'just now';
     }
 
-    async function zapPost(post_id: number, zapped: UUID) {
+    async function zapPost(post_id: any, zapped: any) {
 
-        const zappp = {
+        const zap_object = {
             post_zapped: post_id,
             zapper: user?.id,
             zapped: zapped,
         }
 
-        await zap_post(zappp)
+        zapp_post.mutate(zap_object)
         // (zappp)
 
     }
@@ -70,8 +158,8 @@ const Post = ({ data, num, page }: any) => {
                         }
                         {user != null
                             ? <>
-                                {zappedPosts.includes(data.id)
-                                    ? <div onClick={() => unZapPost(data.id)} className='p-1 '>
+                                {zappedPosts?.includes(data.id)
+                                    ? <div onClick={() => unzapp_post.mutate(data.id)} className='p-1 '>
                                         <Zap className='text-green-600 hover:text-green-600 cursor-pointer zapppp' size={13} />
                                     </div>
                                     :
@@ -95,11 +183,12 @@ const Post = ({ data, num, page }: any) => {
                             <div className=" leading-5 mb-0 cursor-pointer flex  no-select">
                                 <div>
                                     {data.link == null || data.link == "null"
+                                        // make this a Link
                                         ? <span onClick={num != null ? postClicked : () => { }}> {data.title}</span>
                                         : <a href={data.link} target='_blank' className='hover:underline'>{data.title}</a>
                                     }
 
-                                    {data.link != 'null' &&
+                                    {data.link != 'null' && data.link != '' && data.link != null &&
                                         <a href={data.link} target='_blank'> <span className="text-gray-300 text-xs">({data.link})</span></a>
                                     }
                                 </div>
@@ -136,11 +225,14 @@ const Post = ({ data, num, page }: any) => {
                     </div>
 
                 </div>
+                {deletePost.isPending &&
+                    <p className='text-xs'>deleting post...</p>
+                }
                 {showDelete &&
                     <div className='ml-5 mt-1  '>
                         <p className='text-gray-200'>Are you sure you want to delete post?</p>
                         <div className='mt-1'>
-                            <button onClick={() => deletePost(data.id)} className=' bg-gray-800 px-2 text-sm'>Yes</button>
+                            <button onClick={() => deletePost.mutate(data.id)} className=' bg-gray-800 px-2 text-sm'>Yes</button>
                             <button onClick={() => setShowDelete(false)} className=' bg-gray-700 px-2 text-sm'>No</button>
                         </div>
                     </div>

@@ -1,7 +1,6 @@
 "use client"
 
 import TelegramLoginButton from '@/components/TelegramLoginButton'
-import { usePostsContext } from '@/context/posts'
 import { useUserContext } from '@/context/user'
 import { supabase } from '@/libs/supabase'
 import { useRouter } from 'next/navigation'
@@ -11,7 +10,6 @@ export default function EditPost(context: any) {
     const post_id = context.params.id
     const [formData, setFormData] = useState({} as any)
     const [urlValid, setUrlValid] = useState(true)
-    const { create_post } = usePostsContext()
     const [emptyInput, setEmptyInput] = useState(false)
     const [linkPostEmpty, setLinkPostEmpty] = useState(false)
     const [textPostEmpty, setTextPostEmpty] = useState(false)
@@ -22,7 +20,6 @@ export default function EditPost(context: any) {
     const [title, setTitle] = useState('')
     const [link, setLink] = useState('')
     const [text, setText] = useState('')
-    const { setViewedPost } = usePostsContext()
     const [hackerlink, setHackerlink] = useState('')
     const [hackerLinkError, setHackerLinkError] = useState(false)
     const [linkError, setLinkError] = useState(false)
@@ -142,14 +139,14 @@ export default function EditPost(context: any) {
         }
     }
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        // use post id and fetch the post data
-        if (user) {
-            getPost()
-            setViewedPost(null)
-        }
-    }, [user])
+    //     // use post id and fetch the post data
+    //     if (user) {
+    //         getPost()
+    //         setViewedPost(null)
+    //     }
+    // }, [user])
 
     if (isNotAllowed) {
         return (

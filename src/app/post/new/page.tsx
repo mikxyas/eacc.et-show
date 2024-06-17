@@ -1,19 +1,15 @@
 "use client"
 
-import TelegramLoginButton from '@/components/TelegramLoginButton'
-import { usePostsContext } from '@/context/posts'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
-
+import { create_post as add_post } from '@/functions/posts'
+import { useQueryClient, useMutation } from '@tanstack/react-query'
 export default function NewPost() {
-    const [formData, setFormData] = useState({} as any)
     const [urlValid, setUrlValid] = useState(true)
-    const { create_post } = usePostsContext()
     const [emptyInput, setEmptyInput] = useState(false)
     const [linkPostEmpty, setLinkPostEmpty] = useState(false)
     const [textPostEmpty, setTextPostEmpty] = useState(false)
     const [loading, setLoading] = useState(false)
-    const { setViewedPost } = usePostsContext()
     const [hackerlink, setHackerlink] = useState('')
     const [hackerLinkError, setHackerLinkError] = useState(false)
     const [linkError, setLinkError] = useState(false)
@@ -21,6 +17,18 @@ export default function NewPost() {
     const [title, setTitle] = useState('')
     const [link, setLink] = useState('')
     const [text, setText] = useState('')
+    const router = useRouter()
+
+    const client = useQueryClient()
+    const create_post = useMutation({
+        mutationFn: (data: any) => {
+            return add_post(data)
+        },
+        onSuccess: (data) => {
+            client.invalidateQueries({ queryKey: ['posts'] })
+            router.push('/post/' + data.id)
+        }
+    })
 
     const isHackerNewsLink = (url: any) => {
         try {
@@ -38,10 +46,8 @@ export default function NewPost() {
                 return false;
             }
 
-
         } catch (error) {
             console.log(error);
-            // If the URL is invalid, return false
             return false;
         }
     };
@@ -55,11 +61,9 @@ export default function NewPost() {
         setLink(e.target.value);
         if (isValidUrl(e.target.value)) {
             setLinkError(false);
-            //   setFormData({ ...formData, link: e.target.value });
         } else {
             setLinkError(true);
             setErrorMsg('Invalid URL');
-            //   setFormData({ ...formData, link: '' });
         }
     }
 
@@ -91,10 +95,8 @@ export default function NewPost() {
         }
     }
 
-    const handleChange = (e: any) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value })
-    }
-    const router = useRouter()
+
+
 
     // create a function that validates the link and checks if its a real link or not
     function isValidUrl(string: any) {
@@ -113,11 +115,10 @@ export default function NewPost() {
 
     const Post = async () => {
         setLoading(true)
-        setUrlValid(true)
         setEmptyInput(false)
         setLinkPostEmpty(false)
         setTextPostEmpty(false)
-        if (title.length < 7 || title.length > 80) {
+        if (title.length < 3 || title.length > 80) {
             setEmptyInput(true)
             setLoading(false)
             return
@@ -136,19 +137,13 @@ export default function NewPost() {
             text: text,
             hackerlink: hackerlink
         }
-        const actualFormData = new FormData()
-        actualFormData.append('title', title)
-        actualFormData.append('link', link)
-        actualFormData.append('text', text)
-        actualFormData.append('hackerlink', hackerlink)
-        const id = await create_post(actualFormData)
-        setLoading(false)
-        router.push('/post/' + id)
+        // const actualFormData = new FormData()
+        // actualFormData.append('title', title)
+        // actualFormData.append('link', link)
+        // actualFormData.append('text', text)
+        // actualFormData.append('hackerlink', hackerlink)
+        create_post.mutate(formDataToSend)
     }
-
-    useEffect(() => {
-        setViewedPost(null)
-    }, [])
 
     return (
         <div className='flex flex-col' >
@@ -191,8 +186,8 @@ export default function NewPost() {
                     </div>
                     <p className='w-full md:w-1/2 text-xs text-center text-gray-300'>Leave url blank to submit a question for discussion. If there is a url, text is optional.</p>
                     <button type="submit" className='py-2 px-2 bg-gray-200  bg-opacity-10 hover:bg-opacity-20 border-black border-2 border-opacity-40 ' onClick={Post}>create post</button>
-                    {loading &&
-                        <p>Loading...</p>
+                    {create_post.isPending &&
+                        <p>creating post...</p>
                     }
                 </div>
             </div>

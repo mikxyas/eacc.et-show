@@ -10,23 +10,29 @@ export const metadata: Metadata = {
   description: "a show of e/acc from et",
 };
 
+import { QueryClientProvider } from '@tanstack/react-query'
+import queryClient from "@/lib/queryClient";
+import ReactQueryPvorider from "@/lib/queryClient";
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
+
     <html lang="en">
       <body className={inter.className}>
+
         <UserProvider>
-          <PostsProvider>
+          {/* <PostsProvider> */}
+          <ReactQueryPvorider >
             <Navbar />
             {children}
-          </PostsProvider>
-
+          </ReactQueryPvorider>
+          {/* </PostsProvider> */}
         </UserProvider>
-
       </body>
     </html>
+
   );
 }

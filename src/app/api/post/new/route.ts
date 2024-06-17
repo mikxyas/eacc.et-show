@@ -33,9 +33,5 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(response.data, {
         status: 201,
     });
-    // return NextResponse.redirect(url.origin, {
-    //     status: 301,
-    // });
-
 
 }

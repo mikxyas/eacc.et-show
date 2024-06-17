@@ -36,13 +36,13 @@ interface UserContextType {
 const PostsContext = createContext<UserContextType | undefined>(undefined);
 
 // Create a custom hook to access the user context
-export const usePostsContext = () => {
-    const context = useContext(PostsContext);
-    if (!context) {
-        throw new Error('usePostsContext must be used within a PostsProvider');
-    }
-    return context;
-};
+// export const usePostsContext = () => {
+//     const context = useContext(PostsContext);
+//     if (!context) {
+//         throw new Error('usePostsContext must be used within a PostsProvider');
+//     }
+//     return context;
+// };
 
 // Create the user provider component
 export const PostsProvider = ({ children }
@@ -391,16 +391,16 @@ export const PostsProvider = ({ children }
 
     }
 
-    useEffect(() => {
-        // extract p from url
-        if (page === 1 && posts === null) {
-            // ('extracting url')
-            extractPageFromUrl()
-        }
-        getPosts();
+    // useEffect(() => {
+    //     // extract p from url
+    //     if (page === 1 && posts === null) {
+    //         // ('extracting url')
+    //         extractPageFromUrl()
+    //     }
+    //     getPosts();
 
-        // ('just run')
-    }, [page, sortByNew])
+    //     // ('just run')
+    // }, [page, sortByNew])
 
     return (
         <PostsContext.Provider value={{ deleteComment, deletePost, sortByNew, setSortByNew, loading, setLoading, page, setPage, create_post, postSortDate, setPostSortDate, unZapComment, zappedComments, zapComment, unZapPost, zappedPosts, zap_post, setViewedPost, viewedPost, openPost, posts, setPosts, sendReply }}>
