@@ -1,8 +1,9 @@
 
 "use client"
 import React from 'react'
-
-import dynamic from 'next/dynamic';
+import Comment from "@/components/Comment";
+import Post from "@/components/Post";
+import ReplyInput from "@/components/ReplyInput";
 
 import { HydrationBoundary, QueryClient, dehydrate, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -10,9 +11,6 @@ import usePostQuery from "@/hooks/use-post-query";
 import { createClient } from "@/utils/supabase/client";
 import { getPost } from '@/queries/get-post';
 
-const Post = dynamic(() => import('@/components/Post'), { ssr: true })
-const Comment = dynamic(() => import('@/components/Comment'), { ssr: true })
-const ReplyInput = dynamic(() => import('@/components/ReplyInput'), { ssr: true })
 
 export default function PostWComments({ id, prefetch }: any) {
     const client = createClient()
