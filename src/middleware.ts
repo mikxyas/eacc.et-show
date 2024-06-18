@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
 import { permanentRedirect, redirect } from 'next/navigation'
+import { updateSession } from './utils/middleware'
 
 
 
@@ -25,8 +26,8 @@ export async function middleware(req: NextRequest) {
     //     // redirect the user to the login page
     //     return NextResponse.rewrite(new URL('/login', req.url))
     // }
-
-    return res
+        // return res
+    return updateSession(req)
 };
 
 

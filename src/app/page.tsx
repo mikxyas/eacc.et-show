@@ -1,162 +1,56 @@
 
-"use client"
 
-import Post from "@/components/Post";
-import TelegramLoginButton from "@/components/TelegramLoginButton";
-import { ChevronLeft, ChevronRight, Key } from "lucide-react";
-import Link from "next/link";
-import React, { useEffect } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getPosts, getUsersZappedPosts } from "@/functions/posts";
+import React from "react";
+import { HydrationBoundary, QueryClient, dehydrate, useQuery } from "@tanstack/react-query";
 
+import usePostsQuery from "@/hooks/use-posts-query";
 
+import { cookies } from "next/headers";
+// import PostsList from "@/components/PostsList";
 
-export default function Home() {
+import { createClient } from "@/utils/supabase/server";
+import usePostsZapped from "@/hooks/use-posts-zapped";
+import queryClient from "@/utils/globalClientQuery";
 
-  const [feedPage, setFeedPage] = React.useState(1)
-  const [sortFeedByNew, setSortFeedByNew] = React.useState(false)
-  const client = useQueryClient()
-  const post_feed = useQuery({
-    queryKey: ['posts', { sortByNew: sortFeedByNew, page: feedPage }],
-    queryFn: getPosts,
-  },
-  )
+import dynamic from "next/dynamic";
 
-  // const user = await supabase.auth.getSession()
-  const zaps = useQuery({
-    queryKey: ['posts_zapped'],
-    queryFn: getUsersZappedPosts
-  })
+const DynamicPostLists = dynamic(() => import('@/components/PostsList'), { ssr: true })
 
-  // console.log(zaps.data)
+export default async function Home() {
 
 
+  const cookieStore = cookies()
+  const client = await createClient()
+  // const client = useSupabase()
+  // const client = useQueryClient()
+  // const post_feed = useQuery({
+  //   queryKey: ['posts', { sortByNew: sortFeedByNew, page: feedPage }],
+  //   queryFn: getPosts,
+  // },
+  // )
+  const user = await client.auth.getUser()
 
+  const page = 1
+  const sortByNew = false
+  // const post_feed = useQuery(usePostsQuery({ client: supabase, page: 1, sortByNew: false }))
+  // check if the user is logged in
 
-  const incrementPage = async () => {
-    // (page)
-    if (feedPage > 0) {
-      await setFeedPage(feedPage + 1)
-      client.invalidateQueries({ queryKey: ['posts'] })
-      // client.invalidateQuery(['posts'])
+  // console.log('cookies', cookieStore)
 
-    } else {
-      await setFeedPage(1)
-      client.invalidateQueries({ queryKey: ['posts'] })
-
-      // client.invalidateQueries(['posts'])
-    }
-
+  // console.log(session)
+  const prefetchedPosts = await queryClient.prefetchQuery(usePostsQuery({ client, page, sortByNew }))
+  let user_id = null
+  if (user.data.user) {
+    user_id = user.data.user.id
+  } else {
+    user_id = null
   }
 
-  async function updateSort() {
-    await setSortFeedByNew(!sortFeedByNew)
-    await setFeedPage(1)
-    client.refetchQueries({ queryKey: ['posts'] })
-    // client.refetchQueries({ queryKey: ['posts'] })
-
-    const url = new URL(window.location.href)
-    const search_params = url.searchParams
-    search_params.set('p', '1')
-    window.history.pushState({}, '', url.toString())
-  }
-
-
-
-  const decrementPage = async () => {
-    if (feedPage > 1) {
-      await setFeedPage(feedPage - 1)
-      client.invalidateQueries({ queryKey: ['posts'] })
-
-    } else {
-      await setFeedPage(1)
-      client.invalidateQueries({ queryKey: ['posts'] })
-
-    }
-  }
-
-  if (post_feed.isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center md:mx-44">
-        <div style={{ background: '#1e1e1e', alignSelf: 'center' }} className=" px-6 py-2  w-full">
-          Loading...
-        </div>
-      </div>
-    )
-  }
-
-  if (post_feed.data?.data == null) {
-    return (
-      <div>
-        <div className="flex flex-col items-center justify-center md:mx-44">
-          <div style={{ background: '#1e1e1e', alignSelf: 'center' }} className=" px-6 py-2  w-full">
-            No posts found
-          </div>
-        </div>
-        <div style={{ height: '80vh' }} className='flex justify-center  md:items-center items-end gap-1 mt-2'>
-          <Link href={`/?p=${feedPage > 1 ? feedPage - 1 : 1}`}>
-            <button disabled={feedPage == 1} onClick={() => decrementPage()} className={' px-2 py-1 text-gray-50 bg-gray-200 hover:bg-opacity-20 bg-opacity-10 mb-3  mt-auto rounded-none cursor-pointer border-black border-2 border-opacity-40'}>go back</button>
-          </Link>
-        </div>
-      </div>
-    )
-  }
-
-  if (post_feed.error) {
-    return (
-      <div>
-        <div className="flex flex-col items-center justify-center md:mx-44">
-          <div style={{ background: '#1e1e1e', alignSelf: 'center' }} className=" px-6 py-2  w-full">
-            An error occurred
-            {post_feed.error.message}
-          </div>
-        </div>
-        <div style={{ height: '80vh' }} className='flex justify-center  md:items-center items-end gap-1 mt-2'>
-          <Link href={`/?p=${feedPage > 1 ? feedPage - 1 : 1}`}>
-            <button disabled={feedPage == 1} onClick={() => decrementPage()} className={' px-2 py-1 text-gray-50 bg-gray-200 hover:bg-opacity-20 bg-opacity-10 mb-3  mt-auto rounded-none cursor-pointer border-black border-2 border-opacity-40'}>go back</button>
-          </Link>
-        </div>
-      </div>
-    )
-  }
+  const prefetchedZaps = await queryClient.prefetchQuery(usePostsZapped({ client, user_id }))
 
   return (
-    <div className='md:mx-44 itmes-center font-mono flex flex-col'>
-      <div className="md:relative fixed bottom-0 w-full md:border-none border-t border-white border-opacity-60 flex-col">
-        <div style={{ background: '#191919' }} className="text-gray-200 px-2 py-1 items-center flex justify-between">
-          <div>
-            <span>sort by </span>
-            <button onClick={() => updateSort()} className="self-start underline">
-              {!sortFeedByNew ? ' new' : ' top'}
-            </button>
-          </div>
-          <div className="justify-center gap-1 items-center flex">
-            <Link href={`/?p=${feedPage > 1 ? feedPage - 1 : 1}`}>
-              <span onClick={() => decrementPage()} className={'text-gray-50 '}><ChevronLeft /></span>
-            </Link>
-            <p>{feedPage}</p>
-            <Link href={`/?p=${feedPage > 0 ? feedPage + 1 : 1}`}>
-              <span onClick={() => incrementPage()} className='  text-gray-50 '><ChevronRight /></span>
-            </Link>
-          </div>
-        </div>
-      </div>
-      <div style={{ background: '#1e1e1e', alignSelf: 'center', minHeight: '86vh' }} className="mt-0 mb-7 flex flex-col md:mb-0 px-3 md:py-1 py-4 w-full">
-        {
-          post_feed.data.data?.map((post: any, index: number) => (
-            <Post key={post.id} data={post} num={index} page={feedPage} />
-          ))
-        }
-        <div className="justify-center gap-1 items-center flex mt-auto ">
-          <Link href={`/?p=${feedPage > 1 ? feedPage - 1 : 1}`}>
-            <span onClick={() => decrementPage()} className={'text-gray-50 '}><ChevronLeft /></span>
-          </Link>
-          <p>{feedPage}</p>
-          <Link href={`/?p=${feedPage > 0 ? feedPage + 1 : 1}`}>
-            <span onClick={() => incrementPage()} className='  text-gray-50 '><ChevronRight /></span>
-          </Link>
-        </div>
-      </div>
-    </div>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <DynamicPostLists user_id={user_id} prefetchedPosts={prefetchedPosts} prefetchedZaps={prefetchedZaps} />
+    </HydrationBoundary>
   );
 }

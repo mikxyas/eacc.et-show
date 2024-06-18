@@ -1,23 +1,25 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
+import dynamic from "next/dynamic";
 import { UserProvider } from "@/context/user";
-import { PostsProvider } from "@/context/posts";
+// import { PostsProvider } from "@/context/posts";
 const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "show -> e/acc -> et",
   description: "a show of e/acc from et",
 };
 
-import { QueryClientProvider } from '@tanstack/react-query'
-import queryClient from "@/lib/queryClient";
-import ReactQueryPvorider from "@/lib/queryClient";
+const Navbar = dynamic(() => import("@/components/Navbar"), { ssr: true });
+
+// import { QueryClientProvider } from '@tanstack/react-query'
+
+import ReactQueryPvorider from "@/utils/queryClient";
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>, pageProps: any) {
   return (
 
     <html lang="en">

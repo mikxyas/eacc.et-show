@@ -2,8 +2,8 @@
 
 import TelegramLoginButton from '@/components/TelegramLoginButton'
 import { useUserContext } from '@/context/user'
-import { supabase } from '@/libs/supabase'
 import { useRouter } from 'next/navigation'
+import { createClient } from '@/utils/supabase/client'
 import React, { useEffect, useState } from 'react'
 
 export default function EditPost(context: any) {
@@ -101,6 +101,7 @@ export default function EditPost(context: any) {
     }
 
     const edit_post = async () => {
+        const supabase = createClient()
         setLoading(true)
         setUrlValid(true)
         setEmptyInput(false)
@@ -121,6 +122,8 @@ export default function EditPost(context: any) {
     }
 
     const getPost = async () => {
+        const supabase = createClient()
+
         // use post id and fetch the post data
         const { data, error } = await supabase.from('posts').select('*').eq('id', post_id)
         if (data) {
@@ -139,14 +142,14 @@ export default function EditPost(context: any) {
         }
     }
 
-    // useEffect(() => {
+    useEffect(() => {
 
-    //     // use post id and fetch the post data
-    //     if (user) {
-    //         getPost()
-    //         setViewedPost(null)
-    //     }
-    // }, [user])
+        // use post id and fetch the post data
+        if (user) {
+            getPost()
+            // setViewedPost(null)
+        }
+    }, [user])
 
     if (isNotAllowed) {
         return (
@@ -189,7 +192,7 @@ export default function EditPost(context: any) {
                         <input style={{ background: '#1e1e1e' }} placeholder='Link to post on hacker news' onChange={(e) => handleHackerLink(e)} value={hackerlink} className={`outline-none p-2 w-full  ${hackerLinkError ? 'border border-red-500' : ''}`} width={200} type="text" name="link" />
                     </div>
                     <div className='w-full md:w-1/2'>
-                        <textarea style={{ background: '#1e1e1e' }} placeholder='text' onChange={(e) => setText(e.target.value)} className='w-full h-20 outline-none p-2' name="text" />
+                        <textarea style={{ background: '#1e1e1e' }} placeholder='text' onChange={(e) => setText(e.target.value)} value={text} className='w-full h-20 outline-none p-2' name="text" />
                     </div>
                     <p className='w-full md:w-1/2 text-xs text-center text-gray-300'>Leave url blank to submit a question for discussion. If there is a url, text is optional.</p>
                     <button

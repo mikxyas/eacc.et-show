@@ -19,8 +19,8 @@ const Post = ({ data, num, page }: any) => {
         onSuccess: (post_id) => {
             try {
                 if (page != null) {
-                    const posts: any = client.getQueryData(['posts', { sortByNew: false, page: page }])
-                    client.setQueryData(['posts', { sortByNew: false, page: page }], posts.data.filter((p: any) => p.id != post_id))
+                    // const posts: any = client.getQueryData(['posts', { page: 1, sortByNew: false }])
+                    client.invalidateQueries({ queryKey: ['posts', { page: 1, sortByNew: false }] })
                 } else {
                     client.setQueryData(['post', { id: post_id }], null)
                     router.push('/')
@@ -63,7 +63,6 @@ const Post = ({ data, num, page }: any) => {
                 console.log(e)
             }
         }
-
     })
 
     const unzapp_post = useMutation({
@@ -97,8 +96,6 @@ const Post = ({ data, num, page }: any) => {
                 console.log(e)
             }
         },
-
-
     })
 
     const client = useQueryClient()

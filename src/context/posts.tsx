@@ -1,6 +1,6 @@
 "use client"
 
-import { supabase } from '@/libs/supabase';
+import { createClient } from '@/utils/supabase/client';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useUserContext } from './user';
 import { UUID } from 'crypto';
@@ -86,6 +86,8 @@ export const PostsProvider = ({ children }
     };
 
     async function unZapComment(comment_id: UUID) {
+        const supabase = createClient();
+
         const s = zappedComments.filter((id: UUID) => id != comment_id)
         setZappedComments(s)
         const newComments = viewedPost.comments.map((comment: any) => {
@@ -122,6 +124,8 @@ export const PostsProvider = ({ children }
     }
 
     async function unZapPost(post_id: UUID) {
+        const supabase = createClient();
+
         if (viewedPost?.id === post_id) {
             const updatedPost = {
                 ...viewedPost,
@@ -167,6 +171,8 @@ export const PostsProvider = ({ children }
         }
     }
     async function zap_post(zappp: any) {
+        const supabase = createClient();
+
         if (viewedPost?.id === zappp.post_zapped) {
             const updatedPost = {
                 ...viewedPost,
@@ -246,6 +252,7 @@ export const PostsProvider = ({ children }
             return comment
         })
         setViewedPost({ ...viewedPost, comments: newComments })
+        const supabase = createClient();
 
         const { data, error } = await supabase
             .from('zaps')
@@ -291,6 +298,8 @@ export const PostsProvider = ({ children }
         }
     }
     async function sendReply(formData: FormData) {
+        const supabase = createClient();
+
         const res = await fetch('/api/comment/new', {
             method: 'POST',
 
@@ -318,6 +327,8 @@ export const PostsProvider = ({ children }
     }
 
     async function deleteComment(comment_id: UUID) {
+        const supabase = createClient();
+
         const { error } = await supabase
             .from('comments')
             .delete()
@@ -344,6 +355,8 @@ export const PostsProvider = ({ children }
     }
 
     async function deletePost(post_id: UUID) {
+        const supabase = createClient();
+
         const { error } = await supabase
             .from('posts')
             .delete()
@@ -367,6 +380,8 @@ export const PostsProvider = ({ children }
     }
 
     async function getPosts() {
+        const supabase = createClient();
+
         setLoading(true)
         const res = await fetch('/api/post/get?p=' + page + '&new=' + sortByNew)
         const data = await res.json()

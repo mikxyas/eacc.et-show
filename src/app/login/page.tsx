@@ -1,6 +1,7 @@
 "use client"
 import { useUserContext } from "@/context/user"
-import { supabase } from "@/libs/supabase"
+
+import { createClient } from "@/utils/supabase/client"
 import { Github } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
@@ -17,6 +18,8 @@ const LoginPage = () => {
     const router = useRouter()
 
     const signInWithGithub = async () => {
+        const supabase = createClient();
+
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'github'
         })
@@ -49,6 +52,8 @@ const LoginPage = () => {
 
 
     const handleLogin = async () => {
+        const supabase = createClient();
+
         setLoading(true)
         const validation = validateForm()
         if (validation !== 'valid') {
@@ -70,11 +75,11 @@ const LoginPage = () => {
             setLoading(false)
             setError(true)
             setErorMsg('invalid username or password')
-            // (login.error)
+            console.log(login.error)
         } else {
             setLoading(false)
             window.location.reload()
-            // (login.data)
+
         }
     }
 

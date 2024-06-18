@@ -1,5 +1,5 @@
-import { supabase } from "@/libs/supabase"
-
+import { createClient } from "@/utils/supabase/client";
+const supabase = createClient()
 
 
 export async function getPosts({ queryKey }: any) {

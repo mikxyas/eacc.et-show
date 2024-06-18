@@ -4,17 +4,21 @@ import React, { useState } from 'react';
 import ReplyInput from './ReplyInput';
 import { useUserContext } from '@/context/user';
 import Link from 'next/link';
-import { useQueryClient, useMutation } from '@tanstack/react-query';
+import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
 import { zapComment, unzapComment, delete_comment } from '@/functions/comments';
-import { supabase } from '@/libs/supabase';
+import useCommentsZapped from '@/hooks/use-comments-zapped';
+import { createClient } from '@/utils/supabase/client';
+
 
 const Comment = ({ post_id, comment }: any) => {
     const [showReply, setShowReply] = useState<any>({});
     const [showDelete, setShowDelete] = useState<any>({})
     const { user } = useUserContext()
     const client = useQueryClient()
+    const supabase = createClient()
+    // const zappedComments: any = client.getQueryData(['upvoted_comments', { id: post_id }])
+    const ZappedComments = useQuery(useCommentsZapped({ client: supabase, user_id: user?.id, post_id: post_id }))
 
-    const zappedComments: any = client.getQueryData(['upvoted_comments', { id: post_id }])
     // console.log(zappedComments)
     const toggleReply = (commentId: any) => {
         setShowReply((prev: any) => ({ ...prev, [commentId]: !prev[commentId] }));
@@ -32,7 +36,7 @@ const Comment = ({ post_id, comment }: any) => {
             // mutate the zapped_posts query
 
 
-            const prevState = client.setQueryData(['upvoted_comments', { id: post_id }], [...zappedComments, comment.comment_zapped])
+            const prevState = client.setQueryData(['upvoted_comments', { id: post_id }], [...ZappedComments.data, comment.comment_zapped])
             // update zap_count on the comment 
             const post: any = client.getQueryData(['post', { id: post_id }])
             const updateCount = post.comments.map((c: any) => {
@@ -58,7 +62,7 @@ const Comment = ({ post_id, comment }: any) => {
         onMutate: async (comment_id) => {
             // mutate the zapped_posts query
             // const zappedComments: any = client.getQueryData(['upvoted_comments', { id: post_id }])
-            const prevState = client.setQueryData(['upvoted_comments', { id: post_id }], zappedComments.filter((id: any) => id != comment_id))
+            const prevState = client.setQueryData(['upvoted_comments', { id: post_id }], ZappedComments.data.filter((id: any) => id != comment_id))
             const post: any = client.getQueryData(['post', { id: post_id }])
             const updateCount = post.comments.map((c: any) => {
                 if (c.id == comment_id) {
@@ -77,14 +81,18 @@ const Comment = ({ post_id, comment }: any) => {
         mutationFn: (comment_id) => {
             return delete_comment(comment_id)
         },
-        onMutate: async (comment_id) => {
-            // mutate the zapped_posts query
-            const post: any = client.getQueryData(['post', { id: post_id }])
-            const updateCount = post.comments.filter((c: any) => c.id != comment_id)
-            client.setQueryData(['post', { id: post_id }], { ...post, comments: updateCount })
-            // A mutation is about to happen!
-            // Optionally return a context containing data to use when for example rolling back
-            return updateCount
+        // onMutate: async (comment_id) => {
+        //     // mutate the zapped_posts query
+        //     const post: any = client.getQueryData(['post', { id: post_id }])
+        //     const updateCount = post.comments.filter((c: any) => c.id != comment_id)
+        //     client.setQueryData(['post', { id: post_id }], { ...post, comments: updateCount })
+        //     // A mutation is about to happen!
+        //     // Optionally return a context containing data to use when for example rolling back
+        //     return updateCount
+        // }
+        onSuccess: () => {
+            client.invalidateQueries({ queryKey: ['post', { id: post_id }] })
+            client.invalidateQueries({ queryKey: ['posts', { page: 1, sortByNew: false }] })
         }
     })
 
@@ -130,7 +138,7 @@ const Comment = ({ post_id, comment }: any) => {
                                 </div>
                             </Link>
                         </div>
-                        : zappedComments?.includes(comment.id) ? (
+                        : ZappedComments.data?.includes(comment.id) ? (
                             <div onClick={() => unzapCommentMutation.mutate(comment.id)} className='p-0 flex  flex-col items-center justify-center gap-1'>
                                 <Zap className='text-green-600 hover:text-green-600 cursor-pointer zapppp' size={13} />
                                 {comment.zap_count > 0 && <p className='hover:underline  cursor-pointer'>{comment.zap_count}</p>}

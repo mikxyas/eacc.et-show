@@ -1,8 +1,8 @@
-import { supabase } from "@/libs/supabase";
+import { createClient } from "@/utils/supabase/client"
 
 export async function getUpvotedComments({ queryKey }: any) {
     // console.log(queryKey)
-
+    const supabase = createClient()
     try {
         const session = await supabase.auth.getSession()
         const [_key, { id }] = queryKey as [string, { id: any }]
@@ -33,6 +33,7 @@ export async function getUpvotedComments({ queryKey }: any) {
 }
 
 export async function zapComment(zap: any) {
+    const supabase = createClient()
 
     try {
         // const session = await supabase.auth.getSession()
@@ -69,6 +70,8 @@ export async function zapComment(zap: any) {
 }
 
 export const unzapComment = async (comment_id: any) => {
+    const supabase = createClient()
+
     const session = await supabase.auth.getSession()
     // console.log(zap_id)
     try {
@@ -90,6 +93,8 @@ export const unzapComment = async (comment_id: any) => {
 }
 
 export const delete_comment = async (comment_id: any) => {
+    const supabase = createClient()
+
     try {
         const { data, error } = await supabase
             .from('comments')
@@ -107,6 +112,8 @@ export const delete_comment = async (comment_id: any) => {
 }
 
 export const create_comment = async (comment: any) => {
+    const supabase = createClient()
+
     try {
         const { data, error } = await supabase
             .from('comments')

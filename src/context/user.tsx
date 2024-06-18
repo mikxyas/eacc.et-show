@@ -1,5 +1,6 @@
 "use client"
-import { supabase } from '@/libs/supabase';
+
+import { createClient } from '@/utils/supabase/client';
 import { UUID } from 'crypto';
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
@@ -38,6 +39,7 @@ export const UserProvider = ({ children }:
     const hasProfileBeenCreated = useRef(false);
 
     const createNewProfile = useCallback(async (name: any, username: any, email: any, userId: any) => {
+        const supabase = createClient();
         console.log('req');
         const { data, error } = await supabase
             .from('profiles')
@@ -51,7 +53,10 @@ export const UserProvider = ({ children }:
     }, []);
 
     const init = useCallback(async () => {
+        const supabase = createClient();
+
         const session = await supabase.auth.getSession();
+        // console.log(session.data.session)
         if (session.data.session) {
             setUser(session.data.session?.user);
             const { data, error } = await supabase
@@ -79,6 +84,8 @@ export const UserProvider = ({ children }:
     }, [createNewProfile]);
 
     const IsUsernameTaken = async (username: string) => {
+        const supabase = createClient();
+
         const { data, error } = await supabase
             .from('profiles')
             .select('username')
@@ -100,6 +107,8 @@ export const UserProvider = ({ children }:
     const createUser = async (username: string, password: string) => {
         // first check if username exists 
         // (username)
+        const supabase = createClient();
+
         // (password)
         const usernametaken = await IsUsernameTaken(username)
         if (usernametaken) {
@@ -138,6 +147,8 @@ export const UserProvider = ({ children }:
     }
 
     const logout = async () => {
+        const supabase = createClient();
+
         const { error } = await supabase.auth.signOut()
         // (error)
         await setUser(null)

@@ -2,7 +2,8 @@ import { MessageCircle, MessageCircleDashed, MessageCircleOff, MessageCircleX, X
 import React, { useEffect } from 'react'
 import { useQueryClient, useQuery, useMutation } from '@tanstack/react-query'
 import { create_comment } from '@/functions/comments'
-import { supabase } from '@/libs/supabase'
+
+import { createClient } from '@/utils/supabase/client'
 
 export default function ReplyInput({ post_id, parent_id, showReply, toggleReply }: any) {
     // const [showReply, setShowReply] = React.useState(false)
@@ -31,28 +32,10 @@ export default function ReplyInput({ post_id, parent_id, showReply, toggleReply 
         //     return prevState
         // },
         onSuccess: (data) => {
-            try {
-                // check if comments[0] = null  
-                console.log(data)
-                const prevState: any = client.getQueryData(['post', { id: post_id }])
-                let updatedComments = []
-                if (prevState.comments == null) {
-                    client.invalidateQueries({ queryKey: ['post', { id: post_id }] })
-                    setReply('')
-                    setReplying(false)
-                    return
-                } else {
-                    updatedComments = [...prevState.comments, data]
-                    console.log(updatedComments)
-                }
-                client.setQueryData(['post', { id: post_id }], { ...prevState, comments: updatedComments })
-                if (parent_id != null) {
-                    toggleReply()
-                }
-                setReply('')
-                setReplying(false)
-            } catch (e) {
-                console.log(e)
+            client.invalidateQueries({ queryKey: ['post', { id: post_id }] })
+            setReply('')
+            if (parent_id !== null) {
+                toggleReply()
             }
 
         }
@@ -60,6 +43,7 @@ export default function ReplyInput({ post_id, parent_id, showReply, toggleReply 
 
     const Send_Reply = async () => {
         setReplying(true)
+        const supabase = createClient()
         const formdata = new FormData()
         const session = await supabase.auth.getSession()
         const obj = {

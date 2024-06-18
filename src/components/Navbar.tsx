@@ -1,12 +1,10 @@
 "use client"
 
 import { useUserContext } from '@/context/user';
-import useTelegramLogin from '@/hooks/useTelegramLogin';
-import { supabase } from '@/libs/supabase';
-import { Bell, Reply } from 'lucide-react';
 import Link from 'next/link';
 
-import React, { useEffect, useLayoutEffect } from 'react';
+
+import React, { Suspense, useEffect, useLayoutEffect } from 'react';
 
 const Navbar: React.FC = () => {
 
