@@ -15,7 +15,7 @@ import usePostsZapped from "@/hooks/use-posts-zapped";
 import { getPosts } from "@/queries/get-posts";
 import { get_zapped_posts } from "@/queries/get-zapped-posts";
 const Post = dynamic(() => import('@/components/Post'))
-export default function PostsList({ prefetchedPosts, prefetchedZaps, user_id }: { prefetchedPosts: any, prefetchedZaps: any, user_id: string | null }) {
+export default function PostsList({ prefetchedPosts, prefetchedZaps, user_id }: { prefetchedPosts: any, prefetchedZaps: any, user_id: string }) {
     const [feedPage, setFeedPage] = React.useState(1)
     const [sortFeedByNew, setSortFeedByNew] = React.useState(false)
     const supabase = useSupabase()
