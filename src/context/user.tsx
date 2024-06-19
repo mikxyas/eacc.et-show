@@ -38,12 +38,12 @@ export const UserProvider = ({ children }:
 
     const hasProfileBeenCreated = useRef(false);
 
-    const createNewProfile = useCallback(async (name: any, username: any, email: any, userId: any) => {
+    const createNewProfile = useCallback(async (name: any, username: any, userId: any) => {
         const supabase = createClient();
         console.log('req');
         const { data, error } = await supabase
             .from('profiles')
-            .insert({ name, username, email, user_id: userId })
+            .insert({ name, username, user_id: userId })
             .select();
         if (error) {
             console.log(error);
@@ -73,7 +73,6 @@ export const UserProvider = ({ children }:
                     await createNewProfile(
                         session.data.session?.user.user_metadata.full_name,
                         session.data.session?.user.user_metadata.user_name + random,
-                        session.data.session?.user.email,
                         session.data.session?.user.id
                     );
                 } else {

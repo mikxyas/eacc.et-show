@@ -26,8 +26,8 @@ export async function middleware(req: NextRequest) {
     //     // redirect the user to the login page
     //     return NextResponse.rewrite(new URL('/login', req.url))
     // }
-        // return res
-    return updateSession(req)
+    return res
+    // return updateSession(req)
 };
 
 

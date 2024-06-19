@@ -14,11 +14,11 @@ export async function getPosts(client: any, page: any, sortByNew: any) {
 
     if (sortByNew) {
         const resp = await client.rpc('get_newest_posts', { p_limit, p_offset });
-        console.log(resp)
+        // console.log(resp)
         return resp;
     } else {
         const resp = await client.rpc('get_posts_with_zap_counts', { p_limit, p_offset });
-        console.log(resp)
+        // console.log(resp)
         return resp;
     }
 

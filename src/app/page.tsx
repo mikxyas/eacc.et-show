@@ -39,11 +39,11 @@ export default async function Home() {
 
   // console.log(session)
   const prefetchedPosts = await queryClient.prefetchQuery(usePostsQuery({ client, page, sortByNew }))
-  let user_id = null
+  let user_id = 'none'
   if (user.data.user) {
     user_id = user.data.user.id
   } else {
-    user_id = null
+    user_id = 'none'
   }
 
   const prefetchedZaps = await queryClient.prefetchQuery(usePostsZapped({ client, user_id }))

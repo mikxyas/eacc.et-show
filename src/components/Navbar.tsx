@@ -2,6 +2,7 @@
 
 import { useUserContext } from '@/context/user';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 
 import React, { Suspense, useEffect, useLayoutEffect } from 'react';
@@ -9,6 +10,7 @@ import React, { Suspense, useEffect, useLayoutEffect } from 'react';
 const Navbar: React.FC = () => {
 
     const { user, profile, logout } = useUserContext()
+
 
 
     const logoutUser = async () => {

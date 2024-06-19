@@ -49,8 +49,6 @@ const LoginPage = () => {
         return 'valid'
     }
 
-
-
     const handleLogin = async () => {
         const supabase = createClient();
 
@@ -85,6 +83,7 @@ const LoginPage = () => {
 
     const handleSignup = () => {
         setLoading(true)
+
         const validation = validateForm()
         if (validation !== 'valid') {
             setErorMsg(validation)

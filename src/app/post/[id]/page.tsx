@@ -1,4 +1,3 @@
-"use server"
 import { HydrationBoundary, QueryClient, dehydrate, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createClient } from "@/utils/supabase/server";
 // import PostWComments from "@/components/PostWComments";
