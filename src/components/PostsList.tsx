@@ -1,7 +1,7 @@
 
 "use client"
 
-// import Post from "@/components/Post";
+import Post from "@/components/Post";
 import dynamic from "next/dynamic";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
@@ -12,7 +12,7 @@ import useSupabase from "@/hooks/use-supabase";
 import { getPosts } from "@/queries/get-posts";
 import ContentContainer from "./ContentContainer";
 import usePostsQuery from "@/hooks/use-posts-query";
-const Post = dynamic(() => import('@/components/Post'))
+// const Post = dynamic(() => import('@/components/Post'))
 export default function PostsList({ user_id }: { user_id: string }) {
     const [feedPage, setFeedPage] = React.useState(1)
     const [sortFeedByNew, setSortFeedByNew] = React.useState(false)
