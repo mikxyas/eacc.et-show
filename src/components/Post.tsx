@@ -54,10 +54,10 @@ const Post = ({ data, num, page, zapped_posts }: any) => {
                     client.setQueryData(['posts', { page: page, sortByNew: false }], updated_post)
                 } else {
                     const post: any = client.getQueryData(['post', { id: zap.post_zapped }])
-                    post.zap_count += 1
+                    post.data.zap_count += 1
                     client.setQueryData(['post', { id: zap.post_zapped }], post)
-                    const zaps: any = client.getQueryData(['posts_zapped'])
-                    client.setQueryData(['posts_zapped'], [...zaps, zap.post_zapped])
+                    // const zaps: any = client.getQueryData(['posts_zapped'])
+                    // client.setQueryData(['posts_zapped'], [...zaps, zap.post_zapped])
                 }
             }
             catch (e) {
@@ -88,9 +88,15 @@ const Post = ({ data, num, page, zapped_posts }: any) => {
                     client.setQueryData(['posts', { page: page, sortByNew: false }], updated_post)
                 } else {
                     const post: any = client.getQueryData(['post', { id: post_id }])
-                    const zaps: any = client.getQueryData(['posts_zapped'])
-                    client.setQueryData(['posts_zapped'], zaps.filter((z: any) => z != post_id))
-                    post.zap_count -= 1
+                    const new_post = {
+                        ...post,
+                        data: {
+                            ...post.data,
+                            zap_count: post.data.zap_count - 1
+                        },
+                        zapped_posts: zapped_posts.filter((id: string) => id != post_id)
+                    }
+
                     client.setQueryData(['post', { id: post_id }], post)
                 }
             }
