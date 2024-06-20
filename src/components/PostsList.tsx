@@ -19,11 +19,11 @@ export default function PostsList({ user_id }: { user_id: string }) {
     const supabase = useSupabase()
     const client = useQueryClient()
 
-    // const post_feed = useQuery({
-    //     queryKey: ['posts', { sortByNew: sortFeedByNew, page: feedPage }],
-    //     queryFn: () => getPosts(supabase, feedPage, sortFeedByNew),
-    // })
-    const post_feed = useQuery(usePostsQuery({ client: supabase, page: feedPage, sortByNew: sortFeedByNew }))
+    const post_feed = useQuery({
+        queryKey: ['posts', { sortByNew: sortFeedByNew, page: feedPage }],
+        queryFn: () => getPosts(supabase, feedPage, sortFeedByNew),
+    })
+    // const post_feed = useQuery(usePostsQuery({ client: supabase, page: feedPage, sortByNew: sortFeedByNew }))
 
     const incrementPage = async () => {
         if (feedPage > 0) {
