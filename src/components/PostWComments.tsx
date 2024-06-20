@@ -1,18 +1,22 @@
 
 "use client"
 import React from 'react'
-import Comment from "@/components/Comment";
-import Post from "@/components/Post";
-import ReplyInput from "@/components/ReplyInput";
+// import Comment from "@/components/Comment";
+// import Post from "@/components/Post";
+// import ReplyInput from "@/components/ReplyInput";
+import dynamic from 'next/dynamic';
+import { useQuery } from "@tanstack/react-query";
+const Comment = dynamic(() => import('@/components/Comment'))
+const Post = dynamic(() => import('@/components/Post'))
+const ReplyInput = dynamic(() => import('@/components/ReplyInput'))
 
-import { HydrationBoundary, QueryClient, dehydrate, useQuery, useQueryClient } from "@tanstack/react-query";
-
-import usePostQuery from "@/hooks/use-post-query";
+// import usePostQuery from "@/hooks/use-post-query";
 import { createClient } from "@/utils/supabase/client";
 import { getPost } from '@/queries/get-post';
+import ContentContainer from './ContentContainer';
 
 
-export default function PostWComments({ id, prefetch }: any) {
+export default function PostWComments({ id, zapped_posts }: any) {
     const client = createClient()
     // const viewedPost = useQuery(usePostQuery({ client: client, id: id, prefetch: prefetch }))
 
@@ -20,10 +24,10 @@ export default function PostWComments({ id, prefetch }: any) {
     const viewedPost = useQuery({
         queryKey: ['post', { id: id }],
         queryFn: () => getPost({ client, id }),
-        initialData: prefetch
+        // initialData: prefetch
     })
 
-
+    // console.log(viewedPost.data)
     // const upvotedComments = useQuery({
     //     queryKey: ['upvoted_comments', { id: id }],
     //     queryFn: getUpvotedComments,
@@ -61,38 +65,38 @@ export default function PostWComments({ id, prefetch }: any) {
         return nestedComments;
     };
     if (viewedPost.isLoading) {
-        return <div className="flex flex-col  items-center md:mx-44 justify-center">
-            <div style={{ background: '#1e1e1e', alignSelf: 'center' }} className=" px-6 py-2  w-full ">
+        return <div className="flex flex-col  items-center lg:mx-44 justify-center">
+            <ContentContainer tailwindstyle='' styles={{}}>
                 Loading...
-            </div>
+            </ContentContainer>
         </div>;
     }
 
     if (viewedPost.data == null) {
-        return <div className="flex flex-col  items-center md:mx-44 justify-center">
-            <div style={{ background: '#1e1e1e', alignSelf: 'center' }} className=" px-6 py-2  w-full ">
+        return <div className="flex flex-col  items-center lg:mx-44 justify-center">
+            <ContentContainer tailwindstyle='' styles={{}}>
                 the post does not exist
-            </div>
+            </ContentContainer>
         </div>;
     }
 
     // (viewedPost)
     return (
 
-        <div className="items-center justify-center flex flex-col  md:mx-44">
-            <div style={{ background: '#1e1e1e', alignSelf: 'center' }} className="pt-3 w-full md:px-1 pb-3  ">
-                <div className="pl-2">
-                    <Post data={viewedPost.data} num={null} page={null} />
+        <div className="items-center justify-center flex flex-col  lg:mx-44">
+            <ContentContainer styles={{ paddingTop: "10px", minHeight: '85vh' }} tailwindstyle=''>
+                <div className="">
+                    <Post data={viewedPost.data.data} zapped_posts={zapped_posts} num={null} page={null} />
                 </div>
-                <div className="ml-7  mb-0">
-                    <ReplyInput showReply={true} post_id={viewedPost.data.id} parent_id={null} />
+                <div className="ml-6 mb-0">
+                    <ReplyInput showReply={true} post_id={viewedPost.data.data.id} parent_id={null} />
                 </div>
-                <div className="ml-4">
-                    {viewedPost.data?.comments != null && nestComments(viewedPost.data.comments).map((comment: object, index: number) => (
-                        <Comment key={index} comment={comment} post_id={viewedPost.data.id} />
+                <div className="">
+                    {viewedPost.data.data?.comments != null && nestComments(viewedPost.data.data.comments).map((comment: object, index: number) => (
+                        <Comment key={index} zapped_comments={viewedPost.data?.zapped_comments} comment={comment} post_id={viewedPost.data?.data.id} />
                     ))}
                 </div>
-            </div>
+            </ContentContainer>
         </div>
 
 

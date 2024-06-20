@@ -10,13 +10,20 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-
     extend: {
+      borderOpacity: {
+        "light": "30%"
+      },
+      backgroundColor: {
+        "main-content": "#1e1e1e",
+        "input": "#2d2d2d"
+      },
       margin: {
         "comment": "-1.09rem",
       },
       width: {
-        "reply-pc": '30vw'
+        "reply-pc": '30vw',
+
       },
       fontFamily: {
         "roboto": ["Source Code"],

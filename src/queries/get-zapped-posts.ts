@@ -2,7 +2,7 @@ import { SupabaseClient } from "@supabase/supabase-js"
 
 
 export async function get_zapped_posts(client: SupabaseClient, user_id: string) {
-    // console.log(user_id)
+
     if (user_id === 'none') {
         return []
     }

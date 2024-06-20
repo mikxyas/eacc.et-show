@@ -6,19 +6,16 @@ import { useUserContext } from '@/context/user';
 import Link from 'next/link';
 import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
 import { zapComment, unzapComment, delete_comment } from '@/functions/comments';
-import useCommentsZapped from '@/hooks/use-comments-zapped';
-import { createClient } from '@/utils/supabase/client';
 
 
-const Comment = ({ post_id, comment }: any) => {
+const Comment = ({ post_id, comment, zapped_comments }: any) => {
     const [showReply, setShowReply] = useState<any>({});
     const [showDelete, setShowDelete] = useState<any>({})
     const { user } = useUserContext()
     const client = useQueryClient()
-    const supabase = createClient()
     // const zappedComments: any = client.getQueryData(['upvoted_comments', { id: post_id }])
-    const ZappedComments = useQuery(useCommentsZapped({ client: supabase, user_id: user?.id, post_id: post_id }))
-
+    // const ZappedComments = useQuery(useCommentsZapped({ client: supabase, user_id: user?.id, post_id: post_id }))
+    // const ZappedComments = zapped_comments
     // console.log(zappedComments)
     const toggleReply = (commentId: any) => {
         setShowReply((prev: any) => ({ ...prev, [commentId]: !prev[commentId] }));
@@ -34,21 +31,28 @@ const Comment = ({ post_id, comment }: any) => {
         },
         onMutate: async (comment) => {
             // mutate the zapped_posts query
-
-
-            const prevState = client.setQueryData(['upvoted_comments', { id: post_id }], [...ZappedComments.data, comment.comment_zapped])
+            // const prevState = client.setQueryData(['upvoted_comments', { id: post_id }], [...zapped_comments.data, comment.comment_zapped])
             // update zap_count on the comment 
-            const post: any = client.getQueryData(['post', { id: post_id }])
-            const updateCount = post.comments.map((c: any) => {
-                if (c.id == comment.comment_zapped) {
-                    c.zap_count += 1
+            try {
+                const post: any = client.getQueryData(['post', { id: post_id }])
+                const updated_count = {
+                    data: {
+                        ...post.data,
+                        comments: post.data.comments.map((com: any) => {
+                            if (com.id === comment.comment_zapped) {
+                                com.zap_count += 1
+                                return com
+                            }
+                            return com
+                        }),
+                    },
+                    zapped_comments: [...post.zapped_comments, comment.comment_zapped]
                 }
-                return c
-            })
-            client.setQueryData(['post', { id: post_id }], { ...post, comments: updateCount })
+                client.setQueryData(['post', { id: post_id }], updated_count)
+            } catch (e) {
+                console.log(e)
+            }
 
-            // Optionally return a context containing data to use when for example rolling back
-            return prevState
         },
         onSuccess: () => {
 
@@ -59,21 +63,30 @@ const Comment = ({ post_id, comment }: any) => {
         mutationFn: (comment_id) => {
             return unzapComment(comment_id)
         },
-        onMutate: async (comment_id) => {
+        onMutate: async (comment_id: string) => {
             // mutate the zapped_posts query
             // const zappedComments: any = client.getQueryData(['upvoted_comments', { id: post_id }])
-            const prevState = client.setQueryData(['upvoted_comments', { id: post_id }], ZappedComments.data.filter((id: any) => id != comment_id))
-            const post: any = client.getQueryData(['post', { id: post_id }])
-            const updateCount = post.comments.map((c: any) => {
-                if (c.id == comment_id) {
-                    c.zap_count -= 1
+            // const prevState = client.setQueryData(['upvoted_comments', { id: post_id }], zapped_comments.filter((id: any) => id != comment_id))
+            try {
+                const post: any = client.getQueryData(['post', { id: post_id }])
+                const updated_count = {
+                    data: {
+                        ...post.data,
+                        comments: post.data.comments.map((com: any) => {
+                            if (com.id === comment_id) {
+                                com.zap_count -= 1
+                                return com
+                            }
+                            return com
+                        }),
+                    },
+                    zapped_comments: post.zapped_comments.filter((id: string) => id != comment_id)
                 }
-                return c
-            })
-            client.setQueryData(['post', { id: post_id }], { ...post, comments: updateCount })
-            // A mutation is about to happen!
-            // Optionally return a context containing data to use when for example rolling back
-            return prevState
+
+                client.setQueryData(['post', { id: post_id }], updated_count)
+            } catch (e) {
+                console.log(e)
+            }
         }
     })
 
@@ -138,7 +151,7 @@ const Comment = ({ post_id, comment }: any) => {
                                 </div>
                             </Link>
                         </div>
-                        : ZappedComments.data?.includes(comment.id) ? (
+                        : zapped_comments.includes(comment.id) ? (
                             <div onClick={() => unzapCommentMutation.mutate(comment.id)} className='p-0 flex  flex-col items-center justify-center gap-1'>
                                 <Zap className='text-green-600 hover:text-green-600 cursor-pointer zapppp' size={13} />
                                 {comment.zap_count > 0 && <p className='hover:underline  cursor-pointer'>{comment.zap_count}</p>}

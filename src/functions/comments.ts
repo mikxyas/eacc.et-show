@@ -34,7 +34,7 @@ export async function getUpvotedComments({ queryKey }: any) {
 
 export async function zapComment(zap: any) {
     const supabase = createClient()
-
+    // console.log(zap)
     try {
         // const session = await supabase.auth.getSession()
         const { data, error } = await supabase
@@ -44,8 +44,7 @@ export async function zapComment(zap: any) {
         if (error) {
             console.log(error)
         } else {
-            console.log(data)
-
+            // console.log(data)
         }
 
     } catch (e) {

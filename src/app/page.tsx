@@ -14,7 +14,7 @@ import queryClient from "@/utils/globalClientQuery";
 
 import dynamic from "next/dynamic";
 
-const DynamicPostLists = dynamic(() => import('@/components/PostsList'), { ssr: true })
+const DynamicPostLists = dynamic(() => import('@/components/PostsList'))
 
 export default async function Home() {
 
@@ -38,7 +38,7 @@ export default async function Home() {
   // console.log('cookies', cookieStore)
 
   // console.log(session)
-  const prefetchedPosts = await queryClient.prefetchQuery(usePostsQuery({ client, page, sortByNew }))
+  await queryClient.prefetchQuery(usePostsQuery({ client, page, sortByNew }))
   let user_id = 'none'
   if (user.data.user) {
     user_id = user.data.user.id
@@ -46,11 +46,11 @@ export default async function Home() {
     user_id = 'none'
   }
 
-  const prefetchedZaps = await queryClient.prefetchQuery(usePostsZapped({ client, user_id }))
+  await queryClient.prefetchQuery(usePostsZapped({ client, user_id }))
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <DynamicPostLists user_id={user_id} prefetchedPosts={prefetchedPosts} prefetchedZaps={prefetchedZaps} />
+      <DynamicPostLists user_id={user_id} />
     </HydrationBoundary>
   );
 }

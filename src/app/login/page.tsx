@@ -1,4 +1,5 @@
 "use client"
+import ContentContainer from "@/components/ContentContainer"
 import { useUserContext } from "@/context/user"
 
 import { createClient } from "@/utils/supabase/client"
@@ -110,42 +111,41 @@ const LoginPage = () => {
     }
     return (
         // craete a login page
+        <div className="flex lg:mx-44">
+            <ContentContainer styles={{ minHeight: '55vh' }} tailwindstyle="">
 
-        <div className="flex items-center justify-center flex-col mt-10" style={{ width: '100%' }}>
-            <div className="flex items-center gap-1 mt-3 justify-center flex-col">
-                {/* make this input only accept lowercase */}
-                <input style={{ background: '#1e1e1e' }} type="text" className={usernameTaken ? 'border border-red-500 px-2 py-2 outline-none' : `px-2 py-2 outline-none`} onChange={(e) => setUsername(e.currentTarget.value)} placeholder="username" />
-                {usernameTaken &&
-                    <p className="text-sm text-gray-400">username already exists</p>
-                }
-                <input style={{ background: '#1e1e1e' }} type='password' className="px-2 py-2 outline-none" onChange={(e) => setPassword(e.currentTarget.value)} placeholder="password" />
-                <button onClick={() => handleSignup()} className="px-3 py-1 mt-1 flex gap-2 border border-dashed border-green-700">Signup</button>
-            </div>
+                <div className="flex items-center justify-center flex-col " style={{ width: '100%' }}>
+                    {
+                        loading &&
+                        <p className="text-sm text-gray-400">loading...</p>
+                    }
+                    {error &&
+                        <p className="text-sm text-gray-400">{errorMsg}</p>
+                    }
+                    <div className="flex items-center gap-2 mt-3 justify-center flex-col">
+                        {/* make this input only accept lowercase */}
+                        <input type="text" className={`${usernameTaken ? "border border-red-500" : ''} bg-input px-2 py-2 outline-none`} onChange={(e) => setUsername(e.currentTarget.value)} placeholder="username" />
+                        {usernameTaken &&
+                            <p className="text-sm text-gray-400">username already exists</p>
+                        }
+                        <input type='password' className="px-2 py-2 outline-none bg-input" onChange={(e) => setPassword(e.currentTarget.value)} placeholder="password" />
+                        <button onClick={() => handleSignup()} className=' bg-gray-200  bg-opacity-10 hover:bg-opacity-20 w-full border-white border-2  hover:border-opacity-20 border-opacity-10  text-white px-2 py-1  mb-3  rounded-none cursor-pointer '>sign up</button>
 
-            <div className="flex  items-center gap-1 mt-3 justify-center flex-col">
-                {
-                    loading &&
-                    <p className="text-sm text-gray-400">loading...</p>
-                }
-                {error &&
-                    <p className="text-sm text-gray-400">{errorMsg}</p>
-                }
-                <input style={{ background: '#1e1e1e' }} type="text" className="px-2 py-2 outline-none" onChange={(e) => setUsername(e.currentTarget.value)} placeholder="username" />
-                <input style={{ background: '#1e1e1e' }} type='password' className="px-2 py-2 outline-none" onChange={(e) => setPassword(e.currentTarget.value)} placeholder="password" />
-                <button onClick={() => handleLogin()} className='px-3 py-1 mt-1 flex gap-2 border border-dashed border-green-700'>Login</button>
-            </div>
+                        {/* <button className="px-3 py-1 mt-1 flex gap-2">Signup</button> */}
+                    </div>
 
-            <button onClick={signInWithGithub} style={{ background: '#1e1e1e' }} className="
-            px-3 
-            py-1
-            mt-7
-            flex 
-            gap-2
-            border border-dashed border-gray-700
-            ">
-                Login With Github <Github />
-            </button>
-        </div >
+                    <div className="flex  items-center  gap-2 mt-3 justify-center flex-col">
+
+                        <input type="text" className="px-2 py-2 bg-input outline-none" onChange={(e) => setUsername(e.currentTarget.value)} placeholder="username" />
+                        <input type='password' className="px-2 bg-input py-2 outline-none" onChange={(e) => setPassword(e.currentTarget.value)} placeholder="password" />
+                        <button onClick={() => handleLogin()} className=' bg-gray-200 w-full  bg-opacity-10 hover:bg-opacity-20 border-white border-2  hover:border-opacity-20 border-opacity-10  text-white px-2 py-1  mb-3  rounded-none cursor-pointer '>login</button>
+                        {/* <button onClick={() => handleLogin()} className='px-3 py-1 mt-1 flex gap-2 border border-dashed border-green-700'></button> */}
+                        <button onClick={signInWithGithub} className=' bg-gray-200 w-full  flex justify-between  bg-opacity-10 hover:bg-opacity-20 border-white border-2  hover:border-opacity-20 border-opacity-10  text-gray-300 px-2 py-1  mb-3  rounded-none cursor-pointer '> <Github /> login with github </button>
+
+                    </div>
+                </div >
+            </ContentContainer>
+        </div>
     )
 
 }

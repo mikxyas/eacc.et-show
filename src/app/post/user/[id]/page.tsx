@@ -1,4 +1,5 @@
 "use client"
+import ContentContainer from '@/components/ContentContainer'
 import Post from '@/components/Post'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
@@ -48,8 +49,8 @@ export default function UserPosts(context: any) {
     }, [page])
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center md:mx-44">
-                <div style={{ background: '#1e1e1e', alignSelf: 'center' }} className=" px-6 py-2  w-full">
+            <div className="flex flex-col items-center justify-center lg:mx-44">
+                <div style={{ alignSelf: 'center' }} className=" bg-main-content px-6 py-2  w-full">
                     Loading...
                 </div>
             </div>
@@ -58,10 +59,10 @@ export default function UserPosts(context: any) {
     if (posts === null) {
         return (
             <div>
-                <div className="flex flex-col items-center justify-center md:mx-44">
-                    <div style={{ background: '#1e1e1e', alignSelf: 'center' }} className=" px-6 py-2  w-full">
+                <div className="flex flex-col items-center justify-center lg:mx-44">
+                    <ContentContainer tailwindstyle='' styles={{}}>
                         user has no posts
-                    </div>
+                    </ContentContainer>
                 </div>
                 <div className='flex justify-center items-center gap-1 mt-2'>
                     <Link href={`/post/user/${id}?p=${page > 1 ? page - 1 : 1}`}>
@@ -76,14 +77,14 @@ export default function UserPosts(context: any) {
     }
 
     return (
-        <div className="flex flex-col items-center justify-center md:mx-44">
-            <div style={{ background: '#1e1e1e', alignSelf: 'center' }} className=" px-6 py-2  w-full">
+        <div className="flex flex-col items-center justify-center lg:mx-44">
+            <ContentContainer tailwindstyle='' styles={{}}>
 
                 {posts?.map((post: any, index: number) => (
                     <Post key={post.id} data={post} num={index} page={page} />
                 ))
                 }
-            </div>
+            </ContentContainer>
             <div className='flex justify-center items-center gap-1 mt-2'>
                 <Link href={`/post/user/${id}?p=${page > 1 ? page - 1 : 1}`}>
                     <button disabled={page == 1} onClick={() => decrementPage()} className={page === 1 ? ` p-1 text-gray-50 bg-gray-200  bg-opacity-10  border-black border-2 border-opacity-40  px-2 py-1` : ' p-1 px-2 py-1 text-gray-50 bg-green-900'}>prev</button>

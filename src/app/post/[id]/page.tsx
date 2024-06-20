@@ -6,6 +6,7 @@ import usePostQuery from "@/hooks/use-post-query";
 import { cookies } from "next/headers";
 import useCommentsZapped from "@/hooks/use-comments-zapped";
 import queryClient from "@/utils/globalClientQuery";
+import { get_zapped_posts } from "@/queries/get-zapped-posts";
 
 const PostWComments = dynamic(() => import('@/components/PostWComments'), { ssr: true })
 
@@ -21,19 +22,20 @@ export default async function Post(event: any) {
 
     // client.invalidateQueries(['posts_zapped'])
     // console.log('hi')
-    const prefetch = await queryClient.prefetchQuery(usePostQuery({ client: supabase, id: id }))
-
+    await queryClient.prefetchQuery(usePostQuery({ client: supabase, id: id }))
+    // not clean but gets the job done
     let user_id = null
-    let post_id = id
+    let zapped_posts = []
     if (user.data.user) {
         user_id = user.data.user.id
+        zapped_posts = await get_zapped_posts(supabase, user_id)
     }
     console.log('user', user_id)
-    await queryClient.prefetchQuery(useCommentsZapped({ client: supabase, user_id: user_id, post_id: post_id }))
+    // await queryClient.prefetchQuery(useCommentsZapped({ client: supabase, user_id: user_id, post_id: post_id }))
 
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
-            <PostWComments id={id} prefetch={prefetch} />
+            <PostWComments id={id} zapped_posts={zapped_posts} />
         </HydrationBoundary>
 
     );

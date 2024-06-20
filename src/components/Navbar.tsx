@@ -1,6 +1,7 @@
 "use client"
 
 import { useUserContext } from '@/context/user';
+import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
@@ -23,26 +24,11 @@ const Navbar: React.FC = () => {
 
     return (
         <div className=' '>
-            <div style={{ background: '#3d3d3d' }} className='flex  px-2 md:mx-44 flex-col justify-center items-start md:mt-3'>
-                {/* <pre className=' text-4xs hidden md:flex md:text-3xs whitespace-pre' style={{ fontFamily: 'monospace', lineHeight: '1.2', color: 'green', wordSpacing: 'normal' }}>
-                    {`
-███████╗██╗  ██╗ ██████╗ ██╗    ██╗   ███████╗    ██╗ █████╗  ██████╗ ██████╗   ███████╗████████╗ 
-██╔════╝██║  ██║██╔═══██╗██║    ██║   ██╔════╝   ██╔╝██╔══██╗██╔════╝██╔════╝   ██╔════╝╚══██╔══╝
-███████╗███████║██║   ██║██║ █╗ ██║   █████╗    ██╔╝ ███████║██║     ██║        █████╗     ██║    
-╚════██║██╔══██║██║   ██║██║███╗██║   ██╔══╝   ██╔╝  ██╔══██║██║     ██║        ██╔══╝     ██║   
-███████║██║  ██║╚██████╔╝╚███╔███╔╝██╗███████╗██╔╝   ██║  ██║╚██████╗╚██████╗██╗███████╗   ██║   
-╚══════╝╚═╝  ╚═╝ ╚═════╝  ╚══╝╚══╝ ╚═╝╚══════╝╚═╝    ╚═╝  ╚═╝ ╚═════╝ ╚═════╝╚═╝╚══════╝   ╚═╝ 
-                    `}
-                </pre> */}
-                {/* <div className='flex w-full'>
-                    <p className='self-start text-green-700 font-mono font-bold w-auto'></p>
-                    <input className='bg-gray-900 text-green-700 font-mono font-bold p-2 pl-4 w-auto' type="text" placeholder="Type your command here" />
-                </div> */}
-                <div className=" text-white  py-1  font-mono   text-sm flex flex-col md:flex-row">
-                    {/* <div className="terminal-prompt">
-                        <span className="prompt-text">user@eacc.et-mikiyas:~$</span>
-                    </div> */}
-                    <div className=' gap-3 flex'>
+            <div style={{ background: '#2d2d2d' }} className='flex border border-white border-opacity-light border-b-0 px-2 lg:mx-44 flex-col justify-center items-start lg:mt-3'>
+
+                <div className=" text-white  py-1  font-mono w-full   text-sm flex flex-col md:flex-row">
+
+                    <div className=' gap-3 flex '>
                         <Link href='/'>
                             <button className='hover:underline hover:text-gray-50 hover:pl-1 pl-1 pr-1'>home</button>
                         </Link>
@@ -71,7 +57,9 @@ const Navbar: React.FC = () => {
                                 <button className='hover:underline hover:text-gray-50 hover:pl-1 pr-1 pl-1'>login</button>
                             </Link>
                         }
+
                     </div>
+
                 </div>
             </div>
 

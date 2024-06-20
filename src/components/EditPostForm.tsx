@@ -4,6 +4,7 @@ import { useUserContext } from '@/context/user'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
 import React, { useEffect, useState } from 'react'
+import ContentContainer from './ContentContainer'
 export default function EditPostForm({ id }: any) {
     const post_id = id
     const [formData, setFormData] = useState({} as any)
@@ -159,50 +160,52 @@ export default function EditPostForm({ id }: any) {
     }
     return (
         <div>
-            <div className='flex flex-col' >
-                <div className='flex self-center flex-col items-center justify-center  w-full md:w-2/3 mt-40 md:mt-2' >
-                    {/* <p className='px-4 font-mono w-full md:w-1/2'>submit high quality content that inspires insightful discussion and learning</p> */}
-                    {errorEditing &&
-                        <p className='text-red-500 text-xs'>Error editing post</p>
-                    }
-                    <div className='mx-4 my-2 w-full items-center px-4 md:px-1 justify-center flex flex-col gap-2'>
-                        {emptyInput &&
-                            <p className='text-sm'>Title Cannot be empty</p>
+            <div className='lg:mx-44' >
+                <ContentContainer styles={{ minHeight: '55vh' }} tailwindstyle='justify-center'>
+                    <div className='flex self-center flex-col items-center justify-center  w-full   ' >
+                        {/* <p className='px-4 font-mono w-full md:w-1/2'>submit high quality content that inspires insightful discussion and learning</p> */}
+                        {errorEditing &&
+                            <p className='text-red-500 text-xs'>Error editing post</p>
                         }
-                        {linkPostEmpty && textPostEmpty &&
-                            <p className='text-sm'>Link or Text cannot be empty. Submit either a link post or a text post</p>
-                        }
-                        <div className='w-full md:w-1/2 '>
-                            <input style={{ background: '#1e1e1e' }} placeholder='Title' onChange={(e) => setTitle(e.target.value)} value={title} className='outline-none p-2 w-full' type="text" name="title" />
-                        </div>
-                        <div className='w-full md:w-1/2'>
-                            {linkError &&
-                                <p
-                                    className='text-red-500 text-xs'
-                                >URL is Invalid</p>
+                        <div className='mx-4 my-2 w-full items-center px-4 md:px-1 justify-center flex flex-col gap-2'>
+                            {emptyInput &&
+                                <p className='text-sm'>Title Cannot be empty</p>
                             }
-                            <input style={{ background: '#1e1e1e' }} placeholder='Link (link to blog or tg post) -> (optional)' onChange={(e) => handleLink(e)} value={link} className={`outline-none p-2 w-full ${linkError ? 'border border-red-500' : ''}`} width={200} type="text" name="link" />
-                        </div>
-                        <div className='w-full md:w-1/2'>
-                            {hackerLinkError &&
-                                <p
-                                    className='text-red-500 text-xs'
-                                >{errorMsg}</p>
+                            {linkPostEmpty && textPostEmpty &&
+                                <p className='text-sm'>Link or Text cannot be empty. Submit either a link post or a text post</p>
                             }
-                            <input style={{ background: '#1e1e1e' }} placeholder='Link to post on hacker news' onChange={(e) => handleHackerLink(e)} value={hackerlink} className={`outline-none p-2 w-full  ${hackerLinkError ? 'border border-red-500' : ''}`} width={200} type="text" name="link" />
+                            <div className='w-full md:w-1/2 '>
+                                <input placeholder='Title' onChange={(e) => setTitle(e.target.value)} value={title} className='outline-none bg-input p-2 w-full' type="text" name="title" />
+                            </div>
+                            <div className='w-full md:w-1/2'>
+                                {linkError &&
+                                    <p
+                                        className='text-red-500 text-xs'
+                                    >URL is Invalid</p>
+                                }
+                                <input placeholder='Link (link to blog or tg post) -> (optional)' onChange={(e) => handleLink(e)} value={link} className={`outline-none bg-input p-2 w-full ${linkError ? 'border border-red-500' : ''}`} width={200} type="text" name="link" />
+                            </div>
+                            <div className='w-full md:w-1/2'>
+                                {hackerLinkError &&
+                                    <p
+                                        className='text-red-500 text-xs'
+                                    >{errorMsg}</p>
+                                }
+                                <input placeholder='Link to post on hacker news' onChange={(e) => handleHackerLink(e)} value={hackerlink} className={`outline-none p-2 w-full bg-input  ${hackerLinkError ? 'border border-red-500' : ''}`} width={200} type="text" name="link" />
+                            </div>
+                            <div className='w-full md:w-1/2'>
+                                <textarea placeholder='text' onChange={(e) => setText(e.target.value)} value={text} className='w-full h-20 bg-input outline-none p-2' name="text" />
+                            </div>
+                            <p className='w-full md:w-1/2 text-xs text-center text-gray-300'>Leave url blank to submit a question for discussion. If there is a url, text is optional.</p>
+                            <button
+                                disabled={title == '' || (link == '' && hackerlink == '') && text == '' || linkError || hackerLinkError}
+                                type="submit" className='py-2 px-2 bg-gray-200 w-6/12 mt-6  bg-opacity-10 hover:bg-opacity-20 border-black border-2 border-opacity-40  ' onClick={edit_post}>update post</button>
+                            {loading &&
+                                <p>updating...</p>
+                            }
                         </div>
-                        <div className='w-full md:w-1/2'>
-                            <textarea style={{ background: '#1e1e1e' }} placeholder='text' onChange={(e) => setText(e.target.value)} value={text} className='w-full h-20 outline-none p-2' name="text" />
-                        </div>
-                        <p className='w-full md:w-1/2 text-xs text-center text-gray-300'>Leave url blank to submit a question for discussion. If there is a url, text is optional.</p>
-                        <button
-                            disabled={title == '' || (link == '' && hackerlink == '') && text == '' || linkError || hackerLinkError}
-                            type="submit" className='py-2 px-2 bg-gray-200  bg-opacity-10 hover:bg-opacity-20 border-black border-2 border-opacity-40  ' onClick={edit_post}>update post</button>
-                        {loading &&
-                            <p>updating...</p>
-                        }
                     </div>
-                </div>
+                </ContentContainer>
             </div>t
         </div>
     )

@@ -10,7 +10,7 @@ import React, { useState } from 'react';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { zapPost as zap_the_post, unzapPost as unzappPost } from '@/functions/posts';
 import { delete_post } from '@/functions/posts';
-const Post = ({ data, num, page }: any) => {
+const Post = ({ data, num, page, zapped_posts }: any) => {
     // const { deletePost } = usePostsContext();
     const deletePost = useMutation({
         mutationFn: (post_id) => {
@@ -41,16 +41,17 @@ const Post = ({ data, num, page }: any) => {
             try {
                 if (page != null) {
                     const posts: any = client.getQueryData(['posts', { sortByNew: false, page: page }])
-                    const zaps: any = client.getQueryData(['posts_zapped'])
-                    const new_posts_zap_count = posts.data.map((post: any) => {
-                        if (post.id == zap.post_zapped) {
-                            post.zap_count += 1
-                        }
-                        return post
-                    })
-
-                    client.setQueryData(['posts_zapped'], [...zaps, zap.post_zapped])
-                    client.setQueryData(['posts'], new_posts_zap_count)
+                    const updated_post = {
+                        data: posts.data.map((post: any) => {
+                            if (post.id == zap.post_zapped) {
+                                post.zap_count += 1
+                            }
+                            return post
+                        }),
+                        zapped_posts: [...zapped_posts, zap.post_zapped]
+                    }
+                    // console.log(updated_post)
+                    client.setQueryData(['posts', { page: page, sortByNew: false }], updated_post)
                 } else {
                     const post: any = client.getQueryData(['post', { id: zap.post_zapped }])
                     post.zap_count += 1
@@ -69,21 +70,22 @@ const Post = ({ data, num, page }: any) => {
         mutationFn: (post_id) => {
             return unzappPost(post_id)
         },
-        onMutate: async (post_id) => {
+        onMutate: async (post_id: string) => {
             try {
                 // if page null user is in post page so we dont need to update the posts query we update the post query
                 if (page != null) {
                     const posts: any = client.getQueryData(['posts', { sortByNew: false, page: page }])
-
-                    const zaps: any = client.getQueryData(['posts_zapped'])
-                    const new_posts_zap_count = posts.data.map((post: any) => {
-                        if (post.id == post_id) {
-                            post.zap_count -= 1
-                        }
-                        return post
-                    })
-                    client.setQueryData(['posts_zapped'], zaps.filter((z: any) => z != post_id))
-                    client.setQueryData(['posts'], new_posts_zap_count)
+                    const updated_post = {
+                        data: posts.data.map((post: any) => {
+                            if (post.id == post_id) {
+                                post.zap_count -= 1
+                            }
+                            return post
+                        }),
+                        zapped_posts: zapped_posts.filter((id: string) => id != post_id)
+                    }
+                    // TODO: update with zustand by making page and sortbyenw a zustand state
+                    client.setQueryData(['posts', { page: page, sortByNew: false }], updated_post)
                 } else {
                     const post: any = client.getQueryData(['post', { id: post_id }])
                     const zaps: any = client.getQueryData(['posts_zapped'])
@@ -99,7 +101,7 @@ const Post = ({ data, num, page }: any) => {
     })
 
     const client = useQueryClient()
-    const zappedPosts: any = client.getQueryData(['posts_zapped'])
+
     const [showDelete, setShowDelete] = useState(false)
     const { user } = useUserContext()
     const router = useRouter()
@@ -131,7 +133,10 @@ const Post = ({ data, num, page }: any) => {
         }
         return 'just now';
     }
-
+    function isTextEmptyOrWhitespace(text: string) {
+        if (text == 'null') return true
+        return text.trim().length === 0;
+    }
     async function zapPost(post_id: any, zapped: any) {
 
         const zap_object = {
@@ -155,7 +160,7 @@ const Post = ({ data, num, page }: any) => {
                         }
                         {user != null
                             ? <>
-                                {zappedPosts?.includes(data.id)
+                                {zapped_posts?.includes(data.id)
                                     ? <div onClick={() => unzapp_post.mutate(data.id)} className='p-1 '>
                                         <Zap className='text-green-600 hover:text-green-600 cursor-pointer zapppp' size={13} />
                                     </div>
@@ -179,14 +184,14 @@ const Post = ({ data, num, page }: any) => {
                         <div className="inline-flex  w-full items-baseline ">
                             <div className=" leading-5 mb-0 cursor-pointer flex  no-select">
                                 <div>
-                                    {data.link == null || data.link == "null"
+                                    {isTextEmptyOrWhitespace(data.link)
                                         // make this a Link
-                                        ? <span onClick={num != null ? postClicked : () => { }}> {data.title}</span>
-                                        : <a href={data.link} target='_blank' className='hover:underline'>{data.title}</a>
+                                        ? <span className='no-select' onClick={num != null ? postClicked : () => { }}>{data.title}</span>
+                                        : <a href={data.link} target='_blank' className='hover:underline no-select'>{data.title}</a>
                                     }
 
-                                    {data.link != 'null' && data.link != '' && data.link != null &&
-                                        <a href={data.link} target='_blank'> <span className="text-gray-300 text-xs">({data.link})</span></a>
+                                    {!isTextEmptyOrWhitespace(data.link) &&
+                                        <a href={data.link} target='_blank'> <span className="text-gray-300 text-xs ">({data.link})</span></a>
                                     }
                                 </div>
                             </div>
