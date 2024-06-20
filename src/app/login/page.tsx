@@ -24,7 +24,9 @@ const LoginPage = () => {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'github'
         })
-
+        if (!error) {
+            window.location.reload()
+        }
         // (data, error)
     }
 
