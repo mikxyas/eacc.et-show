@@ -229,12 +229,11 @@ const getProfile = async(user_id:string | undefined) => {
                     refresh_token=null
                  })
                  console.log(resp.data.user)
-                 if((!refresh_token && !access_token) && resp.data.user){
-                    // set the tokens on the cloud storage
-                    
-                    const sesh = await supabase.auth.getSession()
-                    setStorageItem("session", sesh.data.session)
+                 const sesh = await supabase.auth.getSession()
 
+                 if((!refresh_token && !access_token) && sesh.data.session){
+                    // set the tokens on the cloud storage
+                    setStorageItem("session", sesh.data.session)
                     init()
                  }
 
