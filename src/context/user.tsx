@@ -229,15 +229,9 @@ const getProfile = async(user_id:string | undefined) => {
                     refresh_token=null
                  })
                  console.log(resp.data.user)
-                 const sesh = await supabase.auth.getSession()
+                 
 
-                 if(!resp.data.user && sesh.data.session?.user?.app_metadata.provider == 'github'){
-                    // set the tokens on the cloud storage
-                    await setStorageItem("session", sesh.data.session)
-                    
-                    init()
-                    
-                 }
+             
 
                 if(!resp.data.user){
                   
@@ -254,6 +248,14 @@ const getProfile = async(user_id:string | undefined) => {
                           }else{
                             console.log(error)
                           }
+                    }else{
+                        const sesh = await supabase.auth.getSession()
+                        console.log(sesh)
+                        if(sesh.data.session){
+                        await setStorageItem("session", sesh.data.session)
+    
+                        init()
+                        }
                     }
                 }else{
                     setUser(resp.data.user)
