@@ -53,7 +53,7 @@ export const viewport: Viewport = {
   themeColor: "#1d1d1d",
 }
 
-const Navbar = dynamic(() => import("@/components/Navbar"));
+const Navbar = dynamic(() => import("@/components/Navbar"), { ssr: true });
 
 // import { QueryClientProvider } from '@tanstack/react-query'
 
