@@ -234,6 +234,8 @@ const getProfile = async(user_id:string | undefined) => {
                     
                     const sesh = await supabase.auth.getSession()
                     setStorageItem("session", sesh.data.session)
+
+                    init()
                  }
 
                 if(!resp.data.user){
