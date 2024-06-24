@@ -4,18 +4,42 @@
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import ContentContainer from './ContentContainer'
+import TelegramProfileCard from './TelegramProfileCard'
+import { useUserContext } from '@/context/user'
+import { createClient } from '@/utils/supabase/client'
+
+
 
 export default function ViewProfileComp({ id }: any) {
-    const [profile, setProfile] = useState<any>(null)
-    const fetchUser = async () => {
-        const res = await fetch('/api/user/' + id)
-        const data = await res.json()
-        setProfile(data)
-        // (data)
+    // const [profile, setProfile] = useState<any>(null)
+    const {setTelegramProfile, setProfile, profile} = useUserContext()
+    const [noexist, setNoexist] = useState(false)
+
+
+    async function getuserprof(id: string){
+        const supabase = createClient()
+
+        const {data, error} = await supabase
+        .from('profiles')
+        .select('*, telegram_profiles(first_name, last_name, tg_username)')
+        .eq('username', id)
+        if(data){
+            console.log(data)
+            if(data[0].length === 0){
+                console.log('no exist')
+                setNoexist(true)
+            }else{
+                setProfile(data[0])
+                setTelegramProfile(data[0].telegram_profiles[0])
+                setNoexist(false)
+            }
+        }else{
+            console.log(error)
+        }
     }
 
     useEffect(() => {
-        fetchUser()
+        getuserprof(id)
     }, [])
 
     if (!profile)
@@ -43,7 +67,7 @@ export default function ViewProfileComp({ id }: any) {
                     <button className='py-1 px-4  border border-dashed border-gray-700'>Comments</button>
                 </Link> */}
                     </div>
-
+                    <TelegramProfileCard />
                 </div>
             </ContentContainer>
 

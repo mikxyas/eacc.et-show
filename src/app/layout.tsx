@@ -53,11 +53,12 @@ export const viewport: Viewport = {
   themeColor: "#1d1d1d",
 }
 
-const Navbar = dynamic(() => import("@/components/Navbar"), { ssr: true });
+const Navbar = dynamic(() => import("@/components/Navbar"));
 
 // import { QueryClientProvider } from '@tanstack/react-query'
 
 import ReactQueryPvorider from "@/utils/queryClient";
+
 // import Navbar from "@/components/Navbar";
 export default function RootLayout({
   children,
@@ -67,11 +68,13 @@ export default function RootLayout({
   return (
 
     <html lang="en">
+      
       <body className={inter.className}>
 
         <UserProvider>
           {/* <PostsProvider> */}
           <ReactQueryPvorider >
+ 
             <Navbar />
             {children}
           </ReactQueryPvorider>

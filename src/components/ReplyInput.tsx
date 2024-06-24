@@ -64,7 +64,7 @@ export default function ReplyInput({ post_id, parent_id, showReply, toggleReply 
         <div className='' style={{ fontSize: '10pt' }}>
             {
                 showReply == true
-                && <div className='mt-2 w-full md:w-reply-pc flex pr-4 flex-col '>
+                && <div className='mt-2 w-full lg:w-reply-pc flex pr-4 flex-col '>
                     <textarea style={{ background: '#1e1e1e' }} value={reply} onChange={(e) => setReply(e.target.value)} className=' h-20  p-2 outline-none border-white border-opacity-10 border-2  ' placeholder='write your reply'></textarea>
                     <div className='flex  flex-row justify-between'>
                         <div className='gap-1 mt-2'>

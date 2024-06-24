@@ -12,7 +12,7 @@ export async function middleware(req: NextRequest) {
 
 
     // if session not exist and is path is in submit rewrite it with /login page
-    if (!session && (req.url.includes('/submit') || req.url.includes('/user/profile') || req.url.includes('/post/edit'))) {
+    if (!session && (req.url.includes('/submit') || req.url.includes('/user/profile') || req.url.includes('/post/edit') )) {
         return NextResponse.rewrite(new URL('/login', req.url))
     }
 

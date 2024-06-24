@@ -14,12 +14,14 @@ const ReplyInput = dynamic(() => import('@/components/ReplyInput'))
 import { createClient } from "@/utils/supabase/client";
 import { getPost } from '@/queries/get-post';
 import ContentContainer from './ContentContainer';
+import { useUserContext } from '@/context/user';
 
 
 export default function PostWComments({ id, zapped_posts }: any) {
     const client = createClient()
     // const viewedPost = useQuery(usePostQuery({ client: client, id: id, prefetch: prefetch }))
 
+    const {isTelegramMiniApp} = useUserContext()
 
     const viewedPost = useQuery({
         queryKey: ['post', { id: id }],
@@ -84,12 +86,12 @@ export default function PostWComments({ id, zapped_posts }: any) {
     return (
 
         <div className="items-center justify-center flex flex-col  lg:mx-44">
-            <ContentContainer styles={{ paddingTop: "10px", minHeight: '85vh' }} tailwindstyle=''>
+            <ContentContainer styles={{ paddingTop: "10px", minHeight: '85vh'}} tailwindstyle=''>
                 <div className="">
                     <Post data={viewedPost.data.data} zapped_posts={zapped_posts} num={null} page={null} />
                 </div>
                 <div className="ml-6 mb-0">
-                    <ReplyInput showReply={true} post_id={viewedPost.data.data.id} parent_id={null} />
+                    <ReplyInput showReply={true} post_id={viewedPost.data?.data?.id} parent_id={null} />
                 </div>
                 <div className="">
                     {viewedPost.data.data?.comments != null && nestComments(viewedPost.data.data.comments).map((comment: object, index: number) => (

@@ -10,7 +10,7 @@ import React, { Suspense, useEffect, useLayoutEffect } from 'react';
 
 const Navbar: React.FC = () => {
 
-    const { user, profile, logout } = useUserContext()
+    const { user, profile, logout, isTelegramMiniApp } = useUserContext()
 
 
 
@@ -24,7 +24,7 @@ const Navbar: React.FC = () => {
 
     return (
         <div className=' '>
-            <div style={{ background: '#2d2d2d' }} className='flex border border-white border-opacity-light border-b-0 px-2 lg:mx-44 flex-col justify-center items-start lg:mt-3'>
+            <div style={{ background:  '#2d2d2d' }} className='flex border border-white border-opacity-light border-b-0 px-2 lg:mx-44 flex-col justify-center items-start lg:mt-3'>
 
                 <div className=" text-white  py-1  font-mono w-full   text-sm flex flex-col md:flex-row">
 

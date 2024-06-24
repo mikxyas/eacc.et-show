@@ -63,7 +63,22 @@ const Post = ({ data, num, page, zapped_posts }: any) => {
             catch (e) {
                 console.log(e)
             }
-        }
+        },
+        onError(error, variables, context) {
+            // rollback the changes that were made
+            console.log(error)
+            const posts: any = client.getQueryData(['posts', { sortByNew: false, page: page }])
+            const updated_post = {
+                data: posts.data.map((post: any) => {
+                    if (post.id == variables.post_zapped) {
+                        post.zap_count -= 1
+                    }
+                    return post
+                }),
+                zapped_posts: zapped_posts.filter((id: string) => id != variables.post_zapped)
+            }
+            client.setQueryData(['posts', { page: page, sortByNew: false }], updated_post)
+        },
     })
 
     const unzapp_post = useMutation({
@@ -183,7 +198,6 @@ const Post = ({ data, num, page, zapped_posts }: any) => {
                                 </div>
                             </Link>
                         }
-
                     </div>
                     <div className='w-full'>
                         {/* <Link href={`/post/${data.id}`}> */}
@@ -195,7 +209,6 @@ const Post = ({ data, num, page, zapped_posts }: any) => {
                                         ? <span className='no-select' onClick={num != null ? postClicked : () => { }}>{data.title}</span>
                                         : <a href={data.link} target='_blank' className='hover:underline no-select'>{data.title}</a>
                                     }
-
                                     {!isTextEmptyOrWhitespace(data.link) &&
                                         <a href={data.link} target='_blank'> <span className="text-gray-300 text-xs ">({data.link})</span></a>
                                     }

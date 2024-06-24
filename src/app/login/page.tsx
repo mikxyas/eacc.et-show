@@ -1,8 +1,10 @@
 "use client"
 import ContentContainer from "@/components/ContentContainer"
 import { useUserContext } from "@/context/user"
+import queryClient from "@/utils/globalClientQuery"
 
 import { createClient } from "@/utils/supabase/client"
+import { useQueryClient } from "@tanstack/react-query"
 import { Github } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
@@ -15,8 +17,9 @@ const LoginPage = () => {
     const [errorMsg, setErorMsg] = useState('')
     const [error, setError] = useState(false)
     const [loading, setLoading] = useState(false)
-    const { createUser, createNewProfile } = useUserContext()
-    const router = useRouter()
+    const { createUser, isTelegramMiniApp } = useUserContext()
+    // const client = useQueryClient()
+    // const router = useRouter()
 
     const signInWithGithub = async () => {
         const supabase = createClient();
@@ -26,10 +29,10 @@ const LoginPage = () => {
         })
         if (error) {
             console.log(error)
+        } else {
         }
         // (data, error)
     }
-
 
     function isValidUsername(username: string) {
         const regex = /^[a-zA-Z0-9_]{4,20}$/;
@@ -41,7 +44,6 @@ const LoginPage = () => {
         return passwordRegex.test(password);
     }
 
-    // Example usage      
     const validateForm = () => {
         if (!isValidUsername(username)) {
             return 'invalid username'
@@ -52,9 +54,26 @@ const LoginPage = () => {
         return 'valid'
     }
 
+    const setStorageItem = (key :any, value: any) => {
+        window.Telegram.WebApp.CloudStorage.setItem(key, value)
+    }
+
+    const storeSessionInTelegramCloud = async(refreshToken: any, accessToken:any) => {
+      const sessionData = {
+        refresh_token:refreshToken,
+        access_token: accessToken,
+      }
+        if(isTelegramMiniApp){
+       await window.Telegram.WebApp.CloudStorage.removeItems(['refresh_token', 'access_token'])
+      await setStorageItem('session', JSON.stringify(sessionData))
+    //   await setStorageItem('access_token', accessToken)
+      }else{
+        console.log('In web')
+      }
+    }
+
     const handleLogin = async () => {
         const supabase = createClient();
-
         setLoading(true)
         const validation = validateForm()
         if (validation !== 'valid') {
@@ -78,13 +97,14 @@ const LoginPage = () => {
             setErorMsg('invalid username or password')
             console.log(login.error)
         } else {
+            await storeSessionInTelegramCloud(login.data.session.refresh_token, login.data.session.access_token)
             setLoading(false)
             window.location.reload()
 
         }
     }
 
-    const handleSignup = () => {
+    const handleSignup = async () => {
         setLoading(true)
 
         const validation = validateForm()
@@ -98,7 +118,7 @@ const LoginPage = () => {
             setLoading(false)
             setErorMsg('')
         }
-        const resp = createUser(username, password).then((resp: any) => {
+        const resp = await createUser(username, password).then(async(resp: any) => {
             // (resp)
             if (resp === "username taken") {
                 setLoading(false)
@@ -106,10 +126,12 @@ const LoginPage = () => {
             }
             if (resp === "sign up success") {
                 setLoading(false)
+                storeSessionInTelegramCloud(resp.data.session.refresh_token, resp.data.session.access_token)
                 // create a profile for the user
                 window.location.reload()
             }
         })
+        
     }
     return (
         // craete a login page

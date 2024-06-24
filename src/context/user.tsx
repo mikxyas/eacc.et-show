@@ -13,6 +13,11 @@ interface UserContextType {
     logout: () => void;
     createUser: (username: string, password: string) => any;
     createNewProfile: (name: string, username: string, email: string, userId: UUID) => any;
+    telegramProfile: any | null;
+    isTelegramMiniApp: boolean;
+    testobj: any,
+    getProfile: (user_id: string) => void,
+    setTelegramProfile: (s:any) => void
 }
 
 // Create the user context
@@ -35,9 +40,11 @@ export const UserProvider = ({ children }:
 ) => {
     const [user, setUser] = useState<any | null>(null);
     const [profile, setProfile] = useState<any | null>(null);
-
+    const [telegramProfile, setTelegramProfile] = useState<any | null>(null);
+    const [isTelegramMiniApp, setISTelegramMiniApp] = useState(false)
+    const [telegramScriptLoaded, setTelegramScriptLoaded] = useState(false)
     const hasProfileBeenCreated = useRef(false);
-
+    const [testobj, setTestobj] = useState('')
     const createNewProfile = useCallback(async (name: any, username: any, userId: any) => {
         const supabase = createClient();
         console.log('req');
@@ -52,18 +59,34 @@ export const UserProvider = ({ children }:
         }
     }, []);
 
+
+
+const getProfile = async(user_id:string | undefined) => {
+    const supabase = createClient();
+    const { data, error } = await supabase
+    .from('profiles')
+    .select()
+    .eq('user_id', user_id)
+    .select('*, telegram_profiles(*)');
+    if(error){
+        console.log(error)
+    }else{
+        setProfile(data[0])
+        setTelegramProfile(data[0].telegram_profiles[0])
+    }
+}
+
     const init = useCallback(async () => {
         const supabase = createClient();
-
-        const session = await supabase.auth.getSession();
+        const user = await supabase.auth.getUser();
         // console.log(session.data.session)
-        if (session.data.session) {
-            setUser(session.data.session?.user);
+        if (user.data.user) {
+            setUser(user.data.user);
             const { data, error } = await supabase
                 .from('profiles')
                 .select()
-                .eq('user_id', session.data.session?.user.id)
-                .select('*');
+                .eq('user_id', user.data.user.id)
+                .select('*, telegram_profiles(*)');
             if (error) {
                 console.log(error);
             } else {
@@ -71,11 +94,12 @@ export const UserProvider = ({ children }:
                 if (data.length === 0 && !hasProfileBeenCreated.current) {
                     hasProfileBeenCreated.current = true;
                     await createNewProfile(
-                        session.data.session?.user.user_metadata.full_name,
-                        session.data.session?.user.user_metadata.user_name + random,
-                        session.data.session?.user.id
+                        user.data.user.user_metadata.full_name,
+                        user.data.user?.user_metadata.user_name + random,
+                        user.data.user.id
                     );
                 } else {
+                    setTelegramProfile(data[0].telegram_profiles[0]);
                     setProfile(data[0]);
                 }
             }
@@ -131,35 +155,124 @@ export const UserProvider = ({ children }:
                     access_token: data.session?.access_token,
                     refresh_token: data.session?.refresh_token
                 });
-                // (sesh)
-                // (data)
+
                 return "sign up success"
             } else {
                 console.log(error)
-
                 return ("username taken")
             }
-
-            // create a function that when a user is created a profile is also created with the first @ found before the username
-            // then becuase the profile gets created just set the session and reload the page
         }
     }
 
     const logout = async () => {
         const supabase = createClient();
-
+        if(isTelegramMiniApp){
+            window.Telegram.WebApp.CloudStorage.removeItem('session')
+        }
         const { error } = await supabase.auth.signOut()
         // (error)
         await setUser(null)
         await setProfile(null)
     }
 
+    const getStorageItem = async (key: string) => {
+        return new   Promise((resolve, reject) => {
+            window.Telegram.WebApp.CloudStorage.getItem(key, (err, value:any) => {
+                if(err || !value){
+                    console.log('IT IS NOT STORED')
+                    // return reject(new Error('Data is not stored'))
+                }else{
+
+                    resolve(value)
+                }
+                
+            })
+        })
+    }
+    const setStorageItem = (key :any, value: any) => {
+        window.Telegram.WebApp.CloudStorage.setItem(key, value)
+    }
     useEffect(() => {
-        init()
-    }, [])
+        const script = document.createElement('script');
+        script.src = "https://telegram.org/js/telegram-web-app.js";
+        script.async = true;
+    
+        script.onload = async() => {
+          // Check if WebApp is defined
+          if (typeof window.Telegram !== "object" || window.Telegram === null) {
+            console.error(
+              "Error: Telegram Web App script has not run, see https://core.telegram.org/bots/webapps#initializing-web-apps",
+            );
+            setISTelegramMiniApp(false)
+            setTelegramScriptLoaded(false)
+          } else {
+            // WebApp is defined
+            setTelegramScriptLoaded(true)
+            if(window.Telegram.WebApp.platform !== 'unknown'){
+                // get session from window.Telegram.WebApp.CloudStorage.session
+                setISTelegramMiniApp(true)
+                const supabase = createClient();
+                const resp = await supabase.auth.getUser()
+
+    // console.log(getStorageItem('refresh_token'))
+                // window.Telegram.WebApp.CloudStorage.removeItems(['accessToken', 'refresh_token'])
+              
+                let refresh_token= null 
+                let access_token= null
+               await  getStorageItem("session").then((session: any) => {
+                    const unstrigify = JSON.parse(session)
+                    refresh_token = unstrigify.refresh_token
+                    access_token = unstrigify.access_token
+                 }).catch((err) => {
+                    console.log(err)
+                    access_token = null
+                    refresh_token=null
+                 })
+
+                 if((!refresh_token && !access_token) && resp.data.user){
+                    // set the tokens on the cloud storage
+                    const sesh = await supabase.auth.getSession()
+                    sesh && setStorageItem("session", sesh.data.session)
+                 }
+
+                if(!resp.data.user){
+                  
+                    // setTestobj(access_token)
+                    if(refresh_token  && access_token ){
+                        const { data, error } = await supabase.auth.setSession({
+                            access_token: access_token,
+                            refresh_token: refresh_token
+                          })
+                          if(data){
+
+                            setUser(data.user)
+                            getProfile(data.user?.id)
+                          }else{
+                            console.log(error)
+                          }
+                    }
+                }else{
+                    setUser(resp.data.user)
+                    getProfile(resp.data.user.id)
+                }
+                
+            }else{
+                init()
+                setISTelegramMiniApp(false)
+            }
+          }
+        };
+    
+        document.head.appendChild(script);
+     
+        return () => {
+          document.head.removeChild(script);
+        };
+      }, []);
+
 
     return (
-        <UserContext.Provider value={{ createNewProfile, createUser, logout, profile, setProfile, user, setUser }}>
+        <UserContext.Provider value={{ getProfile, setTelegramProfile,testobj,isTelegramMiniApp,telegramProfile,createNewProfile, createUser, logout, profile, setProfile, user, setUser }}>
             {children}
         </UserContext.Provider>
     );

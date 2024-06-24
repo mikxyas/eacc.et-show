@@ -12,18 +12,20 @@ import useSupabase from "@/hooks/use-supabase";
 import { getPosts } from "@/queries/get-posts";
 import ContentContainer from "./ContentContainer";
 import usePostsQuery from "@/hooks/use-posts-query";
+import { useUserContext } from "@/context/user";
 // const Post = dynamic(() => import('@/components/Post'))
 export default function PostsList({ user_id }: { user_id: string }) {
     const [feedPage, setFeedPage] = React.useState(1)
     const [sortFeedByNew, setSortFeedByNew] = React.useState(false)
     const supabase = useSupabase()
     const client = useQueryClient()
+    const {isTelegramMiniApp, testobj} = useUserContext()
 
-    const post_feed = useQuery({
-        queryKey: ['posts', { sortByNew: sortFeedByNew, page: feedPage }],
-        queryFn: () => getPosts(supabase, feedPage, sortFeedByNew),
-    })
-    // const post_feed = useQuery(usePostsQuery({ client: supabase, page: feedPage, sortByNew: sortFeedByNew }))
+    // const post_feed = useQuery({
+    //     queryKey: ['posts', { sortByNew: sortFeedByNew, page: feedPage }],
+    //     queryFn: () => getPosts(supabase, feedPage, sortFeedByNew),
+    // })
+    const post_feed = useQuery(usePostsQuery({ client: supabase, page: feedPage, sortByNew: sortFeedByNew }))
 
     const incrementPage = async () => {
         if (feedPage > 0) {
@@ -38,6 +40,7 @@ export default function PostsList({ user_id }: { user_id: string }) {
         }
 
     }
+
 
     async function updateSort() {
         await setSortFeedByNew(!sortFeedByNew)
@@ -98,7 +101,7 @@ export default function PostsList({ user_id }: { user_id: string }) {
     return (
         <div className='lg:mx-44 itmes-center  flex flex-col'>
             <div className="md:relative border border-white  fixed bottom-0 w-full  border-opacity-light  lg:border-t-0 border-b-0 flex-col">
-                <div style={{ background: '#191919' }} className="text-gray-200 px-2 py-1 text-xs items-center flex justify-between">
+                <div style={{ background: '#191919'}} className="text-gray-200 px-2 py-1 text-xs items-center flex justify-between">
                     <div>
                         <span >sort by </span>
                         <button onClick={() => updateSort()} className="self-start underline">
@@ -117,11 +120,13 @@ export default function PostsList({ user_id }: { user_id: string }) {
                 </div>
             </div>
             <ContentContainer tailwindstyle="" styles={{ minHeight: '85vh' }} >
+               {/* <p className="text-3xl">{isTelegramMiniApp}</p>  */}
                 {
                     post_feed.data.data?.map((post: any, index: number) => (
                         <Post key={post.id} zapped_posts={post_feed.data?.zapped_posts} data={post} num={index} page={feedPage} />
                     ))
                 }
+              <p className="text-xl text-white">{testobj}</p>  
                 {post_feed.data.data.length >= 30
                     && <div className="justify-center gap-1 items-center flex mt-auto ">
                         <Link href={`/?p=${feedPage > 1 ? feedPage - 1 : 1}`}>

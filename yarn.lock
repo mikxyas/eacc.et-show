@@ -46,6 +46,13 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.57.0.tgz#a5417ae8427873f1dd08b70b3574b453e67b5f7f"
   integrity sha512-Ys+3g2TaW7gADOJzPt83SJtCDhMjndcDMFVQ/Tj9iA1BfJzFKD9mAUXT3OenpuPHbI6P/myECxRJrofUsDx/5g==
 
+"@grammyjs/web-app@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@grammyjs/web-app/-/web-app-1.3.0.tgz#1114ea96336b40590123adf62bfdee4febe35705"
+  integrity sha512-wQgKFNVcgBPiJLu6LoPM3OGy61JY16qo7v9X7/E4DImob0MFh/873GaZ/7yFHP7PpxCTBXEUwiJ6DlSuYbzyCA==
+  dependencies:
+    "@types/telegram-web-app" "^6.4.0"
+
 "@humanwhocodes/config-array@^0.11.14":
   version "0.11.14"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.11.14.tgz#d78e481a039f7566ecc9660b4ea7fe6b1fec442b"
@@ -445,6 +452,16 @@
   dependencies:
     "@tanstack/query-core" "5.45.0"
 
+"@telegram-auth/react@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@telegram-auth/react/-/react-1.0.3.tgz#b10847d281aac5bbf0bb28e80067004126819cf1"
+  integrity sha512-p8wXqaAuP5fH/p5+F8OHdmS9C3FZefVY6+NSdjGn7vd9+7oTdflXcLgA+SrO/KW+k4jY+qxgGbEG19Lyz/G0yA==
+
+"@telegram-auth/server@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@telegram-auth/server/-/server-1.0.3.tgz#c73a1dc6deecc38125772a61c5c1eac276be58fb"
+  integrity sha512-H0HLuAdP0V6eXqypx/DN4dAtVpiF2gLN3xZHQpNUfsMWIAgMCjiVtSGK+ig1mkcWezCoXAI49kauUsJpawB0Mg==
+
 "@types/estree@1.0.5":
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-1.0.5.tgz#a6ce3e556e00fd9895dd872dd172ad0d4bd687f4"
@@ -486,6 +503,11 @@
   dependencies:
     "@types/prop-types" "*"
     csstype "^3.0.2"
+
+"@types/telegram-web-app@^6.4.0":
+  version "6.9.4"
+  resolved "https://registry.yarnpkg.com/@types/telegram-web-app/-/telegram-web-app-6.9.4.tgz#885d00946177824b2f24ad3bbbceeeae43c70307"
+  integrity sha512-Zc1CKYw0D869oz6Z6nGEy+TptJT0In9pATcPgzp25wiUBc+E8UVwbpdO1+BD6mhHTZH+hCu0DLg6Qt6zWYYl0w==
 
 "@types/trusted-types@2.0.7":
   version "2.0.7"
