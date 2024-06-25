@@ -238,7 +238,7 @@ const getProfile = async(user_id:string | undefined) => {
                             access_token: data.session?.access_token,
                             refresh_token: data.session?.refresh_token
                         }
-                        await setStorageItem("session", seshObj)
+                        await setStorageItem("session", JSON.stringify(seshObj))
                     }else{
                         console.log(error)
                     }
