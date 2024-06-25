@@ -161,7 +161,7 @@ export default function EditPostForm({ id }: any) {
     return (
         <div>
             <div className='lg:mx-44' >
-                <ContentContainer styles={{ minHeight: '55vh' }} tailwindstyle='justify-center'>
+                <ContentContainer styles={{ minHeight: '80vh' }} tailwindstyle='justify-center'>
                     <div className='flex self-center flex-col items-center justify-center  w-full   ' >
                         {/* <p className='px-4 font-mono w-full md:w-1/2'>submit high quality content that inspires insightful discussion and learning</p> */}
                         {errorEditing &&

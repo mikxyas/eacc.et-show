@@ -141,7 +141,7 @@ const LoginPage = () => {
     return (
         // craete a login page
         <div className="flex lg:mx-44">
-            <ContentContainer styles={{ minHeight: '55vh' }} tailwindstyle="">
+            <ContentContainer styles={{ minHeight: '80vh' }} tailwindstyle="">
 
                 <div className="flex items-center justify-center flex-col " style={{ width: '100%' }}>
                     {

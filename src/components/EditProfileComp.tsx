@@ -141,7 +141,7 @@ export default function EditProfileComp() {
             
             <div className='flex'>
                 <div className='flex self-center flex-col items-center justify-center w-full lg:mx-44  ' >
-                    <ContentContainer styles={{ minHeight: "55vh", }} tailwindstyle='justify-center '>
+                    <ContentContainer styles={{ minHeight: "80vh", }} tailwindstyle='justify-center '>
                         <div className=' my-2 w-full items-center px-4 md:px-1 justify-center flex flex-col gap-2'>
                             {/* <p className='text-xs text-opacity-50 text-white'>changing username is paused</p> */}
                             

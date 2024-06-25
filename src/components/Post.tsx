@@ -165,10 +165,7 @@ const Post = ({ data, num, page, zapped_posts }: any) => {
             zapper: user?.id,
             zapped: zapped,
         }
-
         zapp_post.mutate(zap_object)
-        // (zappp)
-
     }
     return (
 
@@ -239,8 +236,8 @@ const Post = ({ data, num, page, zapped_posts }: any) => {
                             }
                         </div>
                         {data.text != null && data.text != 'null' &&
-                            <div className='mt-2 md:w-8/12 w-full'>
-                                <p style={{ fontSize: '10pt' }} >{data.text}</p>
+                            <div className='mt-2 md:w-8/12 w-full '>
+                                <p style={{ fontSize: '10pt', whiteSpace:'pre-wrap' }} >{data.text}</p>
                             </div>
                         }
                     </div>

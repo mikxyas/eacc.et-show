@@ -50,7 +50,7 @@ export default function ViewProfileComp({ id }: any) {
         </div>)
     return (
         <div className='flex  lg:mx-44'>
-            <ContentContainer styles={{ minHeight: '55vh', }} tailwindstyle='justify-center'>
+            <ContentContainer styles={{ minHeight: '80vh', }} tailwindstyle='justify-center'>
                 <div className='font-mono gap-4 px-3 py-5 flex-col items-center flex  justify-center'>
 
                     <p>{profile.name}</p>

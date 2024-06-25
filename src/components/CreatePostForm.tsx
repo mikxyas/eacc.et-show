@@ -149,7 +149,7 @@ export default function CreatePostForm() {
 
             <div className='flex self-center flex-col  justify-center items-start  w-full lg:mx-44  ' >
                 {/* <p className='px-4 font-mono w-full md:w-1/2'>submit high quality content that inspires insightful discussion and learning</p> */}
-                <ContentContainer styles={{ minHeight: '55vh' }} tailwindstyle='justify-center items-center'>
+                <ContentContainer styles={{ minHeight: '80vh' }} tailwindstyle='justify-center items-center'>
                     <div className='mx-4 my-2 w-full items-center px-4 md:px-1 justify-center flex flex-col gap-2'>
                         {emptyInput &&
                             <p className='text-sm'>Invalid Title</p>
@@ -182,7 +182,7 @@ export default function CreatePostForm() {
                         <input style={{ background: '#1e1e1e' }} placeholder='Link (link to blog or tg post) -> (optional)' onChange={(e) => handleChange(e)} className=' outline-none p-2 w-full' width={200} type="text" name="link" />
                     </div> */}
                         <div className='w-full md:w-1/2'>
-                            <textarea placeholder='text' onChange={(e) => setText(e.target.value)} className='w-full h-20 bg-input outline-none p-2' name="text" />
+                            <textarea placeholder='text' onChange={(e) => setText(e.target.value)} className='w-full lg:h-20 h-40 bg-input outline-none p-2' name="text" />
                         </div>
                         <p className='w-full md:w-1/2 text-xs text-center text-gray-300'>Leave url blank to submit a question for discussion. If there is a url, text is optional.</p>
                         {create_post.isPending &&
