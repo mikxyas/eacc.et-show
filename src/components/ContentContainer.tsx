@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react'
+import React from 'react'
 
 export default function ContentContainer({ children, styles, tailwindstyle }: { children: any, styles: any, tailwindstyle: string }) {
     return (

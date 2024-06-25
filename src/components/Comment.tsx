@@ -1,10 +1,10 @@
 // components/Comment.js
-import { MessageCircle, Spline, X, Zap } from 'lucide-react';
+import { MessageCircle,  Zap } from 'lucide-react';
 import React, { useState } from 'react';
 import ReplyInput from './ReplyInput';
 import { useUserContext } from '@/context/user';
 import Link from 'next/link';
-import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { zapComment, unzapComment, delete_comment } from '@/functions/comments';
 
 
@@ -13,10 +13,7 @@ const Comment = ({ post_id, comment, zapped_comments }: any) => {
     const [showDelete, setShowDelete] = useState<any>({})
     const { user } = useUserContext()
     const client = useQueryClient()
-    // const zappedComments: any = client.getQueryData(['upvoted_comments', { id: post_id }])
-    // const ZappedComments = useQuery(useCommentsZapped({ client: supabase, user_id: user?.id, post_id: post_id }))
-    // const ZappedComments = zapped_comments
-    // console.log(zappedComments)
+
     const toggleReply = (commentId: any) => {
         setShowReply((prev: any) => ({ ...prev, [commentId]: !prev[commentId] }));
     };
@@ -30,9 +27,6 @@ const Comment = ({ post_id, comment, zapped_comments }: any) => {
             return zapComment(obg)
         },
         onMutate: async (comment) => {
-            // mutate the zapped_posts query
-            // const prevState = client.setQueryData(['upvoted_comments', { id: post_id }], [...zapped_comments.data, comment.comment_zapped])
-            // update zap_count on the comment 
             try {
                 const post: any = client.getQueryData(['post', { id: post_id }])
                 const updated_count = {
@@ -64,9 +58,6 @@ const Comment = ({ post_id, comment, zapped_comments }: any) => {
             return unzapComment(comment_id)
         },
         onMutate: async (comment_id: string) => {
-            // mutate the zapped_posts query
-            // const zappedComments: any = client.getQueryData(['upvoted_comments', { id: post_id }])
-            // const prevState = client.setQueryData(['upvoted_comments', { id: post_id }], zapped_comments.filter((id: any) => id != comment_id))
             try {
                 const post: any = client.getQueryData(['post', { id: post_id }])
                 const updated_count = {
@@ -94,15 +85,7 @@ const Comment = ({ post_id, comment, zapped_comments }: any) => {
         mutationFn: (comment_id) => {
             return delete_comment(comment_id)
         },
-        // onMutate: async (comment_id) => {
-        //     // mutate the zapped_posts query
-        //     const post: any = client.getQueryData(['post', { id: post_id }])
-        //     const updateCount = post.comments.filter((c: any) => c.id != comment_id)
-        //     client.setQueryData(['post', { id: post_id }], { ...post, comments: updateCount })
-        //     // A mutation is about to happen!
-        //     // Optionally return a context containing data to use when for example rolling back
-        //     return updateCount
-        // }
+
         onSuccess: () => {
             client.invalidateQueries({ queryKey: ['post', { id: post_id }] })
             client.invalidateQueries({ queryKey: ['posts', { page: 1, sortByNew: false }] })
@@ -164,7 +147,7 @@ const Comment = ({ post_id, comment, zapped_comments }: any) => {
                         )
                     }
                     <Link href={`/user/${comment.profiles.username}`}>
-                        <p className='hover:underline  cursor-pointer ' >{comment.profiles.username}</p>
+                        <p className={`hover:underline  cursor-pointer ${user.id === comment.replier ? 'text-white ' : ''} `} >{comment.profiles.username}</p>
                     </Link>
                     <p>{timeAgo(comment.created_at)}</p>
                     {comment.replier == user?.id &&
@@ -172,7 +155,6 @@ const Comment = ({ post_id, comment, zapped_comments }: any) => {
                             className='hover:underline cursor-pointer '
                             onClick={() => toggleDelete(comment.id)}
                         >delete</p>
-
                     }
                     {/* <p>delete</p> */}
                 </div>

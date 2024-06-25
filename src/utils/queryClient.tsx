@@ -16,9 +16,7 @@ const ReactQueryPvorider: React.FC<PropsWithChildren> = ({ children }) => {
   // Return Provider
   return (
     <QueryClientProvider client={queryClient}>
-      {/* <HydrationBoundary state={dehydrate(queryClient)}> */}
       {children}
-      {/* </HydrationBoundary> */}
       {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </QueryClientProvider>
   );
