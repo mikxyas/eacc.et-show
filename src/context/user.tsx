@@ -176,11 +176,12 @@ const getProfile = async(user_id:string | undefined) => {
     }
 
     const getStorageItem = async (key: string) => {
+
         return new   Promise((resolve, reject) => {
             window.Telegram.WebApp.CloudStorage.getItem(key, (err, value:any) => {
                 if(err || !value){
                     console.log('IT IS NOT STORED')
-                    // return reject(new Error('Data is not stored'))
+                    return reject(new Error('Data is not stored'))
                 }else{
 
                     resolve(value)
@@ -212,8 +213,9 @@ const getProfile = async(user_id:string | undefined) => {
                 // get session from window.Telegram.WebApp.CloudStorage.session
                 setISTelegramMiniApp(true)
                 const supabase = createClient();
-                const resp = await supabase.auth.getUser()
+                console.log('this works!!!!!!!!!!')
 
+                const resp = await supabase.auth.getUser()
     // console.log(getStorageItem('refresh_token'))
                 // window.Telegram.WebApp.CloudStorage.removeItems(['accessToken', 'refresh_token'])
               
@@ -228,9 +230,11 @@ const getProfile = async(user_id:string | undefined) => {
                     access_token = null
                     refresh_token=null
                  })
+                 console.log('----------------------')
                  console.log(resp.data.user)
+                 console.log('----------------------')
                  
-
+                 init()
              
 
                 if(!resp.data.user){
@@ -248,14 +252,6 @@ const getProfile = async(user_id:string | undefined) => {
                           }else{
                             console.log(error)
                           }
-                    }else{
-                        const sesh = await supabase.auth.getSession()
-                        console.log(sesh)
-                        if(sesh.data.session){
-                        await setStorageItem("session", sesh.data.session)
-    
-                        init()
-                        }
                     }
                 }else{
                     setUser(resp.data.user)

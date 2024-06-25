@@ -23,13 +23,17 @@ const LoginPage = () => {
 
     const signInWithGithub = async () => {
         const supabase = createClient();
-
+    // get the origin of the page
+    const origin = window.location.origin
         const { data, error } = await supabase.auth.signInWithOAuth({
-            provider: 'github'
+            provider: 'github',
+            options:{
+                redirectTo: origin + '/auth/callback'
+            }
         })
         if (error) {
             console.log(error)
-        } else {
+        } else {    
         }
         // (data, error)
     }
@@ -64,7 +68,7 @@ const LoginPage = () => {
         access_token: accessToken,
       }
         if(isTelegramMiniApp){
-       await window.Telegram.WebApp.CloudStorage.removeItems(['refresh_token', 'access_token'])
+       await window.Telegram.WebApp.CloudStorage.removeItems(['session'])
       await setStorageItem('session', JSON.stringify(sessionData))
     //   await setStorageItem('access_token', accessToken)
       }else{

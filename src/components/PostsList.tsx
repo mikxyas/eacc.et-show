@@ -81,7 +81,7 @@ export default function PostsList({ user_id }: { user_id: string }) {
     if (post_feed.data?.data == null) {
         return (
             <div>
-                <div className="flex flex-col items-center justify-center lg:mx-44">
+                <div className="flex  flex-col items-center justify-center lg:mx-44">
                     <ContentContainer styles={{}} tailwindstyle="">
 
                         No posts found
