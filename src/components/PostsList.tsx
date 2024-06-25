@@ -59,9 +59,18 @@ useEffect(() => {
     // check if we in telegram mini app
     if(isTelegramMiniApp){
         // get the param from telegram 
+        console.log(window.Telegram.WebApp.initDataUnsafe)
+        console.log(window.Telegram.WebApp.initData)
         let startParam = window.Telegram.WebApp.initDataUnsafe.start_param
+        /// get the entire url and console log it 
+        console.log(window.location.href)
+        console.log('this is the start param!!!!!!!!!!!!!!')
+        console.log(startParam)
         if(startParam){
-            router.push(`/post/${startParam}`)
+            if(startParam.length == 36){
+                router.push(`/post/${startParam}`)
+            }
+            // remove it from the url 
         }
     }
 },[isTelegramMiniApp])

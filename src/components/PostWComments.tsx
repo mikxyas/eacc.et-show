@@ -1,6 +1,6 @@
 
 "use client"
-import React from 'react'
+import React, { useEffect } from 'react'
 // import Comment from "@/components/Comment";
 // import Post from "@/components/Post";
 // import ReplyInput from "@/components/ReplyInput";
@@ -66,6 +66,17 @@ export default function PostWComments({ id, zapped_posts }: any) {
 
         return nestedComments;
     };
+
+    useEffect(() => {
+        if(isTelegramMiniApp){
+            const id = window.Telegram.WebApp.initDataUnsafe.start_param
+            if(typeof id != undefined && id != ''){
+                // remove it from the url 
+                window.Telegram.WebApp.initDataUnsafe.start_param = ''
+            }
+        }
+    }, [])
+
     if (viewedPost.isLoading) {
         return <div className="flex flex-col  items-center lg:mx-44 justify-center">
             <ContentContainer tailwindstyle='' styles={{}}>
