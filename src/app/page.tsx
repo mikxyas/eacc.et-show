@@ -13,21 +13,23 @@ import usePostsZapped from "@/hooks/use-posts-zapped";
 import queryClient from "@/utils/globalClientQuery";
 
 import dynamic from "next/dynamic";
+import { redirect } from "next/navigation";
 
 const DynamicPostLists = dynamic(() => import('@/components/PostsList'))
 
-export default async function Home() {
+export default async function Home(event: any) {
 
 
   const cookieStore = cookies()
   const client = await createClient()
-  // const client = useSupabase()
-  // const client = useQueryClient()
-  // const post_feed = useQuery({
-  //   queryKey: ['posts', { sortByNew: sortFeedByNew, page: feedPage }],
-  //   queryFn: getPosts,
-  // },
-  // )
+
+  // check if url has redirect_to and redirect to that page
+
+  const redirect_to = event.searchParams.redirect_to
+  if (redirect_to) {
+    redirect(redirect_to)
+  }
+
   const user = await client.auth.getUser()
 
   const page = 1

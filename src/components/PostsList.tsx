@@ -5,7 +5,7 @@ import Post from "@/components/Post";
 import dynamic from "next/dynamic";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
-import React, { use } from "react";
+import React, { use, useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import useSupabase from "@/hooks/use-supabase";
@@ -13,6 +13,7 @@ import { getPosts } from "@/queries/get-posts";
 import ContentContainer from "./ContentContainer";
 import usePostsQuery from "@/hooks/use-posts-query";
 import { useUserContext } from "@/context/user";
+import { useRouter } from "next/navigation";
 // const Post = dynamic(() => import('@/components/Post'))
 export default function PostsList({ user_id }: { user_id: string }) {
     const [feedPage, setFeedPage] = React.useState(1)
@@ -20,7 +21,7 @@ export default function PostsList({ user_id }: { user_id: string }) {
     const supabase = useSupabase()
     const client = useQueryClient()
     const {isTelegramMiniApp, testobj} = useUserContext()
-
+    const router = useRouter()
     // const post_feed = useQuery({
     //     queryKey: ['posts', { sortByNew: sortFeedByNew, page: feedPage }],
     //     queryFn: () => getPosts(supabase, feedPage, sortFeedByNew),
@@ -54,7 +55,15 @@ export default function PostsList({ user_id }: { user_id: string }) {
         window.history.pushState({}, '', url.toString())
     }
 
-
+// useEffect(() => {
+//     // check if the url param has redirect_to and redirect to that page
+//     const url = new URL(window.location.href)
+//     const search_params = url.searchParams
+//     const redirect_to = search_params.get('redirect_to')
+//     if (redirect_to) {
+//         router.push(redirect_to)
+//     }
+// },[])
 
     const decrementPage = async () => {
         if (feedPage > 1) {

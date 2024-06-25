@@ -20,7 +20,7 @@ const LoginPage = () => {
     const { createUser, isTelegramMiniApp } = useUserContext()
     // const client = useQueryClient()
     // const router = useRouter()
-
+    const client = useQueryClient()
     const signInWithGithub = async () => {
         const supabase = createClient();
     // get the origin of the page
@@ -103,6 +103,7 @@ const LoginPage = () => {
         } else {
             await storeSessionInTelegramCloud(login.data.session.refresh_token, login.data.session.access_token)
             setLoading(false)
+            await client.invalidateQueries()
             window.location.reload()
 
         }
