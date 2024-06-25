@@ -24,10 +24,12 @@ export default async function Home(event: any) {
 
   // check if url has redirect_to and redirect to that page
 
-  // const redirect_to = event.searchParams.redirect_to
-  // if (redirect_to) {
-  //   redirect(redirect_to)
-  // }
+  const tgWebAppStart = event.searchParams.tgWebAppStartParam
+  if (tgWebAppStart) {
+    const post_link = '/post/' + tgWebAppStart
+    console.log(post_link)
+    redirect(post_link)
+  }
 
   const user = await client.auth.getUser()
 
