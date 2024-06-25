@@ -55,15 +55,16 @@ export default function PostsList({ user_id }: { user_id: string }) {
         window.history.pushState({}, '', url.toString())
     }
 
-// useEffect(() => {
-//     // check if the url param has redirect_to and redirect to that page
-//     const url = new URL(window.location.href)
-//     const search_params = url.searchParams
-//     const redirect_to = search_params.get('redirect_to')
-//     if (redirect_to) {
-//         router.push(redirect_to)
-//     }
-// },[])
+useEffect(() => {
+    // check if we in telegram mini app
+    if(isTelegramMiniApp){
+        // get the param from telegram 
+        let startParam = window.Telegram.WebApp.initDataUnsafe.start_param
+        if(startParam){
+            router.push(`/post/${startParam}`)
+        }
+    }
+},[isTelegramMiniApp])
 
     const decrementPage = async () => {
         if (feedPage > 1) {

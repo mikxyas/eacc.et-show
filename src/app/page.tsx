@@ -6,7 +6,6 @@ import { HydrationBoundary, QueryClient, dehydrate, useQuery } from "@tanstack/r
 import usePostsQuery from "@/hooks/use-posts-query";
 
 import { cookies } from "next/headers";
-// import PostsList from "@/components/PostsList";
 
 import { createClient } from "@/utils/supabase/server";
 import usePostsZapped from "@/hooks/use-posts-zapped";
@@ -25,21 +24,16 @@ export default async function Home(event: any) {
 
   // check if url has redirect_to and redirect to that page
 
-  const redirect_to = event.searchParams.redirect_to
-  if (redirect_to) {
-    redirect(redirect_to)
-  }
+  // const redirect_to = event.searchParams.redirect_to
+  // if (redirect_to) {
+  //   redirect(redirect_to)
+  // }
 
   const user = await client.auth.getUser()
 
   const page = 1
   const sortByNew = false
-  // const post_feed = useQuery(usePostsQuery({ client: supabase, page: 1, sortByNew: false }))
-  // check if the user is logged in
 
-  // console.log('cookies', cookieStore)
-
-  // console.log(session)
   await queryClient.prefetchQuery(usePostsQuery({ client, page, sortByNew }))
   let user_id = 'none'
   if (user.data.user) {
