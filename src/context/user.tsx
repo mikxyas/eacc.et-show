@@ -213,7 +213,6 @@ const getProfile = async(user_id:string | undefined) => {
                 // get session from window.Telegram.WebApp.CloudStorage.session
                 setISTelegramMiniApp(true)
                 const supabase = createClient();
-                console.log('this works!!!!!!!!!!')
 
                 const resp = await supabase.auth.getUser()
     // console.log(getStorageItem('refresh_token'))
@@ -230,11 +229,21 @@ const getProfile = async(user_id:string | undefined) => {
                     access_token = null
                     refresh_token=null
                  })
-                 console.log('----------------------')
-                 console.log(resp.data.user)
-                 console.log('----------------------')
-                 
-                 init()
+
+                 // if their is a user but session not stored in telegram cloud store the session
+                 if(resp.data.user && !refresh_token && !access_token){
+                    const { data, error } = await supabase.auth.getSession()
+                    if(data){
+                        const seshObj = {
+                            access_token: data.session?.access_token,
+                            refresh_token: data.session?.refresh_token
+                        }
+                        await setStorageItem("session", seshObj)
+                    }else{
+                        console.log(error)
+                    }
+                 }
+            
              
 
                 if(!resp.data.user){
