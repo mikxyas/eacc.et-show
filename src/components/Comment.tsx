@@ -147,7 +147,7 @@ const Comment = ({ post_id, comment, zapped_comments }: any) => {
                         )
                     }
                     <Link href={`/user/${comment.profiles.username}`}>
-                        <p className={`hover:underline  cursor-pointer ${user.id === comment.replier ? 'text-white ' : ''} `} >{comment.profiles.username}</p>
+                        <p className={`hover:underline  cursor-pointer ${user?.id === comment.replier ? 'text-white ' : ''} `} >{comment.profiles.username}</p>
                     </Link>
                     <p>{timeAgo(comment.created_at)}</p>
                     {comment.replier == user?.id &&
